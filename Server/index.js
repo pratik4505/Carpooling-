@@ -4,7 +4,7 @@ const app = express();
 const cors = require("cors");
 const Database=require('./config/database');
 const PORT = process.env.PORT || 4000;
-const MONGODB_URI=`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.0rkt5ow.mongodb.net/carPooling?retryWrites=true&w=majority`
+const MONGODB_URI=`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster1.gkxxxeg.mongodb.net/carPoolingDatabase?retryWrites=true&w=majority&appName=Cluster1`;
 const db = new Database(MONGODB_URI);
 
 db.connect().catch((err) =>
