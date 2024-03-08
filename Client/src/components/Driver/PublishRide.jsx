@@ -2,13 +2,14 @@ import React from "react";
 import {
   useJsApiLoader,
   GoogleMap,
-  Marker,
   Autocomplete,
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import { useRef, useState } from "react";
+import axios from 'axios';
 
 const center = { lat: 48.8584, lng: 2.2945 };
+
 export default function PublishRide() {
   const [libraries, setLibraries] = useState(["places"]);
   const { isLoaded } = useJsApiLoader({
@@ -16,12 +17,11 @@ export default function PublishRide() {
     libraries,
   });
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(null);
-
- 
+  const [availableSeats, setAvailableSeats] = useState(1);
   const [map, setMap] = useState(/** @type google.maps.Map */ (null));
   const [directionsResponses, setDirectionsResponses] = useState(null);
-  const [distance, setDistance] = useState("");
-  const [duration, setDuration] = useState("");
+
+  const [datetime, setDatetime] = useState("");
 
   /** @type React.MutableRefObject<HTMLInputElement> */
   const originRef = useRef();
@@ -32,9 +32,17 @@ export default function PublishRide() {
     return <p>Loading</p>;
   }
 
+  // Event handler to update the datetime value
+  const handleDateTimeChange = (e) => {
+    setDatetime(e.target.value);
+  };
   const handleRouteClick = (index) => {
     setSelectedRouteIndex(index);
   };
+  const handleSeatsChange = (e) => {
+    setAvailableSeats(parseInt(e.target.value));
+  };
+  console.log(datetime);
   async function calculateRoute() {
     if (originRef.current.value === "" || destiantionRef.current.value === "") {
       return;
@@ -56,8 +64,6 @@ export default function PublishRide() {
     }
     console.log(results);
     setDirectionsResponses(results);
-    setDistance(results.routes[0].legs[0].distance.text);
-    setDuration(results.routes[0].legs[0].duration.text);
   }
 
   function clearRoute() {
@@ -67,38 +73,144 @@ export default function PublishRide() {
     originRef.current.value = "";
     destiantionRef.current.value = "";
   }
+
+  async function handlePublishRide(){
+    try {
+      const routeData = {
+        source: directionsResponses.request.origin.query,
+        destination: directionsResponses.request.destination.query,
+        dateTime: datetime,
+        seats: availableSeats,
+        overview_polyline: directionsResponses.routes[selectedRouteIndex].overview_polyline,
+      };
+
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_BASE_URL}/rides/publishRide`, routeData);
+      
+      if (response.status === 201) {
+        // Handle successful ride publication
+        console.log('Ride published successfully:', response.data);
+        // Optionally, perform actions like showing a success message or redirecting the user.
+      } else {
+        // Handle other response statuses (if needed)
+        console.error('Unexpected response status:', response.status);
+        // Optionally, handle the error by showing an error message or logging it for debugging purposes.
+      }
+
+      // Optionally, you can perform some action after successful submission, like showing a success message or redirecting the user.
+    } catch (error) {
+      console.error('Error publishing ride:', error);
+      // Optionally, you can handle errors, such as showing an error message to the user.
+    }
+  }
   console.log(selectedRouteIndex);
   return (
-    <div className="grid grid-cols-2 h-[95vh]">
-      <div className="border border-gray-400 h-full">
-        <div className="border border-gray-400 w-[80%] h-[80%] m-auto">
-          <div className="flex-grow">
-            <Autocomplete
-              apiKey={import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}
-            >
-              <input
-                type="text"
-                placeholder="Origin"
-                ref={originRef}
-                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-              />
-            </Autocomplete>
+    <div className="grid grid-cols-2 h-[100vh]">
+      
+      <div className="h-full">
+      <h1 className="text-3xl font-bold text-center text-gray-800 my-2">Publish Ride</h1>
+
+        <div className=" w-[80%] m-auto flex p-3 flex-col mt-2 border">
+          <div className=" grid grid-cols-2 gap-4">
+            <div className="flex-grow">
+              <Autocomplete
+                apiKey={import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}
+              >
+                <input
+                  type="text"
+                  placeholder="Origin"
+                  ref={originRef}
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+                />
+              </Autocomplete>
+            </div>
+            <div className="flex-grow">
+              <Autocomplete
+                apiKey={import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}
+              >
+                <input
+                  type="text"
+                  placeholder="Destination"
+                  ref={destiantionRef}
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+                />
+              </Autocomplete>
+            </div>
           </div>
-          <div className="flex-grow">
-            <Autocomplete
-              apiKey={import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}
+
+          <div className="flex space-x-4 m-auto mt-3">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
+              onClick={calculateRoute}
             >
-              <input
-                type="text"
-                placeholder="Destination"
-                ref={destiantionRef}
-                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-              />
-            </Autocomplete>
+              Calculate Routes
+            </button>
+            <button
+              className="p-2 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-400"
+              onClick={clearRoute}
+            >
+              Clear Routes
+            </button>
           </div>
-          <button onClick={calculateRoute}>Find Routes</button>
-          <button onClick={clearRoute}>Clear Routes</button>
         </div>
+
+        <div className=" mt-4 p-4 border w-[80%] m-auto flex flex-col gap-4">
+          <div>
+            <label htmlFor="datetime">Select Date and Time:</label>
+            <input
+              type="datetime-local"
+              id="datetime"
+              name="datetime"
+              value={datetime}
+              onChange={handleDateTimeChange}
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="seats">Available Seats:</label>
+            <input
+              type="number"
+              id="seats"
+              name="seats"
+              value={availableSeats}
+              onChange={handleSeatsChange}
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <button
+              type="submit"
+              className="px-4 py-2 bg-pink-500 w-[50%] m-auto text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
+              onClick={handlePublishRide}
+            >
+              Publish Ride
+            </button>
+        </div>
+
+        {directionsResponses && (
+          <div className=" mt-4 p-4 border w-[80%] m-auto flex flex-col gap-4 overflow-y-auto h-64">
+            {directionsResponses.routes.map((route, index) => (
+               <div key={index} className="flex items-center mb-2">
+               <input
+                 type="radio"
+                 id={`route${index}`}
+                 name="routes"
+                 value={index}
+                 checked={selectedRouteIndex === index}
+                 onChange={() => handleRouteClick(index)}
+                 className="mr-2"
+               />
+               <label htmlFor={`route${index}`} className="flex-grow py-2 px-4 bg-gray-100 rounded-lg cursor-pointer">
+                 <div className="font-semibold">{route.summary}</div>
+                 <div className="text-sm text-gray-600">
+                   <div>Distance: {route.legs[0].distance.text}</div>
+                   <div>Duration: {route.legs[0].duration.text}</div>
+                 </div>
+               </label>
+             </div>
+            ))}
+          </div>
+          
+        )}
       </div>
       <div className="border border-gray-400 h-full">
         <GoogleMap
@@ -113,22 +225,21 @@ export default function PublishRide() {
           }}
           onLoad={(map) => setMap(map)}
         >
-          <Marker position={center} />
-          {directionsResponses&&directionsResponses.routes.map((route) => (
-            <DirectionsRenderer
-              key={route.summary}
-              directions={{...directionsResponses, routes: [route],  }}
-              options={{
-                polylineOptions: {
-                  strokeColor: 'blue' ,
-                  strokeOpacity:  route.summary=== selectedRouteIndex ? 1 : 0.5,
-                  strokeWeight: route.summary === selectedRouteIndex ? 17 : 4,
-                },
-              }}
-              onClick={() => handleRouteClick(route.summary)}
-            />
-          ))}
-          
+          {directionsResponses &&
+            directionsResponses.routes.map((route, index) => (
+              <DirectionsRenderer
+                key={index}
+                directions={{ ...directionsResponses, routes: [route] }}
+                options={{
+                  polylineOptions: {
+                    strokeColor: "blue",
+                    strokeOpacity: index === selectedRouteIndex ? 1 : 0.5,
+                    strokeWeight: index === selectedRouteIndex ? 8 : 4,
+                  },
+                }}
+                onClick={() => handleRouteClick(index)}
+              />
+            ))}
         </GoogleMap>
       </div>
     </div>
