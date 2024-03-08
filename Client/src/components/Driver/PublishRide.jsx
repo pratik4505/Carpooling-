@@ -68,13 +68,13 @@ export default function PublishRide() {
 
   function clearRoute() {
     setDirectionsResponses(null);
-    setDistance("");
-    setDuration("");
+   
     originRef.current.value = "";
     destiantionRef.current.value = "";
   }
 
   async function handlePublishRide(){
+    if(!directionsResponses||!datetime)return;
     try {
       const routeData = {
         source: directionsResponses.request.origin.query,

@@ -26,4 +26,4 @@ catch (err) {
 }
 };
 
-module.exports = postRide;
+module.exports = {postRide};

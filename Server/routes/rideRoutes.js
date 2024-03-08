@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const postRide=require('../controllers/rideController/')
+const { postRide } = require("../controllers/rideController");
 
-router.post('/publishRide',postRide);
+router.post("/publishRide", postRide);
 
 module.exports = router;
