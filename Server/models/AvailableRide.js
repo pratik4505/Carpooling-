@@ -1,28 +1,32 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const AvailableRideSchema = new mongoose.Schema({
   source: {
     type: String,
-    required: true
+    required: true,
   },
   destination: {
     type: String,
-    required: true
+    required: true,
   },
-  dateTime: {
+  date: {
     type: Date,
-    required: true
+    required: true,
+  },
+  time: {
+    type: String,
+    required: true,
   },
   seats: {
     type: Number,
-    required: true
+    required: true,
   },
   overview_polyline: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
-const AvailableRide = mongoose.model('AvailableRide', AvailableRideSchema);
+const AvailableRide = mongoose.model("AvailableRide", AvailableRideSchema);
 
 module.exports = AvailableRide;
