@@ -4,21 +4,37 @@ import ProtectedRoute from "./ProtectedRoute";
 
 import { Suspense } from "react";
 import FallbackLoading from "../components/loader/FallbackLoading";
-import PublishRide from "../components/Driver/PublishRide";
+
+import SearchRides from "../pages/SearchRides";
+import CreateRide from "../pages/CreateRide";
+import Chats from "../pages/Chats";
+import BookedRides from "../pages/BookedRides";
+import DriverRides from "../pages/DriverRides";
+import Notifications from "../pages/Notifications";
+import PendingPayments from "../pages/PendingPayments";
+import Profile from "../pages/Profile";
+import RideRequests from "../pages/RideRequests";
+import Transactions from "../pages/Transactions";
 
 const AppRoutes = () => {
   return (
-    <Suspense fallback={<FallbackLoading/>}>
+    <Suspense fallback={<FallbackLoading />}>
       <Routes>
         {/* <Route path="/Login" element={<></>} /> */}
         <Route path="*" element={<h1>Not Found</h1>} />
-        {/* <Route path="Register" element={<></>} /> */}
-        
+        {/* <Route path=/Register" element={<></>} /> */}
 
-        <Route path="/" >
-        <Route path="/publishRide" element={<PublishRide/>} />
-         
-  
+        <Route path="/" element={<ProtectedRoute />}>
+          <Route path="/publishRide" element={<CreateRide />} />
+          <Route path="/searchRide" element={<SearchRides />} />
+          <Route path="/chats" element={<Chats />} />
+          <Route path="/bookedRides" element={<BookedRides />} />
+          <Route path="/driverRides" element={<DriverRides />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/pendingPayments" element={<PendingPayments />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/rideRequests" element={<RideRequests />} />
+          <Route path="/transactions" element={<Transactions />} />
         </Route>
       </Routes>
     </Suspense>

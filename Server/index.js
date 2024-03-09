@@ -8,7 +8,7 @@ const MONGODB_URI=`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_P
 const db = new Database(MONGODB_URI);
 
 const rideRoutes=require('./routes/rideRoutes');
-
+const paymentRoutes=require('./routes/paymentRoutes')
 db.connect().catch((err) =>
   console.error("Error connecting to database:", err)
 );
@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/rides',rideRoutes);
-
+app.use('/payment',paymentRoutes)
 
 app.get("/server-status", (req, res) => {
   res.status(200).json({ message: "Server is up and running!" });
