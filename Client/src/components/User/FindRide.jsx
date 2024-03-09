@@ -6,12 +6,14 @@ import {
   Marker,
   Autocomplete,
   DirectionsRenderer,
+  Polyline,
 } from "@react-google-maps/api";
 
 const FindRide = () => {
+  const [libraries, setLibraries] = useState(["places", "geometry"]);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
-    libraries: ["places", "geometry"],
+    libraries,
   });
   const [directionsResponse, setDirectionResponse] = useState(null);
   const [map, setMap] = useState(null);
@@ -32,7 +34,8 @@ const FindRide = () => {
     const { overview_path } = ride;
 
     // Create a new Polyline instance
-    const routePolyline = new google.maps.Polyline({
+
+    const routePolyline = new window.google.maps.Polyline({
       path: overview_path,
       geodesic: true,
       strokeColor: "#FF0000", // Color of the polyline
@@ -70,10 +73,12 @@ const FindRide = () => {
         for (const ride of response.data) {
           // Parse the overview polyline from the backend response
           const { overview_polyline } = ride;
+          // eslint-disable-next-line no-undef
           const routeCoordinates =
             google.maps.geometry.encoding.decodePath(overview_polyline);
 
           // Geocode source and destination addresses to get their coordinates
+          // eslint-disable-next-line no-undef
           const geocoder = new google.maps.Geocoder();
           const sourceResult = await geocoder.geocode({ address: source });
           const destinationResult = await geocoder.geocode({
@@ -84,7 +89,9 @@ const FindRide = () => {
           const destinationLatLng =
             destinationResult.results[0].geometry.location;
           // Check if the source and destination points are on the route
+
           const isSourceOnRoute = routeCoordinates.some((point) => {
+            // eslint-disable-next-line no-undef
             const distance =
               google.maps.geometry.spherical.computeDistanceBetween(
                 point,
@@ -107,6 +114,7 @@ const FindRide = () => {
             ride.overview_path = routeCoordinates;
             ridesWithValidRoutes.push(ride);
           }
+          console.log(ride.overview_path);
         }
 
         // Update state with rides that have valid routes
@@ -209,7 +217,8 @@ const FindRide = () => {
       </div>
       <div className="border border-gray-400 h-full">
         <GoogleMap
-          center={center}
+          //center={center}
+          center={{ lat: -36.73550441, lng: 144.25178598 }}
           zoom={15}
           mapContainerStyle={{ width: "100%", height: "100%" }}
           options={{
@@ -220,17 +229,43 @@ const FindRide = () => {
           }}
           onLoad={(loaded) => setMap(loaded)}
         >
+          <Polyline
+            path={[
+              {
+                'lat': 10.16253,
+                'lng': 76.64098000000001,
+              },
+              { 'lat': -36.73590441, 'lng': 144.25178198 },
+            ]}
+            options={{
+              strokeColor: "#ff2343",
+              strokeOpacity: "1.0",
+              strokeWeight: 2,
+              icons: [
+                {
+                  icon: "hello",
+                  offset: "0",
+                  repeat: "10px",
+                },
+              ],
+            }}
+          />
           {directionsResponse &&
             directionsResponse.map((response, index) => (
-              <DirectionsRenderer
+              <Polyline
                 key={index}
-                directions={{ ...response }}
+                path={response.overview_path}
                 options={{
-                  polylineOptions: {
-                    strokeColor: "blue",
-                    strokeOpacity: index === selectedRouteIndex ? 1 : 0.5,
-                    strokeWeight: index === selectedRouteIndex ? 8 : 4,
-                  },
+                  strokeColor: "#ff2343",
+                  strokeOpacity: "2.0",
+                  strokeWeight: 3,
+                  icons: [
+                    {
+                      icon: "hello",
+                      offset: "0",
+                      repeat: "10px",
+                    },
+                  ],
                 }}
               />
             ))}
