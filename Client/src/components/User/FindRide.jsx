@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import {
   useJsApiLoader,
@@ -17,47 +17,197 @@ const FindRide = () => {
   const [map, setMap] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
-  const [rides, setRides] = useState([]);
-  const originRef = useRef();
+  const [availableRides, setAvailableRides] = useState([]);
+  const sourceRef = useRef();
   const destinationRef = useRef();
   const dateTimeRef = useRef();
-
-  useEffect(() => {
-    // Fetch rides from the database
-    const fetchRides = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/rides`
-        );
-        if (response.status === 200) {
-          setRides(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching rides:", error);
-      }
-    };
-    fetchRides();
-  }, []);
 
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
 
   const center = { lat: 48.8584, lng: 2.2945 };
+  const displayRoute = (ride) => {
+    console.log("The selected ride is ", ride);
+    const { overview_path } = ride;
 
+    // Create a new Polyline instance
+    const routePolyline = new google.maps.Polyline({
+      path: overview_path,
+      geodesic: true,
+      strokeColor: "#FF0000", // Color of the polyline
+      strokeOpacity: 1.0,
+      strokeWeight: 3, // Thickness of the polyline
+    });
+
+    // Set the polyline on the map
+    routePolyline.setMap(map);
+  };
   const serachRide = async () => {
-    // Function to search for a ride
-    // ...
+    if (sourceRef.current.value === "" || destinationRef.current.value === "") {
+      return;
+    }
+
+    const source = sourceRef.current.value;
+    const destination = destinationRef.current.value;
+    const dateTime = new Date(dateTimeRef.current.value);
+    const date = dateTime.toISOString().slice(0, 10);
+
+    try {
+      // Send request to backend
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/rides/getAvaliableRides`,
+        { source, destination, date }
+      );
+
+      if (response.status === 200) {
+        console.log("Available rides:", response.data);
+
+        // Initialize array to hold rides with valid routes
+        const ridesWithValidRoutes = [];
+
+        // Iterate through each ride in the response array
+        for (const ride of response.data) {
+          // Parse the overview polyline from the backend response
+          const { overview_polyline } = ride;
+          const routeCoordinates =
+            google.maps.geometry.encoding.decodePath(overview_polyline);
+
+          // Geocode source and destination addresses to get their coordinates
+          const geocoder = new google.maps.Geocoder();
+          const sourceResult = await geocoder.geocode({ address: source });
+          const destinationResult = await geocoder.geocode({
+            address: destination,
+          });
+
+          const sourceLatLng = sourceResult.results[0].geometry.location;
+          const destinationLatLng =
+            destinationResult.results[0].geometry.location;
+          // Check if the source and destination points are on the route
+          const isSourceOnRoute = routeCoordinates.some((point) => {
+            const distance =
+              google.maps.geometry.spherical.computeDistanceBetween(
+                point,
+                sourceLatLng
+              );
+            return distance < 1000; // Define your threshold distance here
+          });
+
+          const isDestinationOnRoute = routeCoordinates.some((point) => {
+            const distance =
+              google.maps.geometry.spherical.computeDistanceBetween(
+                point,
+                destinationLatLng
+              );
+            return distance < 10000; // Define your threshold distance here
+          });
+
+          // If both source and destination are on the route, add the ride to the array
+          if (isSourceOnRoute && isDestinationOnRoute) {
+            ride.overview_path = routeCoordinates;
+            ridesWithValidRoutes.push(ride);
+          }
+        }
+
+        // Update state with rides that have valid routes
+        setAvailableRides(ridesWithValidRoutes);
+
+        // rest of the code...
+      } else {
+        console.error("Failed to fetch available rides");
+        // Handle error
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error
+    }
   };
 
   const clearRoute = () => {
-    // Function to clear the route
-    // ...
+    setDirectionResponse(null);
+    setDistance("");
+    setDuration("");
+    sourceRef.current.value = "";
+    destinationRef.current.value = "";
   };
 
   return (
-    <div className="relative flex items-center flex-col h-screen w-screen">
-      <div className="absolute inset-0">
+    <div className="grid grid-cols-2 h-[100vh]">
+      <div className="h-full white">
+        <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
+          Search Ride
+        </h1>
+        <div className="w-4/5 mx-auto flex flex-col space-y-4 my-8">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex-grow">
+              <Autocomplete
+                apiKey={import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}
+              >
+                <input
+                  type="text"
+                  placeholder="source"
+                  ref={sourceRef}
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+                />
+              </Autocomplete>
+            </div>
+            <div className="flex-grow">
+              <Autocomplete
+                apiKey={import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}
+              >
+                <input
+                  type="text"
+                  placeholder="Destination"
+                  ref={destinationRef}
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+                />
+              </Autocomplete>
+            </div>
+          </div>
+
+          <input
+            type="datetime-local"
+            placeholder="Date and time"
+            ref={dateTimeRef}
+            className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+          />
+
+          <div className="flex justify-center">
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+              onClick={serachRide}
+            >
+              Search Ride
+            </button>
+          </div>
+        </div>
+        <div className="h-full bg-gray-200 overflow-auto">
+          <div className="p-8">
+            {availableRides.length > 0 ? (
+              <div>
+                <h2 className="text-2xl font-bold mb-4">Available Rides:</h2>
+                <ul>
+                  {availableRides.map((ride, index) => (
+                    <li
+                      key={index}
+                      className="bg-white rounded-md shadow-md p-4 mb-4 cursor-pointer"
+                    >
+                      <div className="font-bold">source: {ride.source}</div>
+                      <div className="font-bold">
+                        Destination: {ride.destination}
+                      </div>
+                      <div className="font-bold">Date: {ride.date}</div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div className="text-center">No available rides found.</div>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="border border-gray-400 h-full">
         <GoogleMap
           center={center}
           zoom={15}
@@ -70,303 +220,24 @@ const FindRide = () => {
           }}
           onLoad={(loaded) => setMap(loaded)}
         >
-          <Marker position={center} />
-          {directionsResponse && (
-            <DirectionsRenderer directions={directionsResponse} />
-          )}
+          {directionsResponse &&
+            directionsResponse.map((response, index) => (
+              <DirectionsRenderer
+                key={index}
+                directions={{ ...response }}
+                options={{
+                  polylineOptions: {
+                    strokeColor: "blue",
+                    strokeOpacity: index === selectedRouteIndex ? 1 : 0.5,
+                    strokeWeight: index === selectedRouteIndex ? 8 : 4,
+                  },
+                }}
+              />
+            ))}
         </GoogleMap>
-      </div>
-      <div className="z-10">
-        <Autocomplete>
-          <input
-            type="text"
-            placeholder="Origin"
-            ref={originRef}
-            className="border"
-          />
-        </Autocomplete>
-
-        <Autocomplete>
-          <input
-            type="text"
-            placeholder="Destination"
-            ref={destinationRef}
-            className="border"
-          />
-        </Autocomplete>
-
-        <input
-          type="datetime-local"
-          placeholder="Date and time"
-          ref={dateTimeRef}
-          className="border"
-        />
-
-        <button
-          className="bg-gray-300 p-2 rounded-full"
-          onClick={() => {
-            map.panTo(center);
-          }}
-        >
-          Add Icon
-        </button>
-        <button className="bg-gray-300 p-2 rounded-full" onClick={serachRide}>
-          Search Ride
-        </button>
-        <button className="bg-gray-300 p-2 rounded-full" onClick={clearRoute}>
-          Clear Search
-        </button>
-      </div>
-
-      {/* Display list of rides */}
-      <div className="mt-5">
-        <h2 className="text-xl font-bold">Available Rides:</h2>
-        <ul>
-          {rides.map((ride) => (
-            <li key={ride.id}>
-              <p>Origin: {ride.origin}</p>
-              <p>Destination: {ride.destination}</p>
-              <p>Source on Route: {ride.sourceOnRoute ? "Yes" : "No"}</p>
-              <p>
-                Destination on Route: {ride.destinationOnRoute ? "Yes" : "No"}
-              </p>
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );
 };
 
 export default FindRide;
-
-// import React, { useRef, useState } from "react";
-// import {
-//   useJsApiLoader,
-//   GoogleMap,
-//   Marker,
-//   Autocomplete,
-//   DirectionsRenderer,
-// } from "@react-google-maps/api";
-
-// const FindRide = () => {
-//   const { isLoaded } = useJsApiLoader({
-//     googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
-//     libraries: ["places", "geometry"],
-//   });
-//   const [directionsResponse, setDirectionResponse] = useState(null);
-//   const [map, setMap] = useState(null);
-//   const [distance, setDistance] = useState("");
-//   const [duration, setDuration] = useState("");
-//   const originRef = useRef();
-//   const checkRef = useRef();
-//   const destinationRef = useRef();
-
-//   if (!isLoaded) {
-//     return <div>Loading...</div>;
-//   }
-
-//   const center = { lat: 48.8584, lng: 2.2945 };
-//   const handleCheckLocation = () => {
-//     const location = checkRef.current.value;
-//     if (!location) return;
-
-//     const geocoder = new google.maps.Geocoder();
-//     geocoder.geocode({ address: location }, (results, status) => {
-//       if (status === "OK" && results[0]) {
-//         const { lat, lng } = results[0].geometry.location;
-
-//         if (!directionsResponse) {
-//           console.log("Please calculate route first.");
-//           return;
-//         }
-
-//         const routePath = directionsResponse.routes[0].overview_path;
-//         const isLocationOnRoute = routePath.some((point) => {
-//           const distance =
-//             google.maps.geometry.spherical.computeDistanceBetween(
-//               point,
-//               new google.maps.LatLng(lat(), lng())
-//             );
-//           return distance < 10000; // Define your threshold distance here
-//         });
-
-//         if (isLocationOnRoute) {
-//           console.log("Location is on the route.");
-
-//           // Calculate time to reach the specified location
-//           const distanceToLocation =
-//             google.maps.geometry.spherical.computeDistanceBetween(
-//               new google.maps.LatLng("25.3176", "82.9739"),
-//               new google.maps.LatLng(lat(), lng())
-//             );
-//           console.log(distanceToLocation);
-//           // Assuming average speed in meters per second
-//           const averageSpeed = 10; // meters per second
-//           const timeToReachInSeconds = distanceToLocation / averageSpeed;
-
-//           // Convert time to milliseconds and add to current time
-//           const currentTime = new Date().getTime();
-//           const arrivalTime = new Date(
-//             currentTime + timeToReachInSeconds * 1000
-//           );
-//           console.log("Estimated arrival time:", arrivalTime);
-//         } else {
-//           console.log("Location is not on the route.");
-//         }
-//       } else {
-//         console.log(
-//           "Geocode was not successful for the following reason:",
-//           status
-//         );
-//       }
-//     });
-//   };
-
-//   const serachRide = async () => {
-//     if (originRef.current.value === "" || destinationRef.current.value === "") {
-//       return;
-//     }
-
-//     const origin = originRef.current.value;
-//     const destination = destinationRef.current.value;
-
-//     const directionService = new google.maps.DirectionsService();
-//     const results = await directionService.route({
-//       origin,
-//       destination,
-//       travelMode: google.maps.TravelMode.DRIVING,
-//       provideRouteAlternatives: true, // Request multiple routes
-//     });
-
-//     const { routes } = results;
-//     if (routes && routes.length > 0) {
-//       let shortestRouteIndex = 0;
-//       let shortestRouteDuration = routes[0].legs[0].duration.value;
-
-//       // Find the route with the shortest duration
-//       routes.forEach((route, index) => {
-//         const routeDuration = route.legs[0].duration.value;
-//         if (routeDuration < shortestRouteDuration) {
-//           shortestRouteIndex = index;
-//           shortestRouteDuration = routeDuration;
-//         }
-//       });
-
-//       // Store the most optimum route in an array
-//       const optimumRoute = routes[shortestRouteIndex];
-//       console.log("The most optimum route is ", optimumRoute);
-
-//       // Extract place names from the most optimum route
-//       const placeNames = optimumRoute.legs.map((leg) => leg.end_address);
-//       console.log("Places along the most optimum route:", placeNames);
-
-//       // Draw all routes on the map
-//       routes.forEach((route, index) => {
-//         new google.maps.Polyline({
-//           path: route.overview_path,
-//           strokeColor: index === shortestRouteIndex ? "#FF0000" : "#0000FF", // Different color for the most optimum route
-//           strokeOpacity: 0.8,
-//           strokeWeight: 5,
-//           map: map,
-//         });
-//       });
-
-//       // Set distance and duration for the most optimum route
-//       const { legs } = optimumRoute;
-//       if (legs && legs.length > 0) {
-//         const { distance, duration } = legs[0];
-//         setDistance(distance.text);
-//         setDuration(duration.text);
-//       }
-//     }
-
-//     setDirectionResponse(results);
-//   };
-
-//   const clearRoute = () => {
-//     setDirectionResponse(null);
-//     setDistance("");
-//     setDuration("");
-//     originRef.current.value = "";
-//     destinationRef.current.value = "";
-//   };
-
-//   return (
-//     <div className="relative flex items-center flex-col h-screen w-screen">
-//       <div className="absolute inset-0">
-//         <GoogleMap
-//           center={center}
-//           zoom={15}
-//           mapContainerStyle={{ width: "100%", height: "100%" }}
-//           options={{
-//             zoomControl: false,
-//             streetViewControl: false,
-//             mapTypeControl: false,
-//             fullscreenControl: false,
-//           }}
-//           onLoad={(loaded) => setMap(loaded)}
-//         >
-//           <Marker position={center} />
-//           {directionsResponse && (
-//             <DirectionsRenderer directions={directionsResponse} />
-//           )}
-//         </GoogleMap>
-//       </div>
-//       <div className="z-10">
-//         <Autocomplete>
-//           <input
-//             type="text"
-//             placeholder="Origin"
-//             ref={originRef}
-//             className="border"
-//           />
-//         </Autocomplete>
-
-//         <Autocomplete>
-//           <input
-//             type="text"
-//             placeholder="Destination"
-//             ref={destinationRef}
-//             className="border"
-//           />
-//         </Autocomplete>
-
-//         <button
-//           className="bg-gray-300 p-2 rounded-full"
-//           onClick={() => {
-//             map.panTo(center);
-//           }}
-//         >
-//           Add Icon
-//         </button>
-//         <button
-//           className="bg-gray-300 p-2 rounded-full"
-//           onClick={serachRide}
-//         >
-//           Search Ride
-//         </button>
-//         <button className="bg-gray-300 p-2 rounded-full" onClick={clearRoute}>
-//           Clear Search
-//         </button>
-//         <Autocomplete>
-//           <input
-//             type="text"
-//             placeholder="Enter Location"
-//             ref={checkRef}
-//             className="border"
-//           />
-//         </Autocomplete>
-
-//         <button
-//           className="bg-blue-500 text-white p-2 rounded-md"
-//           onClick={handleCheckLocation}
-//         >
-//           Check Location
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default FindRide;
