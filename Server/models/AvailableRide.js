@@ -17,11 +17,28 @@ const AvailableRideSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  seats: {
+  totalSeats: {
+    type: Number,
+    required: true,
+  },
+  availableSeats: {
     type: Number,
     required: true,
   },
   overview_polyline: {
+    type: String,
+    required: true,
+  },
+  driverId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // Reference to the User model
+    required: true,
+  },
+  unitCost: {
+    type: Number,
+    required: true,
+  },
+  vehicleType: {
     type: String,
     required: true,
   },
