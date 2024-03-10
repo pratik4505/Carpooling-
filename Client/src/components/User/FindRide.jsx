@@ -19,10 +19,13 @@ const FindRide = () => {
   const [map, setMap] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+  const [selectedRoute, setSelectedRoute] = useState(null);
   const [availableRides, setAvailableRides] = useState([]);
   const sourceRef = useRef();
   const destinationRef = useRef();
-  const dateTimeRef = useRef();
+  const dateRef = useRef();
+  const timeFromRef = useRef();
+  const timeToRef = useRef();
 
   if (!isLoaded) {
     return <div>Loading...</div>;
@@ -31,20 +34,20 @@ const FindRide = () => {
   const center = { lat: 48.8584, lng: 2.2945 };
   const displayRoute = (ride) => {
     console.log("The selected ride is ", ride);
-    const { overview_path } = ride;
-
+    // const { overview_path } = ride;
+    setSelectedRoute(ride.overview_path);
     // Create a new Polyline instance
 
-    const routePolyline = new window.google.maps.Polyline({
-      path: overview_path,
-      geodesic: true,
-      strokeColor: "#FF0000", // Color of the polyline
-      strokeOpacity: 1.0,
-      strokeWeight: 3, // Thickness of the polyline
-    });
+    // const routePolyline = new window.google.maps.Polyline({
+    //   path: overview_path,
+    //   geodesic: true,
+    //   strokeColor: "#FF0000", // Color of the polyline
+    //   strokeOpacity: 1.0,
+    //   strokeWeight: 3, // Thickness of the polyline
+    // });
 
-    // Set the polyline on the map
-    routePolyline.setMap(map);
+    // // Set the polyline on the map
+    // routePolyline.setMap(map);
   };
   const serachRide = async () => {
     if (sourceRef.current.value === "" || destinationRef.current.value === "") {
@@ -53,11 +56,15 @@ const FindRide = () => {
 
     const source = sourceRef.current.value;
     const destination = destinationRef.current.value;
-    const dateTime = new Date(dateTimeRef.current.value);
-    const date = dateTime.toISOString().slice(0, 10);
+    const date = dateRef.current.value;
+    const timeFrom = timeFromRef.current.value;
+    const timeTo = timeToRef.current.value;
 
     try {
       // Send request to backend
+      console.log("The date is equal to ", date);
+      console.log("The time from is equal to ", timeFrom);
+      console.log("The time to is equal to ", timeTo);
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_BASE_URL}/rides/getAvaliableRides`,
         { source, destination, date }
@@ -173,12 +180,26 @@ const FindRide = () => {
             </div>
           </div>
 
-          <input
-            type="datetime-local"
-            placeholder="Date and time"
-            ref={dateTimeRef}
-            className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-          />
+          <div className="grid grid-cols-3 gap-4">
+            <input
+              type="date"
+              placeholder="Date"
+              ref={dateRef}
+              className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+            />
+            <input
+              type="time"
+              placeholder="Time From"
+              ref={timeFromRef}
+              className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+            />
+            <input
+              type="time"
+              placeholder="Time To"
+              ref={timeToRef}
+              className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+            />
+          </div>
 
           <div className="flex justify-center">
             <button
@@ -189,7 +210,7 @@ const FindRide = () => {
             </button>
           </div>
         </div>
-        <div className="h-full bg-gray-200 overflow-auto">
+        <div className="bg-gray-200 overflow-auto">
           <div className="p-8">
             {availableRides.length > 0 ? (
               <div>
@@ -199,6 +220,7 @@ const FindRide = () => {
                     <li
                       key={index}
                       className="bg-white rounded-md shadow-md p-4 mb-4 cursor-pointer"
+                      onClick={() => displayRoute(ride)} // Add onClick handler
                     >
                       <div className="font-bold">source: {ride.source}</div>
                       <div className="font-bold">
@@ -218,7 +240,7 @@ const FindRide = () => {
       <div className="border border-gray-400 h-full">
         <GoogleMap
           //center={center}
-          center={{ lat: -36.73550441, lng: 144.25178598 }}
+          center={{ lat: 25.3176, lng: 82.9739 }}
           zoom={15}
           mapContainerStyle={{ width: "100%", height: "100%" }}
           options={{
@@ -229,16 +251,11 @@ const FindRide = () => {
           }}
           onLoad={(loaded) => setMap(loaded)}
         >
+          {/* {console.log(availableRides[0].overview_path)} */}
           <Polyline
-            path={[
-              {
-                lat: 10.16253,
-                lng: 76.64098000000001,
-              },
-              { lat: -36.73590441, lng: 144.25178198 },
-            ]}
+            path={selectedRoute}
             options={{
-              strokeColor: "#ff2343",
+              strokeColor: "#ff3563",
               strokeOpacity: "1.0",
               strokeWeight: 2,
               icons: [
@@ -250,13 +267,13 @@ const FindRide = () => {
               ],
             }}
           />
-          {directionsResponse &&
+          {/* {directionsResponse &&
             directionsResponse.map((response, index) => (
               <Polyline
                 key={index}
-                path={response.overview_path}
+                path={selectedRoute}
                 options={{
-                  strokeColor: "#ff2343",
+                  strokeColor: "#ffffff",
                   strokeOpacity: "2.0",
                   strokeWeight: 3,
                   icons: [
@@ -268,7 +285,7 @@ const FindRide = () => {
                   ],
                 }}
               />
-            ))}
+            ))} */}
         </GoogleMap>
       </div>
     </div>
