@@ -15,6 +15,7 @@ import PendingPayments from "../pages/PendingPayments";
 import Profile from "../pages/Profile";
 import RideRequests from "../pages/RideRequests";
 import Transactions from "../pages/Transactions";
+import Home from "../pages/Home";
 
 const AppRoutes = () => {
   return (
@@ -25,7 +26,8 @@ const AppRoutes = () => {
 
         {/* <Route path=/Register" element={<></>} /> */}
 
-        <Route path="/">
+        <Route path="/" element={<ProtectedRoute/>}>
+        <Route path="/home" element={<Home/>} />
           <Route path="/publishRide" element={<CreateRide />} />
           <Route path="/searchRide" element={<SearchRides />} />
           <Route path="/chats" element={<Chats />} />
