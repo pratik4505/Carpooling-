@@ -35,7 +35,7 @@ const AppRoutes = () => {
           <Route path="/driverRides" element={<DriverRides />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/pendingPayments" element={<PendingPayments />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:ownerId" element={<Profile />} />
           <Route path="/rideRequests" element={<RideRequests />} />
           <Route path="/transactions" element={<Transactions />} />
         </Route>

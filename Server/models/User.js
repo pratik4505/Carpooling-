@@ -15,10 +15,6 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  distance: {
-    type: Number,
-   
-  },
   imageUrl: String,
   rideRequests: {
     type: Map,
@@ -40,6 +36,14 @@ const userSchema = new Schema({
       destination: {
         lat: Number,
         lng: Number,
+      },
+      driverSource: {
+        type: String,
+        required: true,
+      },
+      driverDestination: {
+        type: String,
+        required: true,
       },
       seats: Number,
       distance: Number,

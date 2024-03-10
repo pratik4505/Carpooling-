@@ -35,6 +35,10 @@ const pastRideSchema = new Schema({
             description: String
         }
     },
+    overview_polyline: {
+        type: String,
+        required: true,
+      },
     otherData: {
         type: Schema.Types.Mixed 
     }

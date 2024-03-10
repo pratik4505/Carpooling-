@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 export default function CreateRide() {
   return (
     <>
-      <Navbar />
+     
       <PublishRide />
     </>
   );
