@@ -13,7 +13,7 @@ import { AuthContext } from "../../context/ContextProvider";
 export default function PayRides() {
   const [rides, setRides] = useState(null);
   const { userData } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [stripePromise, setStripePromise] = useState(null);
   const [clientSecret, setClientSecret] = useState("");

@@ -49,3 +49,13 @@ export const getPaymentIntent = async (data) => {
     return handleApiError(error);
   }
 };
+
+export const getBookedRides = async () => {
+    try {
+      const res = await API.get("/rides/getBookedRides");
+      if (res.status === 200) return { error: null, data: res.data };
+      else return { error: res, data: null };
+    } catch (error) {
+      return handleApiError(error);
+    }
+  };
