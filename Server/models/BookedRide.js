@@ -12,6 +12,14 @@ const bookedRideSchema = new Schema({
     ref: "User",
     required: true,
   },
+  passengerName: {
+    type: String,
+    required: true,
+  },
+  passengerImageUrl: {
+    type: String,
+    required: true,
+  },
   seats: {
     type: Number,
     required: true,
@@ -47,8 +55,13 @@ const bookedRideSchema = new Schema({
   },
   verificationCode: {
     type: Number,
+    required: true,
   },
   codeVerified: {
+    type: Boolean,
+    default: false,
+  },
+  hasRated: {
     type: Boolean,
     default: false,
   },
@@ -63,7 +76,7 @@ const bookedRideSchema = new Schema({
   overview_polyline: {
     type: String,
     required: true,
-  }
+  },
 });
 
 const BookedRide = mongoose.model("BookedRide", bookedRideSchema);

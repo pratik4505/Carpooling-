@@ -4,6 +4,7 @@ const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
 const User = require("../models/User");
 const AvailableRide = require("../models/AvailableRide");
 const BookedRide = require("../models/BookedRide");
+const PastRide = require("../models/PastRide");
 
 function generateUniqueCode() {
   // Get current timestamp in milliseconds
@@ -126,8 +127,24 @@ const paymentWebhook = async (request, response) => {
           transactionId: transactionId,
           verificationCode:generateUniqueCode(),
           vehicleType: availableRide.vehicleType,
-          overview_polyline: availableRide.overview_polyline
+          overview_polyline: availableRide.overview_polyline,
+          passengerName:user.name,
+          passengerImageUrl:user.imageUrl,
+
         });
+
+        //ALSO MAKE PASTRIDE SCHEMA FOR DRIVER 
+        const pastRide=new PastRide({
+          rideId: value.rideId,
+          userId:customData.paidBy,
+          source:value.pickUpAddress,
+          destination:value.destinationAddress,
+          user:'passenger',
+          rating:{},
+          overview_polyline:availableRide.overview_polyline,
+        });
+
+        await pastRide.save();
 
         console.log("Transaction stored");
       } catch (error) {

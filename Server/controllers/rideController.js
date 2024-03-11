@@ -1,5 +1,7 @@
 const AvailableRide = require("../models/AvailableRide");
 const User = require("../models/User");
+const BookedRide = require("../models/BookedRide");
+
 const postRide = async (req, res) => {
   // Extract data from request body
   try {
@@ -195,10 +197,30 @@ const postDeclinePayment = async () => {
   }
 };
 
+const getBookedRides = async (req, res) => {
+  try {
+    // Retrieve userId from request
+    const userId = req.userId;
+
+    // Find all booked rides where passengerId is equal to userId
+    const bookedRides = await BookedRide.find({ passengerId: userId });
+
+    // Send the booked rides as the response
+    res.json(bookedRides);
+  } catch (error) {
+    // If an error occurs, send an error response
+    console.error("Error fetching booked rides:", error);
+    res.status(500).json({ error: "Unable to fetch booked rides" });
+  }
+};
+
+
+
 module.exports = {
   postRide,
   getRequests,
   postRequest,
   getAcceptedRides,
   postDeclinePayment,
+  getBookedRides
 };
