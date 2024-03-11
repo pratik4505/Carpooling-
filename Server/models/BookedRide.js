@@ -12,7 +12,7 @@ const bookedRideSchema = new Schema({
     ref: "User",
     required: true,
   },
-  bookedSeats: {
+  seats: {
     type: Number,
     required: true,
   },
@@ -23,6 +23,14 @@ const bookedRideSchema = new Schema({
   destination: {
     lat: Number,
     lng: Number,
+  },
+  pickUpAddress: {
+    type: String,
+    required: true,
+  },
+  destinationAddress: {
+    type: String,
+    required: true,
   },
   pickUpDate: Date,
   pickUpTime: String,
@@ -48,6 +56,14 @@ const bookedRideSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  vehicleType: {
+    type: String,
+    required: true,
+  },
+  overview_polyline: {
+    type: String,
+    required: true,
+  }
 });
 
 const BookedRide = mongoose.model("BookedRide", bookedRideSchema);

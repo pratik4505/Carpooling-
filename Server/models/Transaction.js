@@ -10,10 +10,6 @@ const transactionSchema = new Schema({
     type: Number,
     required: true,
   },
-  clientSecret: {
-    type: String,
-    required: true,
-  },
   charge: Number,
   paidBy: {
     type: Schema.Types.ObjectId,
