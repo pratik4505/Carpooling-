@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext} from "react";
 import { getRequests, postRequest } from "../../Api/rideApi";
 import { Link } from "react-router-dom";
 
 import GoogleMapUtil from "../GoogleMapUtil";
+import { AuthContext } from "../../context/ContextProvider";
 
 export default function Requests() {
   const [requests, setRequests] = useState(null);
   const [selectedRequests, setSelectedRequests] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { socket, userData } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -21,7 +23,7 @@ export default function Requests() {
         console.error("Error fetching requests:", error);
       }
     };
-    //fetchRequests();
+    fetchRequests();
   }, []);
 
   const requestHandler = async (action, key) => {
@@ -30,6 +32,11 @@ export default function Requests() {
       setLoading(true);
       const res = await postRequest(action, key);
       if (!res.error) {
+        socket.emit("handleRequest", {
+          action,
+          sendTo: requests[key].requesterId,
+          senderName: userData.name,
+        });
         const updatedRequests = { ...requests };
         delete updatedRequests[key];
         setRequests(updatedRequests);
@@ -73,14 +80,7 @@ export default function Requests() {
                   {value.driverDestination}
                 </span>
               </p>
-              <p className="text-gray-600">
-                <span className="font-semibold">Pick Up:</span>{" "}
-                {value.pickUp.lat}, {value.pickUp.lng}
-              </p>
-              <p className="text-gray-600">
-                <span className="font-semibold">Destination:</span>{" "}
-                {value.destination.lat}, {value.destination.lng}
-              </p>
+             
               <p className="text-gray-600">
                 <span className="font-semibold">Seats Booked:</span>{" "}
                 {value.seats}
@@ -117,22 +117,24 @@ export default function Requests() {
           ))}
       </div>
       <div className="border border-gray-400 h-full">
-        {selectedRequests&&<GoogleMapUtil
-          coordinates={[
-            {
-              lat: requests[selectedRequests].pickUp.lat,
-              lng: requests[selectedRequests].pickUp.lng,
-            },
-            {
-              lat: requests[selectedRequests].destination.lat,
-              lng: requests[selectedRequests].destination.lng,
-            },
-            // Add more coordinates as needed
-          ]}
-          polyline={
-            "a}qzCswtrNH[FaBDa@O?Q^]dAQv@O`B?jAC~CAjGCtIETGvI?Rm@Ay@C{@GiDs@IALL\\`@d@z@^bA`A`DdAvDhBrG~BvHj@`Bx@|@NL|Af@tAd@jJ~ClHhCdInCdA`@hAZpBd@dAPpEn@|Dn@nEp@`Dj@`CZtB^p@JVHlGrCnCnAlCnA|Az@j@V|Ah@rCpAxG`D~DjBlCjAjEtBzExCdEhB`ClA\\LBAJ?JDFH@L?@hBz@tCrA|@VpBXdIp@zDRpCT@A?CHILELBHHDNANGHJbEHfEFbBR`Ah@vA`ArBt@vARh@@?@?@?F@HJ?PxCnGDHB?F?HDDDBNERVz@x@rBtBpFt@lBxDzIlAtClBjFhBnEvBnFB?H@HJ@B?HAFABLf@`EtK^dANJXl@bBnFvA`Fj@bBfC~Hv@lBvArCpCnFR`@R@j@DhBLtE`@rDZdAB`@Ab@IZOVY`@oAv@qC`@eBACAEBG@C@AFs@FgB^wORyHH]p@gC}B[GCNuM"
-          }
-        />}
+        {selectedRequests && (
+          <GoogleMapUtil
+            coordinates={[
+              {
+                lat: requests[selectedRequests].pickUp.lat,
+                lng: requests[selectedRequests].pickUp.lng,
+              },
+              {
+                lat: requests[selectedRequests].destination.lat,
+                lng: requests[selectedRequests].destination.lng,
+              },
+              // Add more coordinates as needed
+            ]}
+            polyline={
+              "a}qzCswtrNH[FaBDa@O?Q^]dAQv@O`B?jAC~CAjGCtIETGvI?Rm@Ay@C{@GiDs@IALL\\`@d@z@^bA`A`DdAvDhBrG~BvHj@`Bx@|@NL|Af@tAd@jJ~ClHhCdInCdA`@hAZpBd@dAPpEn@|Dn@nEp@`Dj@`CZtB^p@JVHlGrCnCnAlCnA|Az@j@V|Ah@rCpAxG`D~DjBlCjAjEtBzExCdEhB`ClA\\LBAJ?JDFH@L?@hBz@tCrA|@VpBXdIp@zDRpCT@A?CHILELBHHDNANGHJbEHfEFbBR`Ah@vA`ArBt@vARh@@?@?@?F@HJ?PxCnGDHB?F?HDDDBNERVz@x@rBtBpFt@lBxDzIlAtClBjFhBnEvBnFB?H@HJ@B?HAFABLf@`EtK^dANJXl@bBnFvA`Fj@bBfC~Hv@lBvArCpCnFR`@R@j@DhBLtE`@rDZdAB`@Ab@IZOVY`@oAv@qC`@eBACAEBG@C@AFs@FgB^wORyHH]p@gC}B[GCNuM"
+            }
+          />
+        )}
       </div>
     </div>
   );

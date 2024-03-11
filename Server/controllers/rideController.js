@@ -56,34 +56,35 @@ const getRequests = async (req, res) => {
   }
 };
 
-
-const postRequest=async (req, res) => {
+const postRequest = async (req, res) => {
   try {
     const userId = req.userId; // Assuming userId is extracted from authentication middleware
 
     // Check if action and key are provided in the request body
     const { action, key } = req.body;
     if (!action || !key) {
-      return res.status(400).json({ error: 'Action and key must be provided in the request body' });
+      return res
+        .status(400)
+        .json({ error: "Action and key must be provided in the request body" });
     }
 
     // Find the user
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Access the rideRequest map for the given key
-    const request = user.rideRequests.get(key);
+    const request = user.rideRequests?.get(key);
     if (!request) {
-      return res.status(404).json({ error: 'Request not found' });
+      return res.status(404).json({ error: "Request not found" });
     }
 
     // Delete the key-value pair from rideRequests map
     user.rideRequests.delete(key);
 
     // If action is 'accept', put the request in pendingPayments map of requesterId
-    if (action === 'accept') {
+    if (action === "accept") {
       const {
         requesterId,
         message,
@@ -95,12 +96,14 @@ const postRequest=async (req, res) => {
         unitCost,
         pickUpDate,
         pickUpTime,
+        pickUpAddress,
+        destinationAddress,
       } = request;
       const requester = await User.findById(requesterId);
       if (!requester) {
-        return res.status(404).json({ error: 'Requester not found' });
+        return res.status(404).json({ error: "Requester not found" });
       }
-    
+
       const requestData = {
         rideId,
         pickUp,
@@ -110,20 +113,92 @@ const postRequest=async (req, res) => {
         unitCost,
         pickUpDate,
         pickUpTime,
+        pickUpAddress,
+        destinationAddress,
       };
-    
+
       requester.pendingPayments.set(key, requestData);
       await requester.save();
     }
-    
 
     // Save the changes to the user
     await user.save();
 
-    res.status(200).json({ message: 'Request processed successfully' });
+    res.status(200).json({ message: "Request processed successfully" });
   } catch (error) {
-    console.error('Error processing request:', error);
+    console.error("Error processing request:", error);
     return handleApiError(error, res);
   }
-} 
-module.exports = { postRide, getRequests ,postRequest };
+};
+
+const getAcceptedRides = async (req, res) => {
+  const userId = req.userId;
+
+  if (!userId) {
+    // If userId is not provided, send a 400 Bad Request response
+    return res.status(400).json({ error: "User ID is required" });
+  }
+
+  try {
+    // Find the user by userId
+    const user = await User.findById(userId);
+
+    if (!user) {
+      // If user is not found, send a 404 Not Found response
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Extract rideRequests map from the user
+    const pendingPayments = user.pendingPayments;
+
+    // Send rideRequests map as the response
+    return res.status(200).json(pendingPayments);
+  } catch (error) {
+    // If an error occurs during database operation, send a 500 Internal Server Error response
+    console.error("Error fetching pending Payments:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const postDeclinePayment = async () => {
+  try {
+    const userId = req.userId; // Assuming userId is extracted from authentication middleware
+
+    // Check if action and key are provided in the request body
+    const {  key } = req.body;
+    if ( !key) {
+      return res
+        .status(400)
+        .json({ error: " key must be provided in the request body" });
+    }
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Access the rideRequest map for the given key
+    const Payments = user.pendingPayments?.get(key);
+    if (!Payments) {
+      return res.status(404).json({ error: " Payment Request not found" });
+    }
+
+    // Delete the key-value pair from rideRequests map
+    user.pendingPayments.delete(key);
+    await user.save();
+
+    res.status(200).json({ message: "Payment request deleted successfully" });
+  } catch (error) {
+    console.error("Error processing request:", error);
+    return handleApiError(error, res);
+  }
+};
+
+module.exports = {
+  postRide,
+  getRequests,
+  postRequest,
+  getAcceptedRides,
+  postDeclinePayment,
+};

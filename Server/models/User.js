@@ -37,6 +37,14 @@ const userSchema = new Schema({
         lat: Number,
         lng: Number,
       },
+      pickUpAddress: {
+        type: String,
+        required: true,
+      },
+      destinationAddress: {
+        type: String,
+        required: true,
+      },
       driverSource: {
         type: String,
         required: true,
@@ -67,6 +75,14 @@ const userSchema = new Schema({
           destination: {
             lat: Number,
             lng: Number,
+          },
+          pickUpAddress: {
+            type: String,
+            required: true,
+          },
+          destinationAddress: {
+            type: String,
+            required: true,
           },
           seats: Number,
           distance: Number,
