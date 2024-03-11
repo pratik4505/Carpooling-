@@ -17,6 +17,7 @@ import RideRequests from "../pages/RideRequests";
 import Transactions from "../pages/Transactions";
 import Home from "../pages/Home";
 import Login from "../components/Login/Login";
+import Register from "../components/Login/Register";
 
 const AppRoutes = () => {
   return (
@@ -40,6 +41,7 @@ const AppRoutes = () => {
           <Route path="/rideRequests" element={<RideRequests />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/login" element = {<Login/>}/>
+          <Route path="/Register" element = {<Register/>}/>
         </Route>
       </Routes>
     </Suspense>
