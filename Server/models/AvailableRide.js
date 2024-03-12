@@ -42,6 +42,11 @@ const AvailableRideSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  pastRideId: { //Make pastRide schema for driver when creating this schema
+    type: Schema.Types.ObjectId,
+    ref: "PastRide",
+    required: true,
+  }
 });
 
 const AvailableRide = mongoose.model("AvailableRide", AvailableRideSchema);

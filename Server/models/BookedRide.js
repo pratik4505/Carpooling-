@@ -7,6 +7,17 @@ const bookedRideSchema = new Schema({
     ref: "Ride",
     required: true,
   },
+  pastRideId: {
+    type: Schema.Types.ObjectId,
+    ref: "PastRide",
+    required: true,
+  },
+  driverPastId: {
+    type: Schema.Types.ObjectId,
+    ref: "PastRide",
+    required: true,
+  },
+  
   passengerId: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -17,6 +28,19 @@ const bookedRideSchema = new Schema({
     required: true,
   },
   passengerImageUrl: {
+    type: String,
+    required: true,
+  },
+  driverId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  driverName: {
+    type: String,
+    required: true,
+  },
+  driverImageUrl: {
     type: String,
     required: true,
   },
@@ -61,10 +85,6 @@ const bookedRideSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  hasRated: {
-    type: Boolean,
-    default: false,
-  },
   rideCancelled: {
     type: Boolean,
     default: false,
@@ -78,6 +98,10 @@ const bookedRideSchema = new Schema({
     required: true,
   },
 });
+
+bookedRideSchema.index({rideId:1,passengerId:1 });
+bookedRideSchema.index({rideId:1 });
+
 
 const BookedRide = mongoose.model("BookedRide", bookedRideSchema);
 

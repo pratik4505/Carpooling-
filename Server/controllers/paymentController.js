@@ -96,6 +96,9 @@ const paymentWebhook = async (request, response) => {
         
         // Save the updated document
         await availableRide.save();
+
+        const driver = await User.findById(availableRide.driverId);
+
         
         // Store transaction data in Transaction schema
         const transaction = new Transaction({
@@ -111,6 +114,18 @@ const paymentWebhook = async (request, response) => {
         await transaction.save();
 
         const transactionId = transaction._id;
+
+        const pastRide=new PastRide({
+          rideId: value.rideId,
+          userId:customData.paidBy,
+          source:value.pickUpAddress,
+          destination:value.destinationAddress,
+          user:'passenger',
+          rating:{},
+          overview_polyline:availableRide.overview_polyline,
+        });
+
+        await pastRide.save();
 
         const bookedRide = new BookedRide({
           rideId: value.rideId,
@@ -130,21 +145,16 @@ const paymentWebhook = async (request, response) => {
           overview_polyline: availableRide.overview_polyline,
           passengerName:user.name,
           passengerImageUrl:user.imageUrl,
-
+          driverId:availableRide.driverId,
+          driverName:driver.name,
+          driverImageUrl:driver.imageUrl,
+          pastRideId:pastRide._id,
+          driverPastId:availableRide.pastRideId
         });
+        await bookedRide.save();
 
         //ALSO MAKE PASTRIDE SCHEMA FOR DRIVER 
-        const pastRide=new PastRide({
-          rideId: value.rideId,
-          userId:customData.paidBy,
-          source:value.pickUpAddress,
-          destination:value.destinationAddress,
-          user:'passenger',
-          rating:{},
-          overview_polyline:availableRide.overview_polyline,
-        });
-
-        await pastRide.save();
+        
 
         console.log("Transaction stored");
       } catch (error) {

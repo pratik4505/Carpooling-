@@ -167,8 +167,8 @@ const postDeclinePayment = async () => {
     const userId = req.userId; // Assuming userId is extracted from authentication middleware
 
     // Check if action and key are provided in the request body
-    const {  key } = req.body;
-    if ( !key) {
+    const { key } = req.body;
+    if (!key) {
       return res
         .status(400)
         .json({ error: " key must be provided in the request body" });
@@ -214,7 +214,58 @@ const getBookedRides = async (req, res) => {
   }
 };
 
+const getCoRiders = async (req, res) => {
+  try {
+    const userId = req.userId; // Assuming userId is available in req.userId
+    const rideId = req.params.rideId;
 
+    // Find all documents from BookedRide schema where rideId matches and passengerId is not equal to userId
+    const coRiders = await BookedRide.find({
+      rideId: rideId,
+      passengerId: { $ne: userId },
+    }).select("passengerId passengerName passengerImageUrl pastRideId");
+
+    // Send the co-riders data as response
+    res.status(200).json(coRiders);
+  } catch (error) {
+    console.error("Error fetching co-riders:", error);
+    res.status(500).json({ error: "Unable to fetch co-riders" });
+  }
+};
+
+const postRatings=async (req, res) => {
+  try {
+    // Assuming req.userId contains the user's ID
+
+    // Iterate over each key-value pair in the map
+    for (const [pastRideId, ratingValue] of Object.entries(req.body)) {
+      // Find the document of PastRide schema for the given pastRideId
+      const pastRide = await PastRide.findById(pastRideId);
+
+      // Check if the pastRide exists
+      if (!pastRide) {
+        return res.status(404).json({ success: false, message: `PastRide with ID ${pastRideId} not found` });
+      }
+
+      // Initialize the ratings map if it's undefined
+      if (!pastRide.ratings) {
+        pastRide.ratings = new Map();
+      }
+
+      // Update the ratings map for the current user
+      pastRide.ratings.set(req.userId, ratingValue);
+
+      // Save the updated document
+      await pastRide.save();
+    }
+
+    // Respond with success message
+    res.status(200).json({ success: true, message: 'Ratings updated successfully' });
+  } catch (error) {
+    console.error('Error updating ratings:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+}
 
 module.exports = {
   postRide,
@@ -222,5 +273,7 @@ module.exports = {
   postRequest,
   getAcceptedRides,
   postDeclinePayment,
-  getBookedRides
+  getBookedRides,
+  getCoRiders,
+  postRatings
 };
