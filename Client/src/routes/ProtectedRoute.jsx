@@ -11,7 +11,7 @@ const ProtectedRoute = () => {
   return accessToken ? (
     <div className="w-full h-full">
       <Navbar />
-      <div className="mt-[6%] h-[94%]">
+      <div>
         <Outlet />
       </div>
     </div>

@@ -3,9 +3,20 @@ const User = require("../models/User");
 const postRide = async (req, res) => {
   // Extract data from request body
   try {
-    console.log("I come in postRide backend");
-    const { source, destination, date, time, seats, overview_polyline } =
-      req.body;
+    const {
+      source,
+      destination,
+      date,
+      time,
+      availableSeats,
+      unitCost,
+      vehicleType,
+      driverId,
+      totalSeats,
+      overview_polyline,
+      totalTime,
+      speed,
+    } = req.body;
 
     // Create a new AvailableRide document
     const newAvailableRide = new AvailableRide({
@@ -13,12 +24,19 @@ const postRide = async (req, res) => {
       destination,
       date,
       time,
-      seats,
       overview_polyline,
+      availableSeats,
+      unitCost,
+      vehicleType,
+      driverId,
+      totalSeats,
+      totalTime,
+      speed,
     });
 
     // Save the new AvailableRide to the database
     await newAvailableRide.save();
+    console.log("I am here");
 
     res.status(201).json(newAvailableRide); // Status code 201: Created
   } catch (err) {
@@ -29,24 +47,19 @@ const postRide = async (req, res) => {
 
 const getRequests = async (req, res) => {
   const userId = req.userId;
-
   if (!userId) {
     // If userId is not provided, send a 400 Bad Request response
     return res.status(400).json({ error: "User ID is required" });
   }
-
   try {
     // Find the user by userId
     const user = await User.findById(userId);
-
     if (!user) {
       // If user is not found, send a 404 Not Found response
       return res.status(404).json({ error: "User not found" });
     }
-
     // Extract rideRequests map from the user
     const rideRequests = user.rideRequests;
-
     // Send rideRequests map as the response
     return res.status(200).json(rideRequests);
   } catch (error) {
@@ -56,34 +69,30 @@ const getRequests = async (req, res) => {
   }
 };
 
-
-const postRequest=async (req, res) => {
+const postRequest = async (req, res) => {
   try {
     const userId = req.userId; // Assuming userId is extracted from authentication middleware
-
     // Check if action and key are provided in the request body
     const { action, key } = req.body;
     if (!action || !key) {
-      return res.status(400).json({ error: 'Action and key must be provided in the request body' });
+      return res
+        .status(400)
+        .json({ error: "Action and key must be provided in the request body" });
     }
-
     // Find the user
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
-
     // Access the rideRequest map for the given key
     const request = user.rideRequests.get(key);
     if (!request) {
-      return res.status(404).json({ error: 'Request not found' });
+      return res.status(404).json({ error: "Request not found" });
     }
-
     // Delete the key-value pair from rideRequests map
     user.rideRequests.delete(key);
-
     // If action is 'accept', put the request in pendingPayments map of requesterId
-    if (action === 'accept') {
+    if (action === "accept") {
       const {
         requesterId,
         message,
@@ -98,9 +107,8 @@ const postRequest=async (req, res) => {
       } = request;
       const requester = await User.findById(requesterId);
       if (!requester) {
-        return res.status(404).json({ error: 'Requester not found' });
+        return res.status(404).json({ error: "Requester not found" });
       }
-    
       const requestData = {
         rideId,
         pickUp,
@@ -111,19 +119,15 @@ const postRequest=async (req, res) => {
         pickUpDate,
         pickUpTime,
       };
-    
       requester.pendingPayments.set(key, requestData);
       await requester.save();
     }
-    
-
     // Save the changes to the user
     await user.save();
-
-    res.status(200).json({ message: 'Request processed successfully' });
+    res.status(200).json({ message: "Request processed successfully" });
   } catch (error) {
-    console.error('Error processing request:', error);
+    console.error("Error processing request:", error);
     return handleApiError(error, res);
   }
-} 
-module.exports = { postRide, getRequests ,postRequest };
+};
+module.exports = { postRide, getRequests, postRequest };
