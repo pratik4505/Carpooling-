@@ -80,6 +80,7 @@ const FindRide = () => {
     return `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
   }
   const displayRoute = (ride, index) => {
+    console.log("The selected ride is ", ride);
     setSelectedRouteIndex(index);
     const bounds = new window.google.maps.LatLngBounds();
     ride.overview_path.forEach((point) => bounds.extend(point));
@@ -201,7 +202,36 @@ const FindRide = () => {
               ride.pickUpPoint = sourceFound;
               ride.dropOffPoint = destinationFound;
               ride.overview_path = routeCoordinates;
-              ridesWithValidRoutes.push(ride);
+
+              // Geocode pickup point
+              geocoder.geocode(
+                { location: ride.pickUpPoint },
+                (results, status) => {
+                  if (status === "OK" && results[0]) {
+                    ride.pickUpAddress = results[0].formatted_address;
+                    // Geocode drop-off point
+                    geocoder.geocode(
+                      { location: ride.dropOffPoint },
+                      (results, status) => {
+                        if (status === "OK" && results[0]) {
+                          ride.dropOffAddress = results[0].formatted_address;
+                          // Push the ride into the array of valid routes
+                          ridesWithValidRoutes.push(ride);
+                          // Update state with the array of valid routes
+                          setAvailableRides(ridesWithValidRoutes);
+                        } else {
+                          console.error(
+                            "Geocode failed for drop-off point:",
+                            status
+                          );
+                        }
+                      }
+                    );
+                  } else {
+                    console.error("Geocode failed for pickup point:", status);
+                  }
+                }
+              );
             }
           }
         }
@@ -218,6 +248,8 @@ const FindRide = () => {
       // Handle error
     }
   };
+
+  // Geocode pickup point
 
   const clearRoute = () => {
     setDirectionResponse(null);
