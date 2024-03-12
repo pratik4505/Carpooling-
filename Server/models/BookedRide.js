@@ -7,12 +7,44 @@ const bookedRideSchema = new Schema({
     ref: "Ride",
     required: true,
   },
+  pastRideId: {
+    type: Schema.Types.ObjectId,
+    ref: "PastRide",
+    required: true,
+  },
+  driverPastId: {
+    type: Schema.Types.ObjectId,
+    ref: "PastRide",
+    required: true,
+  },
+  
   passengerId: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  bookedSeats: {
+  passengerName: {
+    type: String,
+    required: true,
+  },
+  passengerImageUrl: {
+    type: String,
+    required: true,
+  },
+  driverId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  driverName: {
+    type: String,
+    required: true,
+  },
+  driverImageUrl: {
+    type: String,
+    required: true,
+  },
+  seats: {
     type: Number,
     required: true,
   },
@@ -23,6 +55,14 @@ const bookedRideSchema = new Schema({
   destination: {
     lat: Number,
     lng: Number,
+  },
+  pickUpAddress: {
+    type: String,
+    required: true,
+  },
+  destinationAddress: {
+    type: String,
+    required: true,
   },
   pickUpDate: Date,
   pickUpTime: String,
@@ -39,6 +79,7 @@ const bookedRideSchema = new Schema({
   },
   verificationCode: {
     type: Number,
+    required: true,
   },
   codeVerified: {
     type: Boolean,
@@ -48,7 +89,21 @@ const bookedRideSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  vehicleType: {
+    type: String,
+    required: true,
+  },
+  overview_polyline: {
+    type: String,
+    required: true,
+  },
 });
+
+
+//think on it
+
+bookedRideSchema.index({rideId:1 });
+
 
 const BookedRide = mongoose.model("BookedRide", bookedRideSchema);
 

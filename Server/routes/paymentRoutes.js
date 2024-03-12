@@ -1,6 +1,7 @@
 const router = require("express").Router();
-const {checkout} = require('../controllers/paymentController');
+const {checkout,paymentWebhook} = require('../controllers/paymentController');
 
-router.post("/create-checkout-session", checkout);
+router.get("/create-checkout-session", checkout);
+router.post("/confirmPaymentWebhook", paymentWebhook);
 
 module.exports = router;

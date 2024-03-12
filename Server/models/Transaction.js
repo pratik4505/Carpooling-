@@ -10,10 +10,6 @@ const transactionSchema = new Schema({
     type: Number,
     required: true,
   },
-  clientSecret: {
-    type: String,
-    required: true,
-  },
   charge: Number,
   paidBy: {
     type: Schema.Types.ObjectId,
@@ -56,6 +52,8 @@ const transactionSchema = new Schema({
     arrival_date: Date,
   },
 });
+
+transactionSchema.index({rideId:1});
 
 const Transaction = mongoose.model("Transaction", transactionSchema);
 

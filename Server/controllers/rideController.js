@@ -1,5 +1,7 @@
 const AvailableRide = require("../models/AvailableRide");
 const User = require("../models/User");
+const BookedRide = require("../models/BookedRide");
+
 const postRide = async (req, res) => {
   // Extract data from request body
   try {
@@ -85,7 +87,7 @@ const postRequest = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     // Access the rideRequest map for the given key
-    const request = user.rideRequests.get(key);
+    const request = user.rideRequests?.get(key);
     if (!request) {
       return res.status(404).json({ error: "Request not found" });
     }
@@ -104,11 +106,14 @@ const postRequest = async (req, res) => {
         unitCost,
         pickUpDate,
         pickUpTime,
+        pickUpAddress,
+        destinationAddress,
       } = request;
       const requester = await User.findById(requesterId);
       if (!requester) {
         return res.status(404).json({ error: "Requester not found" });
       }
+
       const requestData = {
         rideId,
         pickUp,
@@ -118,12 +123,17 @@ const postRequest = async (req, res) => {
         unitCost,
         pickUpDate,
         pickUpTime,
+        pickUpAddress,
+        destinationAddress,
       };
+
       requester.pendingPayments.set(key, requestData);
       await requester.save();
     }
+
     // Save the changes to the user
     await user.save();
+
     res.status(200).json({ message: "Request processed successfully" });
   } catch (error) {
     console.error("Error processing request:", error);

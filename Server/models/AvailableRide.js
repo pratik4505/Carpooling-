@@ -30,7 +30,8 @@ const AvailableRideSchema = new mongoose.Schema({
     required: true,
   },
   driverId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
   unitCost: {
@@ -43,6 +44,12 @@ const AvailableRideSchema = new mongoose.Schema({
   },
   speed: {
     type: Number,
+    required: true,
+  },
+  pastRideId: {
+    //Make pastRide schema for driver when creating this schema
+    type: Schema.Types.ObjectId,
+    ref: "PastRide",
     required: true,
   },
 });
