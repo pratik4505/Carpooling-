@@ -3,9 +3,9 @@ import { getCoRiders, postRatings } from "../../Api/rideApi";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-export default function RatingList({ rideId, data, driver, onCancel }) {
+export default function RatingList({ rideId, passengers, driver, onCancel }) {
   const [loading, setLoading] = useState(true);
-  const [coriders, setCoriders] = useState(data);
+  const [coriders, setCoriders] = useState(passengers);
   const [ratings, setRatings] = useState({});
 
   useEffect(() => {

@@ -233,7 +233,7 @@ const getCoRiders = async (req, res) => {
   }
 };
 
-const postRatings=async (req, res) => {
+const postRatings = async (req, res) => {
   try {
     // Assuming req.userId contains the user's ID
 
@@ -244,7 +244,12 @@ const postRatings=async (req, res) => {
 
       // Check if the pastRide exists
       if (!pastRide) {
-        return res.status(404).json({ success: false, message: `PastRide with ID ${pastRideId} not found` });
+        return res
+          .status(404)
+          .json({
+            success: false,
+            message: `PastRide with ID ${pastRideId} not found`,
+          });
       }
 
       // Initialize the ratings map if it's undefined
@@ -260,12 +265,50 @@ const postRatings=async (req, res) => {
     }
 
     // Respond with success message
-    res.status(200).json({ success: true, message: 'Ratings updated successfully' });
+    res
+      .status(200)
+      .json({ success: true, message: "Ratings updated successfully" });
   } catch (error) {
-    console.error('Error updating ratings:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error("Error updating ratings:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};
+
+const getDriverRides = async (req, res) => {
+  try {
+    // Extract userId from req
+    const { userId } = req;
+
+    // Find documents from AvailableRide schema where driverId is userId
+    const availableRides = await AvailableRide.find({ driverId: userId });
+
+    // Initialize an array to store results
+    const driverRides = [];
+
+    // Loop through availableRides
+    for (const ride of availableRides) {
+      // Find documents from BookedRide schema where rideId is equal to _id of availableRide
+      const bookedRides = await BookedRide.find({ rideId: ride._id }).select(
+        "pastRideId passengerId passengerName passengerImageUrl seats pickUp destination pickUpAddress destinationAddress pickUpDate pickUpTime distance rideCancelled unitCost"
+      );
+
+      // Add passengers information to the availableRide document
+      const rideWithPassengers = {
+        ...ride.toObject(), // Convert Mongoose document to plain JavaScript object
+        passengers: bookedRides,
+      };
+
+      // Add the ride with passengers to the result array
+      driverRides.push(rideWithPassengers);
+    }
+
+    // Respond with the driver rides
+    res.status(200).json(driverRides);
+  } catch (error) {
+    console.error("Error fetching driver rides:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
 
 module.exports = {
   postRide,
@@ -275,5 +318,6 @@ module.exports = {
   postDeclinePayment,
   getBookedRides,
   getCoRiders,
-  postRatings
+  postRatings,
+  getDriverRides,
 };

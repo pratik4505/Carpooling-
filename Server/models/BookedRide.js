@@ -99,7 +99,9 @@ const bookedRideSchema = new Schema({
   },
 });
 
-bookedRideSchema.index({rideId:1,passengerId:1 });
+
+//think on it
+
 bookedRideSchema.index({rideId:1 });
 
 
