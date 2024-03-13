@@ -90,3 +90,16 @@ export const getDriverRides = async () => {
       return handleApiError(error);
     }
   };
+
+  
+export const rideRequest = async (data) => {
+  try {
+    const res = await API.post(`/rides/rideRequest`,data);
+    if (res.status === 200) return { error: null, data: res.data };
+    else return { error: res, data: null };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
+  

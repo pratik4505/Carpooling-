@@ -1,9 +1,11 @@
 const AvailableRide = require("../models/AvailableRide");
 const User = require("../models/User");
 const BookedRide = require("../models/BookedRide");
-
+const PastRide = require("../models/PastRide");
 const postRide = async (req, res) => {
   // Extract data from request body
+  const userId = req.userId;
+ 
   try {
     const {
       source,
@@ -13,7 +15,7 @@ const postRide = async (req, res) => {
       availableSeats,
       unitCost,
       vehicleType,
-      driverId,
+      
       totalSeats,
       overview_polyline,
       totalTime,
@@ -30,14 +32,31 @@ const postRide = async (req, res) => {
       availableSeats,
       unitCost,
       vehicleType,
-      driverId,
+      driverId:userId,
       totalSeats,
       totalTime,
       speed,
+      pastRideId:'abc'
     });
 
     // Save the new AvailableRide to the database
     await newAvailableRide.save();
+
+    const pastRide=new PastRide({
+      rideId:newAvailableRide._id,
+      userId:userId,
+      source,
+      destination,
+      user:'driver',
+      rating:{},
+      overview_polyline
+    });
+
+    await pastRide.save();
+    newAvailableRide.pastRideId=pastRide._id;
+    await newAvailableRide.save();
+    
+    
     console.log("I am here");
 
     res.status(201).json(newAvailableRide); // Status code 201: Created
@@ -317,6 +336,8 @@ const getDriverRides = async (req, res) => {
   }
 };
 
+const rideRequest = (req, res) => {}
+
 module.exports = {
   postRide,
   getRequests,
@@ -327,4 +348,5 @@ module.exports = {
   getCoRiders,
   postRatings,
   getDriverRides,
+  rideRequest
 };

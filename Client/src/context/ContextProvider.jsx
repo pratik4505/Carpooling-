@@ -84,7 +84,7 @@ export const ContextProvider = ({ children }) => {
   
 
   return (
-    <AuthContext.Provider value={{ socket, userData }}>
+    <AuthContext.Provider value={{ socket, userData ,initialLoad}}>
       {children}
     </AuthContext.Provider>
   );

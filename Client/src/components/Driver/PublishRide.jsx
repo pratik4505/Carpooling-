@@ -127,8 +127,14 @@ export default function PublishRide() {
 
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_BASE_URL}/rides/publishRide`,
-        routeData
+        routeData,
+        {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(localStorage.getItem("profile"))?.accessToken}`,
+          },
+        }
       );
+      
 
       if (response.status === 201) {
         console.log("Ride published successfully:", response.data);

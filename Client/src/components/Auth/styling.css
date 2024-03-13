@@ -1,0 +1,167 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Quicksand', sans-serif;
+    box-sizing: border-box;
+}
+
+.login-lync-logo{
+    width: 100px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    bottom: 15px;
+}
+
+.login-lync-wo-back{
+    width: 80px;
+}
+
+.main-container{
+    width: 100%;
+    height: 100vh;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+
+.form-box{
+    width: 90%;
+    max-width: 450px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(255,255,255,.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    padding: 50px 60px 70px;
+    text-align: center;
+    border-radius: 20px;
+}
+.form-box h1{
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: #9F8FFF;
+    position: relative;
+    font-weight: 1000;
+    text-shadow: 2px 1px black;
+}
+
+.form-box h1::after{
+    content: '';
+    width: 100px;
+    height: 3px;
+    border-radius: 4px;
+    background: #9F8FFF;
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.input-field{
+    background: #eaeaea;
+    margin: 15px 0;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+input{
+    width: 100%;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    padding: 18px 15px;
+    font-size: 15px;
+}
+
+.react-icons-loginPG{
+    margin: 0px 20px;
+    font-size: 25px;
+}
+
+.input-field .react-icons{
+    margin-left: 15px;
+    color: #999;
+    margin-bottom: 19px;
+    font-size: 25px;
+}
+
+.input-group p{
+    text-align: left;
+    font-size: 15px;
+}
+
+.input-group p a{
+    text-decoration: none;
+    color: #9F8FFF;
+}
+
+.input-group p a:hover{
+    color: #FFBD59;
+}
+
+.submit-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    top: 15px;
+    border: #9F8FFF;
+}
+
+.submit-container .submit{
+    flex-basis: 48%;
+    background: #f3f3f3;
+    color: #9F8FFF;
+    border-radius: 20px;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    transition: background 0.4s;
+    height: 30px;
+    padding-top: 1px;
+    font-weight: 400;
+    font-size: 17px;
+}
+
+
+.submit-container .submit:hover{
+    background: #FFBD59;
+    color: #fff ;
+}
+
+.register{
+    position: relative;
+    top: 30px;
+    font-size: 20px;
+}
+
+ .register a{
+    text-decoration: none;
+    color: #9F8FFF;
+ }
+ 
+ .register a:hover{
+    color: #FFBD59;
+ }
+
+ .login-lync{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    bottom: 15px;
+ }
+
+ .error-message{
+    text-align: center;
+    margin-top: 20px;
+    font-size: 30px;
+    color: #9F8FFF;
+    font-weight: 700;
+    text-shadow: 1px 1px black;
+ }

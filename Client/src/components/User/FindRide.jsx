@@ -9,6 +9,7 @@ import {
   Polyline,
   DirectionsService,
 } from "@react-google-maps/api";
+import { rideRequest } from "../../Api/rideApi";
 
 const FindRide = () => {
   const [libraries, setLibraries] = useState(["places", "geometry"]);
@@ -31,7 +32,7 @@ const FindRide = () => {
   const dateRef = useRef();
   const timeFromRef = useRef();
   const timeToRef = useRef();
-
+  console.log(availableRides);
   useEffect(() => {
     // Fetch the real-time location and set it as the center of the map
     if (navigator.geolocation) {
@@ -101,7 +102,14 @@ const FindRide = () => {
       // Send request to backend
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_BASE_URL}/rides/getAvaliableRides`,
-        { source, destination, date, timeFrom, timeTo }
+        { source, destination, date, timeFrom, timeTo },
+        {
+          headers: {
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("profile"))?.accessToken
+            }`,
+          },
+        }
       );
 
       if (response.status === 200) {
@@ -248,6 +256,17 @@ const FindRide = () => {
       // Handle error
     }
   };
+ 
+  const makeRideRequest=async ()=>{
+    try {
+      const res = await rideRequest();
+      if (!res.error) {
+        
+      }
+    } catch (error) {
+      console.error("Error fetching rides:", error);
+    }
+  }
 
   // Geocode pickup point
 
@@ -344,6 +363,12 @@ const FindRide = () => {
                       <div className="font-bold">
                         PickUpTime: {ride.pickUpTime}
                       </div>
+                      <button
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+                        onClick={makeRideRequest}
+                      >
+                        Ride request
+                      </button>
                     </li>
                   ))}
                 </ul>

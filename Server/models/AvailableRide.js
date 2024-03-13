@@ -48,8 +48,7 @@ const AvailableRideSchema = new mongoose.Schema({
   },
   pastRideId: {
     //Make pastRide schema for driver when creating this schema
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "PastRide",
+    type: String,
     required: true,
   },
 });
