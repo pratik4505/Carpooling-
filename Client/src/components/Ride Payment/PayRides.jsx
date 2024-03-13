@@ -37,18 +37,16 @@ export default function PayRides() {
     if (loading) return;
 
     setLoading(true);
-    setStripePromise(loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY));
     try {
       const value = rides[key];
       const result = await getPaymentIntent({
         key: key,
         amount: 1.2 * value.seats * value.distance * value.unitCost,
         description: `Pay for your ride from ${value.pickUpAddress} to ${value.destinationAddress}`,
-        email: userData.email,
+        email: userData.emailId,
         userId: userData.userId,
       });
-
-      console.log(result);
+      setLoading(false);
       setClientSecret(result.data?.clientSecret);
     } catch (error) {
       console.error("Error fetching payment intent:", error);
@@ -65,12 +63,17 @@ export default function PayRides() {
         delete updatedRides[key];
         setRides(updatedRides);
       }
-      console.log(res);
       setLoading(false);
     } catch (error) {
       console.error("Error declining payment:", error);
     }
   };
+
+  useEffect(() => {
+    if (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
+      setStripePromise(loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY));
+    }
+  }, []);
 
   return (
     <div className="border border-gray-400 h-full p-4 overflow-y-auto">
@@ -81,16 +84,13 @@ export default function PayRides() {
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-lg z-50">
           <div className="bg-white rounded-lg shadow-lg p-8 z-50">
             <div className="flex container mt-8">
-              {
-                <Elements stripe={stripePromise} options={{ clientSecret }}>
-                  <CheckoutForm
-                    onCancel={() => {
-                      setClientSecret(null);
-                      setStripePromise(null);
-                    }}
-                  />
-                </Elements>
-              }
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <CheckoutForm
+                  onCancel={() => {
+                    setClientSecret(null);
+                  }}
+                />
+              </Elements>
             </div>
           </div>
         </div>

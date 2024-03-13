@@ -38,16 +38,17 @@ export default function CheckoutForm(props) {
   };
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" />
-      <button disabled={isProcessing || !stripe || !elements} id="submit">
-        <span id="button-text">
+    <form  onSubmit={handleSubmit}>
+      <PaymentElement  />
+      <button  disabled={isProcessing || !stripe || !elements} >
+        <span >
           {isProcessing ? "Processing ... " : "Pay now"}
         </span>
       </button>
-      <button onClick={()=>{props.onCancel()}}> Cancel</button>
+      <button onClick={(e)=>{ e.preventDefault(); props.onCancel(); }}>Cancel</button>
+
       {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
+      {message && <div >{message}</div>}
     </form>
   );
 }

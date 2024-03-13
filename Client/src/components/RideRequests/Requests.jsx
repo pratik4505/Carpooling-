@@ -60,7 +60,7 @@ export default function Requests() {
             <div
               key={key}
               className="border-b border-gray-300 py-4"
-              onClick={() => setSelectedRequests(key)}
+             
             >
               <Link to={`/profile/${value.requesterId}`}>
                 {value.requesterImageUrl && (
@@ -112,6 +112,12 @@ export default function Requests() {
                 onClick={() => requestHandler("decline", key)}
               >
                 Decline
+              </button>
+              <button
+                onClick={() => setSelectedRequests(key)}
+                className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
+              >
+                Show on Map
               </button>
             </div>
           ))}

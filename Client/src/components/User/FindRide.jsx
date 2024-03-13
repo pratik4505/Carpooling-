@@ -35,7 +35,7 @@ const FindRide = () => {
   const timeFromRef = useRef();
   const timeToRef = useRef();
   const seatsRef = useRef();
-  console.log(availableRides);
+  //console.log(availableRides);
   useEffect(() => {
     // Fetch the real-time location and set it as the center of the map
     if (navigator.geolocation) {
@@ -84,7 +84,7 @@ const FindRide = () => {
     return `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
   }
   const displayRoute = (ride, index) => {
-    console.log("The selected ride is ", ride);
+    //console.log("The selected ride is ", ride);
     setSelectedRouteIndex(index);
     const bounds = new window.google.maps.LatLngBounds();
     ride.overview_path.forEach((point) => bounds.extend(point));
@@ -260,8 +260,10 @@ const FindRide = () => {
   };
 
   const makeRideRequest = async (ride, index) => {
+    
     try {
       const rideData = {
+        driverId:ride.driverId,
         rideId: ride._id,
         pickUp: ride.pickUpPoint,
         destination: ride.dropOffPoint,
@@ -274,9 +276,12 @@ const FindRide = () => {
         unitCost: ride.unitCost,
         pickUpDate: dateRef.current.value,
         pickUpTime: ride.pickUpTime,
+        
       };
+     // console.log(rideData)
       const res = await rideRequest({ userData, rideData });
       if (!res.error) {
+        console.log("Request made")
       }
     } catch (error) {
       console.error("Error fetching rides:", error);
