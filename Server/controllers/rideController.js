@@ -2,6 +2,7 @@ const AvailableRide = require("../models/AvailableRide");
 const User = require("../models/User");
 const BookedRide = require("../models/BookedRide");
 const PastRide = require("../models/PastRide");
+const uuid = require("uuid");
 const postRide = async (req, res) => {
   // Extract data from request body
   const userId = req.userId;
@@ -145,6 +146,10 @@ const postRequest = async (req, res) => {
         pickUpAddress,
         destinationAddress,
       };
+
+      if (!requester.pendingPayments) {
+        requester.pendingPayments = new Map();
+      }
 
       requester.pendingPayments.set(key, requestData);
       await requester.save();
@@ -336,7 +341,40 @@ const getDriverRides = async (req, res) => {
   }
 };
 
-const rideRequest = (req, res) => {}
+const rideRequest = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { userData, rideData } = req.body;
+
+    const driver = await User.findById(rideData.driverId);
+
+    if (!driver) {
+      return res.status(404).json({ message: "Driver not found" });
+    }
+
+    const requestData = {
+      requesterId: userData.userId,
+      requesterImageUrl: userData.imageUrl,
+      requesterName: userData.name,
+      ...rideData,
+    };
+
+    if (!driver.rideRequests) {
+      driver.rideRequests = new Map();
+    }
+
+
+    const key =  uuid.v1();; 
+    driver.rideRequests.set(key, requestData);
+    await driver.save();
+
+    res.status(200).json({ message: "Ride request sent successfully" });
+  } catch (error) {
+    console.error("Error in rideRequest:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 module.exports = {
   postRide,
