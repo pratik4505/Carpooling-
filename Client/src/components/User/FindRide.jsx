@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import {
   useJsApiLoader,
@@ -10,6 +10,7 @@ import {
   DirectionsService,
 } from "@react-google-maps/api";
 import { rideRequest } from "../../Api/rideApi";
+import { AuthContext } from "../../context/ContextProvider";
 
 const FindRide = () => {
   const [libraries, setLibraries] = useState(["places", "geometry"]);
@@ -17,6 +18,7 @@ const FindRide = () => {
     googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
   });
+  const { userData } = useContext(AuthContext);
   const [center, setCenter] = useState(null);
   const [userDirectionResponse, setUserDirectionRespone] = useState(null);
   const [directionsResponse, setDirectionResponse] = useState(null);
@@ -32,6 +34,7 @@ const FindRide = () => {
   const dateRef = useRef();
   const timeFromRef = useRef();
   const timeToRef = useRef();
+  const seatsRef = useRef();
   console.log(availableRides);
   useEffect(() => {
     // Fetch the real-time location and set it as the center of the map
@@ -210,6 +213,7 @@ const FindRide = () => {
               ride.pickUpPoint = sourceFound;
               ride.dropOffPoint = destinationFound;
               ride.overview_path = routeCoordinates;
+              ride.rideDistance = distanceFromEnd - distanceFromStart;
 
               // Geocode pickup point
               geocoder.geocode(
@@ -243,8 +247,6 @@ const FindRide = () => {
             }
           }
         }
-        // Update state with rides that have valid routes
-        setAvailableRides(ridesWithValidRoutes);
 
         // rest of the code...
       } else {
@@ -256,17 +258,30 @@ const FindRide = () => {
       // Handle error
     }
   };
- 
-  const makeRideRequest=async ()=>{
+
+  const makeRideRequest = async (ride, index) => {
     try {
-      const res = await rideRequest();
+      const rideData = {
+        rideId: ride._id,
+        pickUp: ride.pickUpPoint,
+        destination: ride.dropOffPoint,
+        pickUpAddress: ride.pickUpAddress,
+        destinationAddress: ride.dropOffAddress,
+        driverSource: ride.source,
+        driverDestination: ride.destination,
+        seats: seatsRef.current.value,
+        distance: ride.rideDistance,
+        unitCost: ride.unitCost,
+        pickUpDate: dateRef.current.value,
+        pickUpTime: ride.pickUpTime,
+      };
+      const res = await rideRequest({ userData, rideData });
       if (!res.error) {
-        
       }
     } catch (error) {
       console.error("Error fetching rides:", error);
     }
-  }
+  };
 
   // Geocode pickup point
 
@@ -331,6 +346,12 @@ const FindRide = () => {
               ref={timeToRef}
               className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
             />
+            <input
+              type="number"
+              placeholder="Seats"
+              ref={seatsRef}
+              className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+            />
           </div>
 
           <div className="flex justify-center">
@@ -365,7 +386,7 @@ const FindRide = () => {
                       </div>
                       <button
                         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
-                        onClick={makeRideRequest}
+                        onClick={() => makeRideRequest(ride, index)}
                       >
                         Ride request
                       </button>
