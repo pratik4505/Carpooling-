@@ -18,18 +18,20 @@ import Transactions from "../pages/Transactions";
 import Home from "../pages/Home";
 import Login from "../components/Login/Login";
 import Register from "../components/Login/Register";
+import LoginPage from "../components/Auth/LoginPage";
+import SignUp from "../components/Auth/SignUp";
 
 const AppRoutes = () => {
   return (
     <Suspense fallback={<FallbackLoading />}>
       <Routes>
-        {/* <Route path="/Login" element={<></>} /> */}
+        <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<h1>Not Found</h1>} />
 
-        {/* <Route path=/Register" element={<></>} /> */}
-        <></>
-        <Route path="/" element={<ProtectedRoute/>}>
-        <Route path="/home" element={<Home/>} />
+        <Route path="/register" element={<SignUp />} />
+
+        <Route path="/" element={<ProtectedRoute />}>
+          <Route index element={<Home />} />
           <Route path="/publishRide" element={<CreateRide />} />
           <Route path="/searchRide" element={<SearchRides />} />
           <Route path="/chats" element={<Chats />} />
@@ -40,8 +42,8 @@ const AppRoutes = () => {
           <Route path="/profile/:ownerId" element={<Profile />} />
           <Route path="/rideRequests" element={<RideRequests />} />
           <Route path="/transactions" element={<Transactions />} />
-          <Route path="/login" element = {<Login/>}/>
-          <Route path="/Register" element = {<Register/>}/>
+          {/* <Route path="/login" element = {<Login/>}/>
+          <Route path="/Register" element = {<Register/>}/> */}
         </Route>
       </Routes>
     </Suspense>

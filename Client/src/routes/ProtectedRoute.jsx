@@ -5,19 +5,19 @@ import { Outlet } from "react-router-dom"; // Import Outlet from react-router-do
 const ProtectedRoute = () => {
   // Retrieve the accessToken from localStorage
   const accessToken =
-    true || JSON.parse(localStorage.getItem("profile"))?.accessToken;
+     JSON.parse(localStorage.getItem("profile"))?.accessToken;
 
   // Return the protected route if accessToken is present
   return accessToken ? (
     <div className="w-full h-full">
       <Navbar />
-      <div className="mt-[6%] h-[94%]">
+      <div>
         <Outlet />
       </div>
     </div>
   ) : (
     // Redirect to Login page if accessToken is not present
-    <Navigate to="/Login" />
+    <Navigate to="/login" />
   );
 };
 

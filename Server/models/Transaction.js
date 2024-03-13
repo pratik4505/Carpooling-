@@ -53,6 +53,8 @@ const transactionSchema = new Schema({
   },
 });
 
+transactionSchema.index({rideId:1});
+
 const Transaction = mongoose.model("Transaction", transactionSchema);
 
 module.exports = Transaction;

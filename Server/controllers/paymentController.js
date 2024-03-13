@@ -4,6 +4,7 @@ const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
 const User = require("../models/User");
 const AvailableRide = require("../models/AvailableRide");
 const BookedRide = require("../models/BookedRide");
+const PastRide = require("../models/PastRide");
 
 function generateUniqueCode() {
   // Get current timestamp in milliseconds
@@ -95,6 +96,9 @@ const paymentWebhook = async (request, response) => {
         
         // Save the updated document
         await availableRide.save();
+
+        const driver = await User.findById(availableRide.driverId);
+
         
         // Store transaction data in Transaction schema
         const transaction = new Transaction({
@@ -111,6 +115,18 @@ const paymentWebhook = async (request, response) => {
 
         const transactionId = transaction._id;
 
+        const pastRide=new PastRide({
+          rideId: value.rideId,
+          userId:customData.paidBy,
+          source:value.pickUpAddress,
+          destination:value.destinationAddress,
+          user:'passenger',
+          rating:{},
+          overview_polyline:availableRide.overview_polyline,
+        });
+
+        await pastRide.save();
+
         const bookedRide = new BookedRide({
           rideId: value.rideId,
           passengerId: customData.paidBy,
@@ -126,8 +142,19 @@ const paymentWebhook = async (request, response) => {
           transactionId: transactionId,
           verificationCode:generateUniqueCode(),
           vehicleType: availableRide.vehicleType,
-          overview_polyline: availableRide.overview_polyline
+          overview_polyline: availableRide.overview_polyline,
+          passengerName:user.name,
+          passengerImageUrl:user.imageUrl,
+          driverId:availableRide.driverId,
+          driverName:driver.name,
+          driverImageUrl:driver.imageUrl,
+          pastRideId:pastRide._id,
+          driverPastId:availableRide.pastRideId
         });
+        await bookedRide.save();
+
+        //ALSO MAKE PASTRIDE SCHEMA FOR DRIVER 
+        
 
         console.log("Transaction stored");
       } catch (error) {

@@ -1,4 +1,4 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -6,7 +6,7 @@
   font-family: "Poppins", sans-serif;
 }
 
-body{
+/* body{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,45 +14,45 @@ body{
   background: url(./img.jpg) no-repeat;
   background-size: cover;
   background-position: center;
-}
+} */
 
-.wrapper{
+.wrapper {
   width: 400px;
   background: transparent;
-  border: 2px solid rgba(255, 255, 255, .2);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(20px);
-  box-shadow: 0 0 10px (0, 0, 0, .2);
+  box-shadow: 0 0 10px (0, 0, 0, 0.2);
   color: #fff;
   border-radius: 10px;
   padding: 30px 40px;
 }
 
-.wrapper h1{
+.wrapper h1 {
   font-size: 36px;
   text-align: center;
 }
 
-.wrapper .input-box{
+.wrapper .input-box {
   position: relative;
   width: 100%;
   height: 50px;
   margin: 30px 0;
 }
 
-.input-box input{
+.input-box input {
   width: 100%;
   height: 100%;
   background: transparent;
   border: none;
   outline: none;
-  border: 2px solid rgba(255, 255, 255, .2);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 40px;
   font-size: 16px;
   color: #fff;
   padding: 20px 45px 20px 20px;
 }
 
-.input-box input::placeholder{
+.input-box input::placeholder {
   color: #fff;
 }
 
@@ -64,7 +64,7 @@ body{
   font-size: 20px;
 }
 
-.wrapper .remember-forgot{
+.wrapper .remember-forgot {
   display: flex;
   justify-content: space-between;
   font-size: 14.5px;
@@ -72,23 +72,22 @@ body{
   padding-bottom: 8px;
 }
 
-body > div > form > div.remember-forget{
+body > div > form > div.remember-forget {
   padding-bottom: 10px;
 }
 
-body > div > form > div.remember-forget > a{
+body > div > form > div.remember-forget > a {
   color: #fff;
   text-decoration: none;
   font-weight: 550;
   padding-left: 7px;
 }
 
-body > div > form > div.remember-forget > a:hover{
+body > div > form > div.remember-forget > a:hover {
   text-decoration: underline;
 }
 
-.remember-forgot label input 
-{
+.remember-forgot label input {
   accent-color: #fff;
   margin-right: 3px;
 }
@@ -109,7 +108,7 @@ body > div > form > div.remember-forget > a:hover{
   border: none;
   outline: none;
   border-radius: 40px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   font-size: 16px;
   color: #333;
@@ -120,7 +119,7 @@ body > div > form > div.remember-forget > a:hover{
   font-size: 14.5px;
   text-align: center;
   margin: 20px 0 15px;
-}    
+}
 
 .register-link p a {
   color: #fff;
@@ -132,7 +131,7 @@ body > div > form > div.remember-forget > a:hover{
   text-decoration: underline;
 }
 
-.login-with{
+.login-with {
   display: flex;
   gap: 15px;
 }
