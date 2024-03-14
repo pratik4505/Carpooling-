@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { signUp } from "../../Api/authApi";
-import './styling.css'
+import "./styling.scss";
 import { AiOutlineUser } from "react-icons/ai";
 import { BsKey } from "react-icons/bs";
 
@@ -17,9 +17,8 @@ export default function RegisterComponent() {
   const handleSignUp = async () => {
     setLoading(true);
     try {
-      const response = await signUp({ userName, email, password }
-      );
-    
+      const response = await signUp({ userName, email, password });
+
       if (response.data) {
         navigate("/login");
       } else {

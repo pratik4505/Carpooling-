@@ -6,22 +6,18 @@ import { AiOutlineUser } from "react-icons/ai";
 import { BsKey } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
-
-
-import "./styling.css";
+import "./styling.scss";
 import { AuthContext } from "../../context/ContextProvider";
 
 export default function LoginPage() {
-
- 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
-  const {initialLoad}=useContext(AuthContext);
-  const navigate=useNavigate();
+  const { initialLoad } = useContext(AuthContext);
+  const navigate = useNavigate();
   const change = (e) => {
     setFormData({
       ...formData,
@@ -38,8 +34,8 @@ export default function LoginPage() {
       console.log(response);
       if (response.data) {
         localStorage.setItem("profile", JSON.stringify(response.data));
-       initialLoad();
-        navigate('/')
+        initialLoad();
+        navigate("/");
         return <Navigate to="/" />;
       } else {
         setResponseMessage(response.data);
@@ -89,13 +85,10 @@ export default function LoginPage() {
                 Log in
               </div>
             )}
-           
           </div>
           <div className="register">
             Don't have an account? <Link to="/register">Register</Link>
           </div>
-
-          
         </div>
       </div>
       {responseMessage && (
