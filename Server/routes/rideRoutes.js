@@ -24,7 +24,7 @@ router.post("/postDeclinePayment",verifyJWT, postDeclinePayment);
 router.get("/getBookedRides",verifyJWT, getBookedRides);
 router.get("/getCoRiders/:rideId",verifyJWT, getCoRiders);
 router.post("/postRatings", verifyJWT,postRatings);
-router.post("/getDriverRides",verifyJWT, getDriverRides);
+router.get("/getDriverRides",verifyJWT, getDriverRides);
 router.post("/rideRequest",verifyJWT,rideRequest);
 
 

@@ -270,6 +270,7 @@ const postRatings = async (req, res) => {
     // Assuming req.userId contains the user's ID
 
     // Iterate over each key-value pair in the map
+    console.log(req.body)
     for (const [pastRideId, ratingValue] of Object.entries(req.body)) {
       // Find the document of PastRide schema for the given pastRideId
       const pastRide = await PastRide.findById(pastRideId);

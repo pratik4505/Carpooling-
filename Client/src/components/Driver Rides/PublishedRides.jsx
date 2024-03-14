@@ -8,7 +8,7 @@ export default function PublishedRides() {
   const [loading, setLoading] = useState(true);
   const [selectedRide, setSelectedRide] = useState(null);
   const [passengers, setPassengers] = useState(null);
-  const [rating, setRating] = useState([]);
+  const [rating, setRating] = useState(null);
   useEffect(() => {
     const fetchRides = async () => {
       try {
@@ -46,17 +46,29 @@ export default function PublishedRides() {
                 <span className="font-semibold">Start Time:</span> {value.time}
               </p>
 
-              {!value.rideCancelled && value.codeVerified && (
+            {/* commented one is the main code ,next one is for testing */}
+              {/* {!value.rideCancelled && value.codeVerified && (
                 <button
                   onClick={() => {
                     setRating(value.passengers);
                   }}
+                  onc
+                  className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
+                >
+                  Rate Passengers
+                </button>
+              )} */}
+              { (
+                <button
+                  onClick={() => {
+                    setRating(value.passengers);
+                  }}
+                 
                   className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
                 >
                   Rate Passengers
                 </button>
               )}
-
               {!value.rideCancelled && !value.codeVerified && (
                 <button className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400">
                   Cancel Ride

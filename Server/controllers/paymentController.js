@@ -1,11 +1,14 @@
-const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
-// This is your Stripe CLI webhook secret for testing your endpoint locally.
+const stripe = require("stripe")(
+  process.env.STRIPE_SECRET_KEY
+);
+
+
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
 const User = require("../models/User");
 const AvailableRide = require("../models/AvailableRide");
 const BookedRide = require("../models/BookedRide");
 const PastRide = require("../models/PastRide");
-
+const Transaction = require("../models/Transaction");
 function generateUniqueCode() {
   // Get current timestamp in milliseconds
   const timestamp = new Date().getTime();
@@ -28,70 +31,83 @@ function generateUniqueCode() {
   return uniqueCode;
 }
 
+
+
 const checkout = async (req, res) => {
   const data = req.body;
- 
+
   try {
     const amountInCents = Math.round(parseFloat(data.amount) * 100);
-    const paymentIntent = await stripe.paymentIntents.create({
-      currency: "EUR",
-      amount: 5,
-      description: data.description,
-      receipt_email: data.email,
-      metadata: {
-        key: data.key,
-        paidBy: data.userId,
+
+    // Create a Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: data.description,
+          },
+          unit_amount: Math.min(9999, amountInCents), //max amount 9999usd allowed
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: process.env.CLIENT_URL,
+      cancel_url: `${process.env.CLIENT_URL}/paymentFailed`, 
+      customer_email: data.email,
+      payment_intent_data: {
+        metadata: {
+          key: data.key,
+          paidBy: data.userId,
+        }
       },
-      automatic_payment_methods: { enabled: true },
     });
-    console.log(paymentIntent);
-    // Send publishable key and PaymentIntent details to client
-    res.status(200).json({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (e) {
-    console.log(e)
-    return res.status(400).send({
-      error: {
-        message: e.message,
-      },
-    });
+
+    // Redirect the user to the Checkout page URL
+    res.redirect(303, session.url);
+  } catch (error) {
+    console.error('Error creating session:', error.message);
+    res.status(400).json({ error: { message: error.message } });
   }
 };
 
 const paymentWebhook = async (request, response) => {
   const sig = request.headers["stripe-signature"];
-  console.log("Webhook Called")
   let event;
+  //console.log('request.body',request.body);
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
   } catch (err) {
-    response.status(400).send(`Webhook Error: ${err.message}`);
-    return;
+    console.error("Webhook Error:", err.message);
+    return response.status(400).send(`Webhook Error: ${err.message}`);
   }
-
-  switch (event.type) {
-    case "payment_intent.succeeded":
-      try {
-        const paymentIntentSucceeded = event.data.object;
-        const customData = paymentIntentSucceeded.metadata.customData;
-
+  //console.log(event);
+ 
+  console.log(event)
+console.log('---------------------------------------------------------------------------------')
+  try {
+    switch (event.type) {
+      case "payment_intent.succeeded":
+        const session = event.data.object;
+        const customData = session.metadata;
+       //console.log("session",session);
+        // console.log("customData",customData);
+       console.log("*****",customData,"****");
         // Access user schema and retrieve pendingPayments
         const user = await User.findById(customData.paidBy);
         const value = user.pendingPayments.get(customData.key);
 
         // Delete the key from pendingPayments map
-        user.pendingPayments.delete(customData.key);
+        
+       user.pendingPayments.delete(customData.key);
 
         // Update user's pendingPayments
-        const pendingPayments = user.pendingPayments; // Get current pendingPayments
-        user.pendingPayments = pendingPayments;
+       
         await user.save();
 
         // Access AvailableRide schema and retrieve paidTo data
-        const availableRide = await AvailableRide.findOne({
-          rideId: value.rideId,
-        });
+        const availableRide = await AvailableRide.findById(value.rideId);
 
         if (!availableRide) {
           console.error("Available ride not found");
@@ -111,10 +127,10 @@ const paymentWebhook = async (request, response) => {
 
         // Store transaction data in Transaction schema
         const transaction = new Transaction({
-          intentId: paymentIntentSucceeded.id,
+          intentId: session.id,
           paidBy: customData.paidBy,
           paidTo: paidTo,
-          amountPaid: paymentIntentSucceeded.amount,
+          amountPaid: session.amount,
           unitCost: value.unitCost,
           distance: value.distance,
           seats: value.seats,
@@ -130,10 +146,10 @@ const paymentWebhook = async (request, response) => {
           destination: value.destinationAddress,
           user: 'passenger',
           rating: {},
-          overview_polyline: availableRide.overview_polyline || null, // Ensure overview_polyline exists
+          overview_polyline: availableRide.overview_polyline  // Ensure overview_polyline exists
         });
         await pastRide.save();
-
+  
         // Create booked ride entry for the passenger
         const bookedRide = new BookedRide({
           rideId: value.rideId,
@@ -150,7 +166,7 @@ const paymentWebhook = async (request, response) => {
           transactionId: transaction._id,
           verificationCode: generateUniqueCode(),
           vehicleType: availableRide.vehicleType,
-          overview_polyline: availableRide.overview_polyline || null, // Ensure overview_polyline exists
+          overview_polyline: availableRide.overview_polyline, // Ensure overview_polyline exists
           passengerName: user.name,
           passengerImageUrl: user.imageUrl,
           driverId: availableRide.driverId,
@@ -162,18 +178,22 @@ const paymentWebhook = async (request, response) => {
         await bookedRide.save();
 
         console.log("Transaction stored");
-      } catch (error) {
-        console.error("Error storing payment intent:", error);
-      }
-      break;
+        break;
 
-    default:
-      console.log(`Unhandled event type ${event.type}`);
+      default:
+        //console.log(`Unhandled event type ${event.type}`);
+        break;
+    }
+  } catch (error) {
+    console.error("Error processing event:", error);
+    return response.status(500).send(`Error processing event: ${error.message}`);
   }
 
   // Return a 200 response to acknowledge receipt of the event
-  response.send();
+  response.status(200).send();
 };
+
+
 
 
 module.exports = {

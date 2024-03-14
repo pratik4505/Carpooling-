@@ -27,11 +27,7 @@ const pastRideSchema = new Schema({
   ratings: {
     type: Map,
     of: {
-      stars: {
-        type: Number,
-        min: 0,
-        max: 5,
-      },
+      rating: Number,
       description: String,
     },
   },
@@ -42,9 +38,6 @@ const pastRideSchema = new Schema({
   rideCancelled: {
     type: Boolean,
     default: false,
-  },
-  otherData: {
-    type: Schema.Types.Mixed,
   },
 });
 

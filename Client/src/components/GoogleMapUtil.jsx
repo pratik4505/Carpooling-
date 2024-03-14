@@ -53,7 +53,7 @@ function GoogleMapUtil({ coordinates, polyline }) {
 
   return (
     <GoogleMap
-      center={{ lat: 25.3176, lng: 82.9739 }}
+      // center={{ lat: 25.3176, lng: 82.9739 }}
       zoom={15}
       mapContainerStyle={{ width: "100%", height: "100%" }}
       options={mapOptions}

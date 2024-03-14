@@ -29,7 +29,7 @@ const bookedRideSchema = new Schema({
   },
   passengerImageUrl: {
     type: String,
-    required: true,
+   
   },
   driverId: {
     type: Schema.Types.ObjectId,
@@ -42,7 +42,7 @@ const bookedRideSchema = new Schema({
   },
   driverImageUrl: {
     type: String,
-    required: true,
+    
   },
   seats: {
     type: Number,
@@ -72,6 +72,7 @@ const bookedRideSchema = new Schema({
   },
   distance: {
     type: Number,
+    required: true,
   },
   transactionId: {
     type: Schema.Types.ObjectId,

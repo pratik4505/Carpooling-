@@ -62,7 +62,8 @@ export default function PassengerRides() {
                 {value.vehicleType}
               </p>
 
-              {!value.rideCancelled &&
+                {/* commented one is the main code ,next one is for testing */}
+              {/* {!value.rideCancelled &&
                 value.codeVerified &&
                  (
                   <button
@@ -73,8 +74,18 @@ export default function PassengerRides() {
                   >
                     Rate Co-riders
                   </button>
-                )}
-
+                )} */}
+                
+                 
+                  <button
+                    onClick={() => {
+                      setRating(value);
+                    }}
+                    className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
+                  >
+                    Rate Co-riders
+                  </button>
+                
               {!value.rideCancelled && !value.codeVerified && (
                 <button className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400">
                   Cancel Ride
