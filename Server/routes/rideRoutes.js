@@ -2,7 +2,7 @@ const router = require("express").Router();
 const {
   postRide,
   getRequests,
-  postRequest,
+  postRequests,
   getAcceptedRides,
   postDeclinePayment,
   getBookedRides,
@@ -16,7 +16,7 @@ const verifyJWT=require('../middleware/verifyJWT')
 router.post("/publishRide",verifyJWT, postRide);
 router.post("/getAvaliableRides",verifyJWT, findRides);
 router.get("/getRequests",verifyJWT, getRequests);
-router.get("/postRequests",verifyJWT, postRequest);
+router.post("/postRequests",verifyJWT, postRequests);
 
 router.get("/getAccepetedRides",verifyJWT, getAcceptedRides);
 router.post("/postDeclinePayment",verifyJWT, postDeclinePayment);

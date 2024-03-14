@@ -30,10 +30,12 @@ function generateUniqueCode() {
 
 const checkout = async (req, res) => {
   const data = req.body;
+ 
   try {
+    const amountInCents = Math.round(parseFloat(data.amount) * 100);
     const paymentIntent = await stripe.paymentIntents.create({
-      currency: "INR",
-      amount: data.amount,
+      currency: "EUR",
+      amount: 5,
       description: data.description,
       receipt_email: data.email,
       metadata: {
@@ -48,6 +50,7 @@ const checkout = async (req, res) => {
       clientSecret: paymentIntent.client_secret,
     });
   } catch (e) {
+    console.log(e)
     return res.status(400).send({
       error: {
         message: e.message,
@@ -58,9 +61,8 @@ const checkout = async (req, res) => {
 
 const paymentWebhook = async (request, response) => {
   const sig = request.headers["stripe-signature"];
-
+  console.log("Webhook Called")
   let event;
-
   try {
     event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
   } catch (err) {
@@ -82,6 +84,7 @@ const paymentWebhook = async (request, response) => {
         user.pendingPayments.delete(customData.key);
 
         // Update user's pendingPayments
+        const pendingPayments = user.pendingPayments; // Get current pendingPayments
         user.pendingPayments = pendingPayments;
         await user.save();
 
@@ -89,6 +92,12 @@ const paymentWebhook = async (request, response) => {
         const availableRide = await AvailableRide.findOne({
           rideId: value.rideId,
         });
+
+        if (!availableRide) {
+          console.error("Available ride not found");
+          break;
+        }
+
         const paidTo = availableRide.driverId;
         
         // Subtract booked seats from available seats
@@ -97,9 +106,9 @@ const paymentWebhook = async (request, response) => {
         // Save the updated document
         await availableRide.save();
 
+        // Find driver details
         const driver = await User.findById(availableRide.driverId);
 
-        
         // Store transaction data in Transaction schema
         const transaction = new Transaction({
           intentId: paymentIntentSucceeded.id,
@@ -113,20 +122,19 @@ const paymentWebhook = async (request, response) => {
         });
         await transaction.save();
 
-        const transactionId = transaction._id;
-
-        const pastRide=new PastRide({
+        // Create past ride entry for the passenger
+        const pastRide = new PastRide({
           rideId: value.rideId,
-          userId:customData.paidBy,
-          source:value.pickUpAddress,
-          destination:value.destinationAddress,
-          user:'passenger',
-          rating:{},
-          overview_polyline:availableRide.overview_polyline,
+          userId: customData.paidBy,
+          source: value.pickUpAddress,
+          destination: value.destinationAddress,
+          user: 'passenger',
+          rating: {},
+          overview_polyline: availableRide.overview_polyline || null, // Ensure overview_polyline exists
         });
-
         await pastRide.save();
 
+        // Create booked ride entry for the passenger
         const bookedRide = new BookedRide({
           rideId: value.rideId,
           passengerId: customData.paidBy,
@@ -139,22 +147,19 @@ const paymentWebhook = async (request, response) => {
           pickUpTime: value.pickUpTime,
           unitCost: value.unitCost,
           distance: value.distance,
-          transactionId: transactionId,
-          verificationCode:generateUniqueCode(),
+          transactionId: transaction._id,
+          verificationCode: generateUniqueCode(),
           vehicleType: availableRide.vehicleType,
-          overview_polyline: availableRide.overview_polyline,
-          passengerName:user.name,
-          passengerImageUrl:user.imageUrl,
-          driverId:availableRide.driverId,
-          driverName:driver.name,
-          driverImageUrl:driver.imageUrl,
-          pastRideId:pastRide._id,
-          driverPastId:availableRide.pastRideId
+          overview_polyline: availableRide.overview_polyline || null, // Ensure overview_polyline exists
+          passengerName: user.name,
+          passengerImageUrl: user.imageUrl,
+          driverId: availableRide.driverId,
+          driverName: driver.name,
+          driverImageUrl: driver.imageUrl,
+          pastRideId: pastRide._id,
+          driverPastId: availableRide.pastRideId,
         });
         await bookedRide.save();
-
-        //ALSO MAKE PASTRIDE SCHEMA FOR DRIVER 
-        
 
         console.log("Transaction stored");
       } catch (error) {
@@ -169,6 +174,7 @@ const paymentWebhook = async (request, response) => {
   // Return a 200 response to acknowledge receipt of the event
   response.send();
 };
+
 
 module.exports = {
   checkout,

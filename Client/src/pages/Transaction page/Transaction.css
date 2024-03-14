@@ -1,0 +1,9 @@
+body {
+	min-height: 100vh;
+	display: flex;
+	font-family: Inter;
+	align-items: center;
+	justify-content: center;
+	background: #e8e8e8;
+	gap: 16px;
+}

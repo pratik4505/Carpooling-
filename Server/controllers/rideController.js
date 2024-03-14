@@ -2,6 +2,7 @@ const AvailableRide = require("../models/AvailableRide");
 const User = require("../models/User");
 const BookedRide = require("../models/BookedRide");
 const PastRide = require("../models/PastRide");
+const uuid = require("uuid");
 const postRide = async (req, res) => {
   // Extract data from request body
   const userId = req.userId;
@@ -90,10 +91,10 @@ const getRequests = async (req, res) => {
   }
 };
 
-const postRequest = async (req, res) => {
+const postRequests = async (req, res) => {
   try {
-    const userId = req.userId; // Assuming userId is extracted from authentication middleware
-    // Check if action and key are provided in the request body
+    const userId = req.userId; 
+    console.log(userId);
     const { action, key } = req.body;
     if (!action || !key) {
       return res
@@ -101,6 +102,7 @@ const postRequest = async (req, res) => {
         .json({ error: "Action and key must be provided in the request body" });
     }
     // Find the user
+    
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -146,6 +148,10 @@ const postRequest = async (req, res) => {
         destinationAddress,
       };
 
+      if (!requester.pendingPayments) {
+        requester.pendingPayments = new Map();
+      }
+
       requester.pendingPayments.set(key, requestData);
       await requester.save();
     }
@@ -156,7 +162,7 @@ const postRequest = async (req, res) => {
     res.status(200).json({ message: "Request processed successfully" });
   } catch (error) {
     console.error("Error processing request:", error);
-    return handleApiError(error, res);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 const getAcceptedRides = async (req, res) => {
@@ -188,7 +194,7 @@ const getAcceptedRides = async (req, res) => {
   }
 };
 
-const postDeclinePayment = async () => {
+const postDeclinePayment = async (req, res) => {
   try {
     const userId = req.userId; // Assuming userId is extracted from authentication middleware
 
@@ -219,7 +225,7 @@ const postDeclinePayment = async () => {
     res.status(200).json({ message: "Payment request deleted successfully" });
   } catch (error) {
     console.error("Error processing request:", error);
-    return handleApiError(error, res);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -336,12 +342,45 @@ const getDriverRides = async (req, res) => {
   }
 };
 
-const rideRequest = (req, res) => {}
+const rideRequest = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { userData, rideData } = req.body;
+    console.log(rideData)
+    const driver = await User.findById(rideData.driverId);
+
+    if (!driver) {
+      return res.status(404).json({ message: "Driver not found" });
+    }
+
+    const requestData = {
+      requesterId: userData.userId,
+      requesterImageUrl: userData.imageUrl,
+      requesterName: userData.name,
+      ...rideData,
+    };
+
+    if (!driver.rideRequests) {
+      driver.rideRequests = new Map();
+    }
+
+
+    const key =  uuid.v1();; 
+    driver.rideRequests.set(key, requestData);
+    await driver.save();
+
+    res.status(200).json({ message: "Ride request sent successfully" });
+  } catch (error) {
+    console.error("Error in rideRequest:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 module.exports = {
   postRide,
   getRequests,
-  postRequest,
+  postRequests,
   getAcceptedRides,
   postDeclinePayment,
   getBookedRides,

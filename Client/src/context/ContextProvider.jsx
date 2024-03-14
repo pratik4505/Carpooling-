@@ -72,7 +72,7 @@ export const ContextProvider = ({ children }) => {
       console.error("Socket.IO connection error:", error);
     });
 
-   // initialLoad();
+    initialLoad();
     return () => {
       // Disconnect the socket
       socket.disconnect();

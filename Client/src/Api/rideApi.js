@@ -93,8 +93,9 @@ export const getDriverRides = async () => {
 
   
 export const rideRequest = async (data) => {
-  try {
+  try { console.log(data)
     const res = await API.post(`/rides/rideRequest`,data);
+   
     if (res.status === 200) return { error: null, data: res.data };
     else return { error: res, data: null };
   } catch (error) {

@@ -58,7 +58,7 @@ const userSchema = new Schema({
       unitCost: Number,
       pickUpDate: Date,
       pickUpTime: String,
-      message: String,
+     
     },
   },
   pendingPayments: {
