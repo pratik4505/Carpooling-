@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
 import "./messageContainer.scss";
-
-
+import { Link } from "react-router-dom";
+import { getMessages,postMessage } from "../../Api/chatApi";
 import { v4 as uuidv4 } from "uuid";
 import ScrollToBottom from "react-scroll-to-bottom";
 
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosSend } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
-import {API} from "../../utils/api"
+
 import { AuthContext } from "../../context/ContextProvider";
 const msgPerLoad = 50;
 
@@ -19,23 +19,23 @@ export default function MessageContainer(props) {
   const [loadMore, setLoadMore] = useState(false);
   const [currMsg, setCurrMsg] = useState("");
 
-  const {userData}=useContext(AuthContext);
+  const {userData,socket}=useContext(AuthContext);
 
   const messageLoader = async () => {
     try {
       const limit = msgPerLoad;
-      const chatId = props.data.chatId;
+     
       const createdAt =
         messages.length > 0 ? messages[0].createdAt : new Date();
 
-      const response = await API.get(
-        `/message/getMessages?limit=${limit}&chatId=${chatId}&createdAt=${createdAt}`
+      const response = await getMessages(limit,props.data.rideId,createdAt);
         
-      );
+        
+     
 
-      if (response.status===200) {
-        const data = await response.data;
-
+      if (response.data) {
+        const data = response.data
+        
         // If the response is not empty, update the messages array
         if (data.length > 0) {
           setMessages((prevMessages) => [...data, ...prevMessages]);
@@ -55,12 +55,13 @@ export default function MessageContainer(props) {
 
   useEffect(() => {
     
-    myId = userData.userId
+    myId = userData.userId;
+    if(!myId)return;
     setMessages([]);
     messageLoader();
-    gloContext.socket.on("receiveMessage", (data) => {
+    socket.on("receiveMessage", (data) => {
       console.log("useEffect");
-      if (data.senderId === props.data.otherMemberId) {
+      if (data.senderId !== myId) {
         setMessages((prev) => {
           return [
             ...prev,
@@ -69,14 +70,14 @@ export default function MessageContainer(props) {
               message: data.message,
               senderId: data.senderId,
               createdAt: data.createdAt,
-              chatId: props.data.chatId,
+              rideId: props.data.rideId,
             },
           ];
         });
       }
     });
   }, [props.data.chatId]);
-
+  console.log(messages)
   const sendMsg = async () => {
     const _id = uuidv4();
 
@@ -87,28 +88,23 @@ export default function MessageContainer(props) {
     });
     setCurrMsg("");
 
-    gloContext.socket.emit("sendMessage", {
-      room: props.data.chatId,
+    socket.emit("sendMessage", {
+      room: props.data.rideId,
       message: msg,
       senderId: myId,
       createdAt: new Date(),
-      userData: gloContext.userData,
+      userData: userData,
     });
     const data = {
       senderId: myId,
-      chatId: props.data.chatId,
+      rideId: props.data.rideId,
       message: msg,
     };
 
     try {
-      const response = await API.post(
-        `/message/postMessage`, data, {headers:{
-          "Content-Type": "application/json",
-        }
-      }
-      ); 
+      const response = await postMessage(data);
 
-      if (response===500) {
+      if (response.error) {
         console.error("Failed to save message to the server");
       }
     } catch (error) {
@@ -125,17 +121,11 @@ export default function MessageContainer(props) {
           color="#ffff"
           onClick={() => props.closeContainer()}
         />
-        {props.data.otherMemberImageUrl && (
-          <img
-            className="w-12 h-12 rounded-full"
-            src={`${baseUrl}/${props.data.otherMemberImageUrl}`}
-            alt=""
-          />
-        )}
-        {!props.data.otherMemberImageUrl && (
+        
+       
           <FaRegUser size={28} className="mx-2" />
-        )}
-        <h1 className="text-3xl ml-2 font-bold text-[#ffffff]">{props.data.otherMemberName}</h1>
+        
+        <h1 className="text-3xl ml-2 font-bold text-[#ffffff]">{props.data.chatName}</h1>
         </div>
         
         
@@ -149,13 +139,26 @@ export default function MessageContainer(props) {
             Load More
           </button>
         )}
-        {messages.map((msg) => (
+         
+        {messages&&messages.map((msg) => (
           <div
             className={`message ${
               msg.senderId === myId ? "outgoing" : "incoming"
             }`}
             key={msg._id}
           >
+            <Link to={`/profile/${msg.senderId}`}>
+                {props.data.members[msg.senderId]?.imageUrl && (
+                  <img
+                    src={props.data.members[msg.senderId]?.imageUrl }
+                    alt="avatar"
+                    className="w-12 h-12 rounded-full mx-auto mb-2"
+                  />
+                )}
+                <h3 className="text-lg font-semibold text-center text-gray-700 mb-1">
+                  {props.data.members[msg.senderId]?.name}
+                </h3>
+              </Link>
             {msg.message}
           </div>
         ))}

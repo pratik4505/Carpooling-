@@ -8,9 +8,9 @@ export const getChats = async () => {
       return handleApiError(error);
     }
   };
-  export const getMessages = async () => {
+  export const getMessages = async (limit,rideId,createdAt) => {
     try {
-      const res = await API.get("/chat/getMessages");
+      const res = await API.get(`/chat/getMessages?limit=${limit}&rideId=${rideId}&createdAt=${createdAt}`);
       if (res.status === 200) return { error: null, data: res.data };
       else return { error: res, data: null };
     } catch (error) {
@@ -20,7 +20,8 @@ export const getChats = async () => {
   export const postMessage = async (data) => {
     try {
       const res = await API.post("/chat/postMessage",data);
-      if (res.status === 200) return { error: null, data: res.data };
+     
+      if (res.status === 201) return { error: null, data: res.data };
       else return { error: res, data: null };
     } catch (error) {
       return handleApiError(error);
@@ -28,7 +29,7 @@ export const getChats = async () => {
   };
   export const createChat = async (data) => {
     try {
-      const res = await API.post("/chat/createChat",data);
+      const res = await API.post(`/chat/createChat`,data);
       if (res.status === 200) return { error: null, data: res.data };
       else return { error: res, data: null };
     } catch (error) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   useJsApiLoader,
   GoogleMap,
@@ -7,6 +7,7 @@ import {
 } from "@react-google-maps/api";
 import { useRef } from "react";
 import axios from "axios";
+import { AuthContext } from "../../context/ContextProvider";
 
 const center = { lat: 48.8584, lng: 2.2945 };
 
@@ -17,6 +18,7 @@ export default function PublishRide() {
     googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
   });
+  const {userData}=useContext(AuthContext);
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(null);
   const [availableSeats, setAvailableSeats] = useState(1);
   const [map, setMap] = useState(null);
@@ -123,6 +125,7 @@ export default function PublishRide() {
         unitCost: unitCost,
         vehicleType: vehicleType,
         speed,
+        userData
       };
 
       const response = await axios.post(

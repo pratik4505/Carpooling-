@@ -20,15 +20,8 @@ export default function MainMessage() {
     setCurrChat(data);
   };
 
- 
-
   useEffect(() => {
-    gloContext.setMessageStatus(true);
-    loadChats();
-
-    return () => {
-      gloContext.setMessageStatus(false);
-    };
+   
   }, []);
 
   return (

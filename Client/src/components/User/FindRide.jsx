@@ -11,6 +11,7 @@ import {
 } from "@react-google-maps/api";
 import { rideRequest } from "../../Api/rideApi";
 import { AuthContext } from "../../context/ContextProvider";
+import { ChatContext } from "../../context/ChatProvider";
 
 const FindRide = () => {
   const [libraries, setLibraries] = useState(["places", "geometry"]);
@@ -18,7 +19,8 @@ const FindRide = () => {
     googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
   });
-  const { userData } = useContext(AuthContext);
+  const { userData} = useContext(AuthContext);
+  const {chatAdder} = useContext(ChatContext);
   const [center, setCenter] = useState(null);
   const [userDirectionResponse, setUserDirectionRespone] = useState(null);
   const [directionsResponse, setDirectionResponse] = useState(null);
@@ -394,6 +396,12 @@ const FindRide = () => {
                         onClick={() => makeRideRequest(ride, index)}
                       >
                         Ride request
+                      </button>
+                      <button
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+                        onClick={() => chatAdder(ride._id)}
+                      >
+                        Join Chat Group
                       </button>
                     </li>
                   ))}

@@ -1,21 +1,26 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const chatSchema = new mongoose.Schema({
-  memberIds: {
-    type: [{ type: String, required: true }],
+  rideId: { 
+    type: String,
+    required: true,
   },
-  memberData: {
-    type: [{
+  members: {
+    type: Map,
+    of: {
       name: String,
-      imageUrl: String
-    }],
+      imageUrl: String,
+    },
   },
   chatName: {
     type: String,
     required: true,
-  }
+  },
+},
+{
+  timestamps: true,
 });
 
-const Chat = mongoose.model('Chat', chatSchema);
+const Chat = mongoose.model("Chat", chatSchema);
 
 module.exports = Chat;

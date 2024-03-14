@@ -2,6 +2,7 @@ const AvailableRide = require("../models/AvailableRide");
 const User = require("../models/User");
 const BookedRide = require("../models/BookedRide");
 const PastRide = require("../models/PastRide");
+const Chat=require('../models/Chat')
 const uuid = require("uuid");
 const postRide = async (req, res) => {
   // Extract data from request body
@@ -21,6 +22,7 @@ const postRide = async (req, res) => {
       overview_polyline,
       totalTime,
       speed,
+      userData
     } = req.body;
 
     // Create a new AvailableRide document
@@ -56,6 +58,19 @@ const postRide = async (req, res) => {
     await pastRide.save();
     newAvailableRide.pastRideId=pastRide._id;
     await newAvailableRide.save();
+    
+    const chat = new Chat({
+      rideId: newAvailableRide._id,
+      members: {
+        [userData.userId]: {
+          name: userData.name,
+          imageUrl: userData.imageUrl
+        }
+      },
+      chatName: `${userData.name} (${source} to ${destination})`
+    });
+    
+    await chat.save();
     
     
     console.log("I am here");

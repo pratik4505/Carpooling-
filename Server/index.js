@@ -26,13 +26,14 @@ app.use(
 );
 app.post("/payment/confirmPaymentWebhook",express.raw({type: 'application/json'}), paymentWebhook);
 app.use(cors());
-// app.use(bodyParser.raw({ type: 'application/json' }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/chat',chatRoutes);
 app.use("/auth", authRoutes);
 app.use("/rides", rideRoutes);
 app.use("/payment", paymentRoutes);
-app.use('/chat',chatRoutes);
+
 
 app.get("/server-status", (req, res) => {
   res.status(200).json({ message: "Server is up and running!" });

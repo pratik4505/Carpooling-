@@ -9,7 +9,7 @@ const verifyJWT = (req, res, next) => {
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  console.log("decline request")
+  
   // Extract token from authorization header
   const token = authHeader.split(" ")[1];
 
