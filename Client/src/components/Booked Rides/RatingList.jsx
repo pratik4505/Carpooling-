@@ -127,26 +127,24 @@ export default function RatingList({ rideId, passengers, driver, onCancel }) {
                 {data.passengerName}
               </h3>
             </Link>
-            <div className="flex items-center">
-              {[1, 2, 3, 4, 5].map((value) => (
-                <label key={value} className="cursor-pointer">
-                  <input
-                    type="radio"
-                    name="rating"
-                    value={value}
-                    onClick={() => handleRatingChange(data.pastRideId, value)}
-                    className="sr-only"
-                  />
-                  <FaStar
-                    className={`text-yellow-400 ${
-                      value <= (ratings[data.pastRideId]?.rating || 0)
-                        ? "fill-current"
-                        : ""
-                    }`}
-                  />
-                </label>
-              ))}
-            </div>
+            <div>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          className="star cursor-pointer"
+          style={{
+            color: ratings[data.pastRideId]?.rating  >= star ? "gold" : "gray",
+            fontSize: "35px",
+          }}
+          onClick={() => handleRatingChange(data.pastRideId, star)}
+        >
+          {" "}
+          ★{" "}
+        </span>
+      ))}
+    </div>
+
+           
             <textarea
               value={ratings[data.pastRideId]?.description || ""}
               onChange={(event) =>
