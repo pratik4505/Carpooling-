@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      <AboutUs />
+      {/* <AboutUs /> */}
       <Services />
       <FAQ />
       <ContactForm />
