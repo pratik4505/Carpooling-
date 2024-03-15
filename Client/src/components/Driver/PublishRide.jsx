@@ -13,12 +13,8 @@ const center = { lat: 48.8584, lng: 2.2945 };
 
 export default function PublishRide() {
   console.log("I come in backend");
-  const [libraries, setLibraries] = useState(["places"]);
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
-    libraries,
-  });
-  const {userData}=useContext(AuthContext);
+  
+  const {userData,isLoaded}=useContext(AuthContext);
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(null);
   const [availableSeats, setAvailableSeats] = useState(1);
   const [map, setMap] = useState(null);

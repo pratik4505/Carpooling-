@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useJsApiLoader, GoogleMap, Marker, Polyline } from "@react-google-maps/api";
+import { AuthContext } from "../context/ContextProvider";
 
 function GoogleMapUtil({ coordinates, polyline }) {
-  const [libraries] = useState(["places", "geometry"]);
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
-    libraries,
-  });
+  const {isLoaded}=useContext(AuthContext)
 
   const [map, setMap] = useState(null);
   const [route, setRoute] = useState(null);

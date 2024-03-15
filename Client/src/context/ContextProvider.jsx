@@ -2,6 +2,10 @@ import { createContext, useState, useEffect, useCallback } from "react";
 import io from "socket.io-client";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import {
+  useJsApiLoader,
+ 
+} from "@react-google-maps/api";
 export const AuthContext = createContext();
 const baseUrl = import.meta.env.VITE_SERVER_BASE_URL;
 export const ContextProvider = ({ children }) => {
@@ -15,7 +19,11 @@ export const ContextProvider = ({ children }) => {
     })
   );
   const [userData, setUserData] = useState(null);
-
+  const [libraries, setLibraries] = useState(["places", "geometry"]);
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
   const listen=useCallback(()=>{
     socket.on("notification", (data)=>{
       if(data.type==='handleRequest'){
@@ -84,7 +92,7 @@ export const ContextProvider = ({ children }) => {
   
 
   return (
-    <AuthContext.Provider value={{ socket, userData ,initialLoad}}>
+    <AuthContext.Provider value={{ socket, userData ,initialLoad,isLoaded}}>
       {children}
     </AuthContext.Provider>
   );

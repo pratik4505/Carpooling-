@@ -338,7 +338,7 @@ const getDriverRides = async (req, res) => {
     for (const ride of availableRides) {
       // Find documents from BookedRide schema where rideId is equal to _id of availableRide
       const bookedRides = await BookedRide.find({ rideId: ride._id }).select(
-        "pastRideId passengerId passengerName passengerImageUrl seats pickUp destination pickUpAddress destinationAddress pickUpDate pickUpTime distance rideCancelled unitCost"
+        "_id pastRideId passengerId passengerName passengerImageUrl seats pickUp destination pickUpAddress destinationAddress pickUpDate pickUpTime distance rideCancelled unitCost codeVerified"
       );
 
       // Add passengers information to the availableRide document
@@ -393,7 +393,14 @@ const rideRequest = async (req, res) => {
   }
 };
 
+const verifyCode=async (req, res) => {
 
+  const {_id,code}=req.body;
+
+    const bookedRide=await BookedRide.findById(_id);
+    
+
+}
 module.exports = {
   postRide,
   getRequests,
@@ -404,5 +411,6 @@ module.exports = {
   getCoRiders,
   postRatings,
   getDriverRides,
-  rideRequest
+  rideRequest,
+  verifyCode
 };

@@ -1,7 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { verifyCode } from "../../Api/rideApi";
+import { VerifiedIcon } from "../icons";
 export default function PassengersList(props) {
   const passengers = props.data;
+
+  const [code,setCode]=useState({});
+
+  const sendCode = async (id) => {
+    try {
+      const res = await verifyCode({ _id: id, code: code[id] });
+      if (!res.error) {
+        // Code verification successful, handle success case here
+      } else {
+        // Code verification failed, handle error case here
+      }
+    } catch (error) {
+      // Handle any errors that occur during the verification process
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <div className="h-full w-full">
       {passengers.map((value, key) => (
@@ -46,6 +65,30 @@ export default function PassengersList(props) {
               <span className="font-semibold">Ride is Cancelled </span>
             </p>
           )}
+          {!value.rideCancelled &&(!value.codeVerified) &&(
+            <div className="w-64 flex">
+              <input
+                className="border border-gray-300 rounded-l-md py-2 px-4 w-full outline-none"
+                type="number"
+                placeholder="Enter Code"
+                
+                onChange={(e) => {
+                  setCode((prev) => ({ ...prev, [value._id]: e.target.value }));
+                }}
+              />
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-r-md ml-px"
+                type="button"
+                onClick={()=>sendCode(value._id)}
+              >
+                Verify
+              </button>
+            </div>
+          )}
+         {value.codeVerified&& <div className="flex">
+          { <VerifiedIcon/> }Verified
+          </div>}
+        
         </div>
       ))}
       <button

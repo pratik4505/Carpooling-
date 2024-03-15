@@ -9,7 +9,8 @@ const {
   postRatings,
   getDriverRides,
   getCoRiders,
-  rideRequest
+  rideRequest,
+  verifyCode
 } = require("../controllers/rideController");
 const { findRides } = require("../controllers/getRides");
 const verifyJWT=require('../middleware/verifyJWT')
@@ -26,6 +27,6 @@ router.get("/getCoRiders/:rideId",verifyJWT, getCoRiders);
 router.post("/postRatings", verifyJWT,postRatings);
 router.get("/getDriverRides",verifyJWT, getDriverRides);
 router.post("/rideRequest",verifyJWT,rideRequest);
-
+router.post('/verifyCode',verifyCode);
 
 module.exports = router;

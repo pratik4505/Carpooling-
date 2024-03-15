@@ -78,7 +78,7 @@ export default function MessageContainer(props) {
       }
     });
   }, [props.data.chatId]);
-  console.log(messages)
+  
   const sendMsg = async () => {
     const _id = uuidv4();
 

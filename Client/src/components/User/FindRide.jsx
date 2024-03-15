@@ -14,12 +14,8 @@ import { AuthContext } from "../../context/ContextProvider";
 import { ChatContext } from "../../context/ChatProvider";
 
 const FindRide = () => {
-  const [libraries, setLibraries] = useState(["places", "geometry"]);
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
-    libraries,
-  });
-  const { userData} = useContext(AuthContext);
+  
+  const { userData,isLoaded} = useContext(AuthContext);
   const {chatAdder} = useContext(ChatContext);
   const [center, setCenter] = useState(null);
   const [userDirectionResponse, setUserDirectionRespone] = useState(null);

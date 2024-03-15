@@ -93,7 +93,7 @@ export const getDriverRides = async () => {
 
   
 export const rideRequest = async (data) => {
-  try { console.log(data)
+  try { 
     const res = await API.post(`/rides/rideRequest`,data);
    
     if (res.status === 200) return { error: null, data: res.data };
@@ -103,4 +103,14 @@ export const rideRequest = async (data) => {
   }
 };
 
+export const verifyCode = async (data) => {
+  try { 
+    const res = await API.post(`/rides/verifyCode`,data);
+   
+    if (res.status === 200) return { error: null, data: res.data };
+    else return { error: res, data: null };
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
   
