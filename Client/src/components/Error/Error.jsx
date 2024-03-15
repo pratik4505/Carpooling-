@@ -6,7 +6,7 @@ const Error = () => {
   const navigate = useNavigate();
   return (
     <div>
-      <div class="about">
+      <div class="about-error">
         <a
           class="bg_links social portfolio"
           href="https://www.rafaelalucas.com"
