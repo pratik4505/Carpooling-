@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { signUp } from "../../Api/authApi";
-import "./styling.scss";
+import "./Login.scss";
 import { AiOutlineUser } from "react-icons/ai";
 import { BsKey } from "react-icons/bs";
 
@@ -35,13 +35,11 @@ export default function RegisterComponent() {
   };
 
   return (
-    <div className="container">
-      <div className="form-box">
-        <h1>Register</h1>
-        <img className="login-lync-wo-back" src="/Lyncwoback.png" alt="Lync" />
-        <div className="input-group">
-          <div className="input-field">
-            <AiOutlineUser className="react-icons" />
+    <div>
+      <div class="login-box">
+        <h2>Register</h2>
+        <form>
+          <div class="user-box">
             <input
               type="text"
               name="username"
@@ -49,9 +47,9 @@ export default function RegisterComponent() {
               placeholder="Username"
               onChange={(e) => setUsername(e.target.value)}
             />
+            <label>UserName</label>
           </div>
-          <div className="input-field">
-            <AiOutlineUser className="react-icons" />
+          <div class="user-box">
             <input
               type="text"
               name="email"
@@ -59,9 +57,9 @@ export default function RegisterComponent() {
               placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
             />
+            <label>Email</label>
           </div>
-          <div className="input-field">
-            <BsKey className="react-icons" />
+          <div class="user-box">
             <input
               type="password"
               name="password"
@@ -69,22 +67,23 @@ export default function RegisterComponent() {
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
             />
+            <label>Password</label>
           </div>
-
-          <div className="submit-container">
-            {loading ? (
-              <div className="loading-spinner">Loading...</div>
-            ) : (
-              <div className="submit" onClick={handleSignUp}>
-                Sign up
-              </div>
-            )}
-          </div>
-        </div>
+          <a onClick={handleSignUp}>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <div>
+              {loading ? (
+                <div>Loading...</div>
+              ) : (
+                <div onClick={handleSignUp}>Sign Up</div>
+              )}
+            </div>
+          </a>
+        </form>
       </div>
-      {responseMessage && (
-        <div className="error-message">{responseMessage}</div>
-      )}
     </div>
   );
 }

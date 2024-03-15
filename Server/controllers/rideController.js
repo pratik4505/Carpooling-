@@ -2,12 +2,12 @@ const AvailableRide = require("../models/AvailableRide");
 const User = require("../models/User");
 const BookedRide = require("../models/BookedRide");
 const PastRide = require("../models/PastRide");
-const Chat=require('../models/Chat')
+const Chat = require("../models/Chat");
 const uuid = require("uuid");
 const postRide = async (req, res) => {
   // Extract data from request body
   const userId = req.userId;
- 
+
   try {
     const {
       source,
@@ -17,14 +17,12 @@ const postRide = async (req, res) => {
       availableSeats,
       unitCost,
       vehicleType,
-      
       totalSeats,
       overview_polyline,
       totalTime,
       speed,
-      userData
+      userData,
     } = req.body;
-
     // Create a new AvailableRide document
     const newAvailableRide = new AvailableRide({
       source,
@@ -35,45 +33,43 @@ const postRide = async (req, res) => {
       availableSeats,
       unitCost,
       vehicleType,
-      driverId:userId,
+      driverId: userId,
       totalSeats,
       totalTime,
       speed,
-      pastRideId:'abc'
+      pastRideId: "abc",
     });
 
     // Save the new AvailableRide to the database
     await newAvailableRide.save();
 
-    const pastRide=new PastRide({
-      rideId:newAvailableRide._id,
-      userId:userId,
+    const pastRide = new PastRide({
+      rideId: newAvailableRide._id,
+      userId: userId,
       source,
       destination,
-      user:'driver',
-      rating:{},
-      overview_polyline
+      user: "driver",
+      rating: {},
+      overview_polyline,
     });
 
     await pastRide.save();
-    newAvailableRide.pastRideId=pastRide._id;
+    newAvailableRide.pastRideId = pastRide._id;
     await newAvailableRide.save();
-    
+
     const chat = new Chat({
       rideId: newAvailableRide._id,
       members: {
         [userData.userId]: {
           name: userData.name,
-          imageUrl: userData.imageUrl
-        }
+          imageUrl: userData.imageUrl,
+        },
       },
       chatName: `${userData.name} (${source.split(',')[0]} to ${destination.split(',')[0]})`
-
     });
-    
+
     await chat.save();
-    
-    
+
     console.log("I am here");
 
     res.status(201).json(newAvailableRide); // Status code 201: Created
@@ -109,7 +105,7 @@ const getRequests = async (req, res) => {
 
 const postRequests = async (req, res) => {
   try {
-    const userId = req.userId; 
+    const userId = req.userId;
     console.log(userId);
     const { action, key } = req.body;
     if (!action || !key) {
@@ -118,7 +114,7 @@ const postRequests = async (req, res) => {
         .json({ error: "Action and key must be provided in the request body" });
     }
     // Find the user
-    
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -286,19 +282,17 @@ const postRatings = async (req, res) => {
     // Assuming req.userId contains the user's ID
 
     // Iterate over each key-value pair in the map
-    console.log(req.body)
+    console.log(req.body);
     for (const [pastRideId, ratingValue] of Object.entries(req.body)) {
       // Find the document of PastRide schema for the given pastRideId
       const pastRide = await PastRide.findById(pastRideId);
 
       // Check if the pastRide exists
       if (!pastRide) {
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message: `PastRide with ID ${pastRideId} not found`,
-          });
+        return res.status(404).json({
+          success: false,
+          message: `PastRide with ID ${pastRideId} not found`,
+        });
       }
 
       // Initialize the ratings map if it's undefined
@@ -363,7 +357,7 @@ const rideRequest = async (req, res) => {
   try {
     const userId = req.userId;
     const { userData, rideData } = req.body;
-    console.log(rideData)
+    console.log(rideData);
     const driver = await User.findById(rideData.driverId);
 
     if (!driver) {
@@ -381,8 +375,7 @@ const rideRequest = async (req, res) => {
       driver.rideRequests = new Map();
     }
 
-
-    const key =  uuid.v1();; 
+    const key = uuid.v1();
     driver.rideRequests.set(key, requestData);
     await driver.save();
 

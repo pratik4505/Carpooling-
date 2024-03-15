@@ -31,13 +31,13 @@ const Navbar = () => {
                   <a href="/searchride">Search Ride</a>
                 </li>
                 <li>
-                  <a href="/pulishride">Publish Ride</a>
+                  <a href="/publishride">Publish Ride</a>
                 </li>
                 <li>
                   <a href="/driverRides">Driver Ride</a>
                 </li>
                 <li>
-                  <a href="/">Publish Ride</a>
+                  <a href="/bookedrides">Booked Ride</a>
                 </li>
               </ul>
             </li>
@@ -147,6 +147,9 @@ const Navbar = () => {
             </li> */}
             <li>
               <a href="/profile">Profile</a>
+            </li>
+            <li>
+              <a href="/riderequests">Ride Requests</a>
             </li>
           </ul>
           <label htmlFor="menu-btn" class="btn menu-btn">

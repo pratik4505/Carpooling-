@@ -14,7 +14,7 @@ import Notifications from "../pages/Notifications";
 import PendingPayments from "../pages/PendingPayments";
 import Profile from "../pages/Profile";
 import RideRequests from "../pages/RideRequests";
-import Transactions from "../pages/Transactions";
+import Transactions from "../components/Transactions/Transactions";
 import Home from "../pages/Home";
 import Login from "../components/Login/Login";
 import Register from "../components/Login/Register";

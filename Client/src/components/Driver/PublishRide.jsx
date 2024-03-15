@@ -21,7 +21,6 @@ export default function PublishRide() {
   const [directionsResponses, setDirectionsResponses] = useState(null);
   const [datetime, setDatetime] = useState("");
   const [unitCost, setUnitCost] = useState("");
-  const [driverId, setDriverId] = useState("");
   const [vehicleType, setVehicleType] = useState("");
 
   const originRef = useRef();
@@ -98,16 +97,11 @@ export default function PublishRide() {
         minute: "2-digit",
       });
       time = convertAMPMTo24Hour(time);
-      console.log("The time is ", time);
-      console.log(directionsResponses.routes[selectedRouteIndex]);
       const totalTime =
         directionsResponses.routes[selectedRouteIndex].legs[0].duration.value;
       const totalDistance =
         directionsResponses.routes[selectedRouteIndex].legs[0].distance.value;
-      console.log(totalTime);
-      console.log(totalDistance);
       const speed = totalDistance / totalTime;
-      console.log(speed);
       const routeData = {
         source: directionsResponses.request.origin.query,
         destination: directionsResponses.request.destination.query,
@@ -117,11 +111,10 @@ export default function PublishRide() {
         totalSeats: availableSeats,
         overview_polyline:
           directionsResponses.routes[selectedRouteIndex].overview_polyline,
-        driverId: driverId,
         unitCost: unitCost,
         vehicleType: vehicleType,
         speed,
-        userData
+        userData,
       };
 
       const response = await axios.post(
@@ -129,11 +122,12 @@ export default function PublishRide() {
         routeData,
         {
           headers: {
-            Authorization: `Bearer ${JSON.parse(localStorage.getItem("profile"))?.accessToken}`,
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("profile"))?.accessToken
+            }`,
           },
         }
       );
-      
 
       if (response.status === 201) {
         console.log("Ride published successfully:", response.data);
@@ -146,9 +140,9 @@ export default function PublishRide() {
   }
 
   return (
-    <div className="grid grid-cols-2 h-[100vh]">
+    <div className="grid grid-cols-2 max-h-[100vh]">
       <div className="h-full">
-        <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mt-[80px]">
           Publish Ride
         </h1>
         <div className="w-[80%] m-auto flex p-3 flex-col mt-2 border">
@@ -177,7 +171,53 @@ export default function PublishRide() {
                 />
               </Autocomplete>
             </div>
+            <div>
+              <label htmlFor="datetime">Select Date and Time:</label>
+              <input
+                type="datetime-local"
+                id="datetime"
+                name="datetime"
+                value={datetime}
+                onChange={handleDateTimeChange}
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="seats">Available Seats:</label>
+              <input
+                type="number"
+                id="seats"
+                name="seats"
+                value={availableSeats}
+                onChange={handleSeatsChange}
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="unitCost">Unit Cost</label>
+              <input
+                type="number"
+                id="unitCost"
+                name="unitCost"
+                value={unitCost}
+                onChange={(e) => setUnitCost(e.target.value)}
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="vehicleType">Vehicle Type</label>
+              <input
+                type="text"
+                id="vehicleType"
+                name="vehicleType"
+                value={vehicleType}
+                onChange={(e) => setVehicleType(e.target.value)}
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+              />
+            </div>
           </div>
+        </div>
+        <div className=" mt-4 p-4 border w-[80%] m-auto flex flex-col gap-4">
           <div className="flex space-x-4 m-auto mt-3">
             <button
               type="submit"
@@ -192,63 +232,6 @@ export default function PublishRide() {
             >
               Clear Routes
             </button>
-          </div>
-        </div>
-        <div className=" mt-4 p-4 border w-[80%] m-auto flex flex-col gap-4">
-          <div>
-            <label htmlFor="datetime">Select Date and Time:</label>
-            <input
-              type="datetime-local"
-              id="datetime"
-              name="datetime"
-              value={datetime}
-              onChange={handleDateTimeChange}
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="seats">Available Seats:</label>
-            <input
-              type="number"
-              id="seats"
-              name="seats"
-              value={availableSeats}
-              onChange={handleSeatsChange}
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="unitCost">Unit Cost</label>
-            <input
-              type="number"
-              id="unitCost"
-              name="unitCost"
-              value={unitCost}
-              onChange={(e) => setUnitCost(e.target.value)}
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="driverId">Driver Id</label>
-            <input
-              type="number"
-              id="driverId"
-              name="driverId"
-              value={driverId}
-              onChange={(e) => setDriverId(e.target.value)}
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="vehicleType">Vehicle Type</label>
-            <input
-              type="text"
-              id="vehicleType"
-              name="vehicleType"
-              value={vehicleType}
-              onChange={(e) => setVehicleType(e.target.value)}
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-            />
           </div>
           <button
             type="submit"
