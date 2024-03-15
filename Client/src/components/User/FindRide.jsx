@@ -19,8 +19,8 @@ const FindRide = () => {
     googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
   });
-  const { userData} = useContext(AuthContext);
-  const {chatAdder} = useContext(ChatContext);
+  const { userData } = useContext(AuthContext);
+  const { chatAdder } = useContext(ChatContext);
   const [center, setCenter] = useState(null);
   const [userDirectionResponse, setUserDirectionRespone] = useState(null);
   const [directionsResponse, setDirectionResponse] = useState(null);
@@ -262,10 +262,9 @@ const FindRide = () => {
   };
 
   const makeRideRequest = async (ride, index) => {
-    
     try {
       const rideData = {
-        driverId:ride.driverId,
+        driverId: ride.driverId,
         rideId: ride._id,
         pickUp: ride.pickUpPoint,
         destination: ride.dropOffPoint,
@@ -278,12 +277,11 @@ const FindRide = () => {
         unitCost: ride.unitCost,
         pickUpDate: dateRef.current.value,
         pickUpTime: ride.pickUpTime,
-        
       };
-     // console.log(rideData)
+      // console.log(rideData)
       const res = await rideRequest({ userData, rideData });
       if (!res.error) {
-        console.log("Request made")
+        console.log("Request made");
       }
     } catch (error) {
       console.error("Error fetching rides:", error);
@@ -301,88 +299,138 @@ const FindRide = () => {
   };
 
   return (
-    <div className="grid grid-cols-2 h-[100vh]">
-      <div className="h-full white">
-        <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
+    <div className="grid grid-cols-1 lg:grid-cols-2 h-screen max-h-[100vh]">
+      <div className="h-full bg-white rounded-lg shadow-lg p-6 max-h-[100vh]">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mt-5">
           Search Ride
         </h1>
-        <div className="w-4/5 mx-auto flex flex-col space-y-4 my-8">
-          <div className="grid grid-cols-2 gap-4">
+        <div className="lg:w-4/5 mx-auto flex flex-col space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="flex-grow">
+              <label
+                htmlFor="source"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Source
+              </label>
               <Autocomplete
                 apiKey={import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}
               >
                 <input
+                  id="source"
                   type="text"
-                  placeholder="source"
+                  placeholder="Enter source"
                   ref={sourceRef}
-                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out"
                 />
               </Autocomplete>
             </div>
             <div className="flex-grow">
+              <label
+                htmlFor="destination"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Destination
+              </label>
               <Autocomplete
                 apiKey={import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}
               >
                 <input
+                  id="destination"
                   type="text"
-                  placeholder="Destination"
+                  placeholder="Enter destination"
                   ref={destinationRef}
-                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out"
                 />
               </Autocomplete>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <input
-              type="date"
-              placeholder="Date"
-              ref={dateRef}
-              className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-            />
-            <input
-              type="time"
-              placeholder="Time From"
-              ref={timeFromRef}
-              className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-            />
-            <input
-              type="time"
-              placeholder="Time To"
-              ref={timeToRef}
-              className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-            />
-            <input
-              type="number"
-              placeholder="Seats"
-              ref={seatsRef}
-              className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-            />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div>
+              <label
+                htmlFor="date"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Date
+              </label>
+              <input
+                id="date"
+                type="date"
+                placeholder="Select date"
+                ref={dateRef}
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="timeFrom"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Time From
+              </label>
+              <input
+                id="timeFrom"
+                type="time"
+                placeholder="Select time"
+                ref={timeFromRef}
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="timeTo"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Time To
+              </label>
+              <input
+                id="timeTo"
+                type="time"
+                placeholder="Select time"
+                ref={timeToRef}
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="seats"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Seats
+              </label>
+              <input
+                id="seats"
+                type="number"
+                placeholder="Enter number of seats"
+                ref={seatsRef}
+                className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out"
+              />
+            </div>
           </div>
 
           <div className="flex justify-center">
             <button
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
               onClick={serachRide}
             >
               Search Ride
             </button>
           </div>
         </div>
-        <div className="bg-gray-200 overflow-auto">
-          <div className="p-8">
-            {availableRides.length > 0 ? (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Available Rides:</h2>
+        <div className="bg-gray-200 mt-2 rounded-md">
+          {availableRides.length > 0 ? (
+            <div>
+              <h2 className="text-2xl font-bold mt-2 p-2">Available Rides:</h2>
+              <div className="bg-gray-200 p-4 max-h-[250px] rounded-md overflow-auto">
                 <ul>
                   {availableRides.map((ride, index) => (
                     <li
                       key={index}
-                      className="bg-white rounded-md shadow-md p-4 mb-4 cursor-pointer"
-                      onClick={() => displayRoute(ride, index)} // Add onClick handler
+                      className="bg-white rounded-md shadow-md p-4 mb-2 cursor-pointer"
+                      onClick={() => displayRoute(ride, index)}
                     >
-                      <div className="font-bold">source: {ride.source}</div>
+                      <div className="font-bold">Source: {ride.source}</div>
                       <div className="font-bold">
                         Destination: {ride.destination}
                       </div>
@@ -392,13 +440,13 @@ const FindRide = () => {
                         PickUpTime: {ride.pickUpTime}
                       </div>
                       <button
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+                        className="px-4 py-2 mx-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
                         onClick={() => makeRideRequest(ride, index)}
                       >
                         Ride request
                       </button>
                       <button
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
                         onClick={() => chatAdder(ride._id)}
                       >
                         Join Chat Group
@@ -407,15 +455,14 @@ const FindRide = () => {
                   ))}
                 </ul>
               </div>
-            ) : (
-              <div className="text-center">No available rides found.</div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="text-center">No available rides found.</div>
+          )}
         </div>
       </div>
-      <div className="border border-gray-400 h-full">
+      <div className="border border-gray-400 max-h-[100vh] rounded-lg overflow-hidden">
         <GoogleMap
-          //center={center}
           center={center}
           zoom={15}
           mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -427,82 +474,21 @@ const FindRide = () => {
           }}
           onLoad={(loaded) => setMap(loaded)}
         >
-          <Marker
-            position={userSource}
-            options={{
-              icon: {
-                url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", // URL of the marker icon
-              },
-              label: {
-                text: "User Start", // Label text
-                color: "Green", // Label color
-                fontSize: "20px", // Label font size
-                fontWeight: "bold", // Label font weight
-              },
-              animation: window.google.maps.Animation.DROP, // Marker animation
-            }}
-          />
+          <Marker position={userSource} />
           <Marker position={center} />
-          {/* Add marker for user destination */}
-          <Marker
-            position={userDestination}
-            options={{
-              icon: {
-                url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", // URL of the marker icon
-              },
-              label: {
-                text: "User Destination", // Label text
-                color: "Green", // Label color
-                fontSize: "20px", // Label font size
-                fontWeight: "bold", // Label font weight
-              },
-              animation: window.google.maps.Animation.DROP, // Marker animation
-            }}
-          />
-          {/* selectedRouteIndex &&
-          <Marker position={selectedRouteIndex[0]} />
-          selectedRouteIndex &&
-          <Marker position={selectedRouteIndex[selectedRouteIndex.length - 1]} /> */}
-          {/* Loop through available rides and add markers for their source and destination */}
-          {/* {console.log(availableRides[0].overview_path)} */}
+          <Marker position={userDestination} />
           {availableRides.map((ride, index) => (
             <Polyline
               key={index}
               path={ride.overview_path}
               options={{
                 strokeColor:
-                  index === selectedRouteIndex ? "#00FF00" : "#ff3563", // Change color based on whether it is selected
+                  index === selectedRouteIndex ? "#00FF00" : "#ff3563",
                 strokeOpacity: "1.0",
                 strokeWeight: 2,
-                icons: [
-                  {
-                    icon: "hello",
-                    offset: "0",
-                    repeat: "10px",
-                  },
-                ],
               }}
             />
           ))}
-          {/* {directionsResponse &&
-            directionsResponse.map((response, index) => (
-              <Polyline
-                key={index}
-                path={selectedRouteIndex}
-                options={{
-                  strokeColor: "#ffffff",
-                  strokeOpacity: "2.0",
-                  strokeWeight: 3,
-                  icons: [
-                    {
-                      icon: "hello",
-                      offset: "0",
-                      repeat: "10px",
-                    },
-                  ],
-                }}
-              />
-            ))} */}
         </GoogleMap>
       </div>
     </div>
