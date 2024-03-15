@@ -5,6 +5,10 @@ const PastRide = require("../models/PastRide");
 const Chat = require("../models/Chat");
 const uuid = require("uuid");
 const Transaction = require("../models/Transaction");
+const stripe = require("stripe")(
+  process.env.STRIPE_SECRET_KEY
+);
+
 const postRide = async (req, res) => {
   // Extract data from request body
   const userId = req.userId;
@@ -66,7 +70,9 @@ const postRide = async (req, res) => {
           imageUrl: userData.imageUrl,
         },
       },
-      chatName: `${userData.name} (${source.split(',')[0]} to ${destination.split(',')[0]})`
+      chatName: `${userData.name} (${source.split(",")[0]} to ${
+        destination.split(",")[0]
+      })`,
     });
 
     await chat.save();
@@ -394,7 +400,7 @@ const verifyCode = async (req, res) => {
     const bookedRide = await BookedRide.findById(_id);
 
     if (!bookedRide) {
-      throw new Error('Ride not found');
+      throw new Error("Ride not found");
     }
 
     if (bookedRide.codeVerified) {
@@ -404,8 +410,8 @@ const verifyCode = async (req, res) => {
     if (bookedRide.rideCancelled) {
       return res.json({ rideCancelled: true, codeVerified: false });
     }
-
-    if (bookedRide.verificationCode !== code) {
+    console.log(bookedRide.verificationCode);
+    if (bookedRide.verificationCode != code) {
       return res.json({ rideCancelled: false, codeVerified: false });
     }
 
@@ -415,16 +421,23 @@ const verifyCode = async (req, res) => {
     const transaction = await Transaction.findById(bookedRide.transactionId);
 
     if (!transaction) {
-      throw new Error('Transaction not found');
+      throw new Error("Transaction not found");
     }
 
     transaction.codeVerified = true;
-    await transaction.save();
+     await transaction.save();
+
+    // const payout = await stripe.payouts.create({
+    //   amount: 1100,
+    //   currency: "usd",
+    // });
+
+   // console.log(payout);
 
     return res.json({ rideCancelled: false, codeVerified: true });
   } catch (error) {
-    console.error('Error:', error);
-    return res.status(500).json({ error: 'An error occurred' });
+    console.error("Error:", error);
+    return res.status(500).json({ error: "An error occurred" });
   }
 };
 
@@ -439,5 +452,5 @@ module.exports = {
   postRatings,
   getDriverRides,
   rideRequest,
-  verifyCode
+  verifyCode,
 };

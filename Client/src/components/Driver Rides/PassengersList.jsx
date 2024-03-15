@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { verifyCode } from "../../Api/rideApi";
 import { VerifiedIcon } from "../icons";
+import CommonLoading from "../loader/CommonLoading";
 export default function PassengersList(props) {
   const passengers = props.data;
   const [Verify, setVerify] = useState(true);
   const [code, setCode] = useState({});
-
+  const [loading, setLoading] = useState(false);
   function modifyRide(
     rides,
     rideId,
@@ -30,6 +31,7 @@ export default function PassengersList(props) {
   }
   const sendCode = async (id) => {
     if (!code[id]) return;
+    setLoading(true);
     try {
       const res = await verifyCode({ _id: id, code: code[id] });
       if (!res.error) {
@@ -40,6 +42,7 @@ export default function PassengersList(props) {
         modifyRide(rides, props.rideId, id, codeVerified, rideCancelled);
 
         props.updateRides(rides);
+        setLoading(false);
       } else {
         console.log(res.error);
       }
@@ -62,6 +65,7 @@ export default function PassengersList(props) {
           </span>
         </div>
       )}
+      {loading&&<CommonLoading/>}
       {passengers.map((value, key) => (
         <div key={key} className="border-b border-gray-300 py-4">
           <Link to={`/profile/${value.passengerId}`}>
