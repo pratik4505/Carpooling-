@@ -1,12 +1,15 @@
 import { ContextProvider } from "./context/ContextProvider";
 import AppRoutes from "./routes/AppRoutes";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
+import { ChatProvider } from "./context/ChatProvider";
 function App() {
   return (
     <>
       <ContextProvider>
-        <ToastContainer/>
-        <AppRoutes />
+        <ChatProvider>
+          <ToastContainer />
+          <AppRoutes />
+        </ChatProvider>
       </ContextProvider>
     </>
   );

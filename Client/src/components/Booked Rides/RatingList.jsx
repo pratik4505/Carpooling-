@@ -4,12 +4,12 @@ import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function RatingList({ rideId, passengers, driver, onCancel }) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [coriders, setCoriders] = useState(passengers);
   const [ratings, setRatings] = useState({});
 
   useEffect(() => {
-    if (data) return;
+    if (passengers) return;
     const fetchRequests = async () => {
       try {
         const res = await getCoRiders(rideId);
@@ -22,9 +22,10 @@ export default function RatingList({ rideId, passengers, driver, onCancel }) {
       }
     };
     fetchRequests();
-  }, [rideId, data]);
+  }, [rideId, passengers]);
 
   const handleRatingChange = (Id, value) => {
+    console.log(value)
     setRatings((prevRatings) => ({
       ...prevRatings,
       [Id]: {
@@ -77,29 +78,29 @@ export default function RatingList({ rideId, passengers, driver, onCancel }) {
               />
             )}
             <h3 className="text-lg font-semibold text-center text-gray-700 mb-1">
-              {driver.driverName}
+              {driver.driverName}(Driver)
             </h3>
           </Link>
-          <div className="flex items-center">
-            {[1, 2, 3, 4, 5].map((value) => (
-              <label key={value} className="cursor-pointer">
-                <input
-                  type="radio"
-                  name="rating"
-                  value={value}
-                  onClick={() => handleRatingChange(driver.driverPastId, value)}
-                  className="sr-only"
-                />
-                <FaStar
-                  className={`text-yellow-400 ${
-                    value <= (ratings[driver.driverPastId]?.rating || 0)
-                      ? "fill-current"
-                      : ""
-                  }`}
-                />
-              </label>
-            ))}
-          </div>
+          <div>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          className="star cursor-pointer"
+          style={{
+            color: ratings[driver.driverPastId]?.rating  >= star ? "gold" : "gray",
+            fontSize: "35px",
+          }}
+          onClick={() => {
+            
+            handleRatingChange(driver.driverPastId, star);
+          }}
+        >
+          {" "}
+          ★{" "}
+        </span>
+      ))}
+    </div>
+
           <textarea
             value={ratings[driver.driverPastId]?.description || ""}
             onChange={(event) =>
@@ -126,26 +127,24 @@ export default function RatingList({ rideId, passengers, driver, onCancel }) {
                 {data.passengerName}
               </h3>
             </Link>
-            <div className="flex items-center">
-              {[1, 2, 3, 4, 5].map((value) => (
-                <label key={value} className="cursor-pointer">
-                  <input
-                    type="radio"
-                    name="rating"
-                    value={value}
-                    onClick={() => handleRatingChange(data.pastRideId, value)}
-                    className="sr-only"
-                  />
-                  <FaStar
-                    className={`text-yellow-400 ${
-                      value <= (ratings[data.pastRideId]?.rating || 0)
-                        ? "fill-current"
-                        : ""
-                    }`}
-                  />
-                </label>
-              ))}
-            </div>
+            <div>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          className="star cursor-pointer"
+          style={{
+            color: ratings[data.pastRideId]?.rating  >= star ? "gold" : "gray",
+            fontSize: "35px",
+          }}
+          onClick={() => handleRatingChange(data.pastRideId, star)}
+        >
+          {" "}
+          ★{" "}
+        </span>
+      ))}
+    </div>
+
+           
             <textarea
               value={ratings[data.pastRideId]?.description || ""}
               onChange={(event) =>
