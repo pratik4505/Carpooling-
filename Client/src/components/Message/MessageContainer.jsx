@@ -83,7 +83,8 @@ export default function MessageContainer(props) {
     const _id = uuidv4();
 
     const msg = currMsg;
-    if(checkToxicity(msg)){
+    
+    if((await checkToxicity(msg))===true){
       toast( <div>
         Warning :  This message may be toxic
       </div>,
@@ -94,37 +95,40 @@ export default function MessageContainer(props) {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: 0.7,
+        
       });
-      return;
+     
     }
-    setMessages((prev) => {
-      return [...prev, { _id: _id, senderId: myId, message: currMsg }];
-    });
-    setCurrMsg("");
-
-    socket.emit("sendMessage", {
-      room: props.data.rideId,
-      message: msg,
-      senderId: myId,
-      createdAt: new Date(),
-      userData: userData,
-    });
-    const data = {
-      senderId: myId,
-      rideId: props.data.rideId,
-      message: msg,
-    };
-
-    try {
-      const response = await postMessage(data);
-
-      if (response.error) {
-        console.error("Failed to save message to the server");
+    else{
+      setMessages((prev) => {
+        return [...prev, { _id: _id, senderId: myId, message: currMsg }];
+      });
+      setCurrMsg("");
+  
+      socket.emit("sendMessage", {
+        room: props.data.rideId,
+        message: msg,
+        senderId: myId,
+        createdAt: new Date(),
+        userData: userData,
+      });
+      const data = {
+        senderId: myId,
+        rideId: props.data.rideId,
+        message: msg,
+      };
+  
+      try {
+        const response = await postMessage(data);
+  
+        if (response.error) {
+          console.error("Failed to save message to the server");
+        }
+      } catch (error) {
+        console.error("An error occurred while posting the message:", error);
       }
-    } catch (error) {
-      console.error("An error occurred while posting the message:", error);
     }
+    
   };
 
   return (

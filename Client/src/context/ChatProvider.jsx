@@ -51,7 +51,7 @@ export const ChatProvider = ({ children }) => {
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
-            progress: 0.7,
+           
           }
         );
       } else {

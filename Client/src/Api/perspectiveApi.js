@@ -14,10 +14,10 @@ export const checkToxicity = async (textToAnalyze) => {
           requestedAttributes: { TOXICITY: {} },
         }),
       });
-      console.log(response);
+     
       const data = await response.json();
       const toxicityScore = data.attributeScores.TOXICITY.summaryScore.value;
-      console.log(toxicityScore)
+     
       // Determine if the toxicity score exceeds the threshold
       const toxicityThreshold = 0.70; // Example threshold (adjust as needed)
       const isToxic = toxicityScore > toxicityThreshold;

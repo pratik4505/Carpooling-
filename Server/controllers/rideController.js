@@ -4,6 +4,7 @@ const BookedRide = require("../models/BookedRide");
 const PastRide = require("../models/PastRide");
 const Chat = require("../models/Chat");
 const uuid = require("uuid");
+const Transaction = require("../models/Transaction");
 const postRide = async (req, res) => {
   // Extract data from request body
   const userId = req.userId;
@@ -386,14 +387,47 @@ const rideRequest = async (req, res) => {
   }
 };
 
-const verifyCode=async (req, res) => {
+const verifyCode = async (req, res) => {
+  try {
+    const { _id, code } = req.body;
 
-  const {_id,code}=req.body;
+    const bookedRide = await BookedRide.findById(_id);
 
-    const bookedRide=await BookedRide.findById(_id);
-    
+    if (!bookedRide) {
+      throw new Error('Ride not found');
+    }
 
-}
+    if (bookedRide.codeVerified) {
+      return res.json({ rideCancelled: false, codeVerified: true });
+    }
+
+    if (bookedRide.rideCancelled) {
+      return res.json({ rideCancelled: true, codeVerified: false });
+    }
+
+    if (bookedRide.verificationCode !== code) {
+      return res.json({ rideCancelled: false, codeVerified: false });
+    }
+
+    bookedRide.codeVerified = true;
+    await bookedRide.save();
+
+    const transaction = await Transaction.findById(bookedRide.transactionId);
+
+    if (!transaction) {
+      throw new Error('Transaction not found');
+    }
+
+    transaction.codeVerified = true;
+    await transaction.save();
+
+    return res.json({ rideCancelled: false, codeVerified: true });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ error: 'An error occurred' });
+  }
+};
+
 module.exports = {
   postRide,
   getRequests,

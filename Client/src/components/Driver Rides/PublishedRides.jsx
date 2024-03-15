@@ -24,9 +24,7 @@ export default function PublishedRides() {
     fetchRides();
   }, []);
 
-  const updateRides=(data)=>{
-    setRides(data);
-  }
+  
 
   return (
     <div className="grid grid-cols-2 h-[87vh]">
@@ -86,7 +84,7 @@ export default function PublishedRides() {
                 Show on Map
               </button>
               <button
-                onClick={() => setPassengers(value.passengers)}
+                onClick={() => setPassengers(value)}
                 
                 className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
               >
@@ -113,8 +111,9 @@ export default function PublishedRides() {
             <div className="flex container mt-8">
               <PassengersList
                 rides={rides}
-                updateRides={updateRides}
-                data={passengers}
+                rideId={passengers._id}
+                updateRides={(data)=>setRides(data)}
+                data={passengers.passengers}
                 onCancel={() => setPassengers(null)}
               />
             </div>
