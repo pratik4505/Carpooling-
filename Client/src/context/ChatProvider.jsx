@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
 } from "react";
+import { toast } from "react-toastify";
 import { getChats, createChat } from "../Api/chatApi";
 import { AuthContext } from "./ContextProvider";
 
@@ -27,6 +28,7 @@ export const ChatProvider = ({ children }) => {
     
     fetchChats();
   }, []);
+ 
 
   const chatAdder = async (rideId) => {
     try {
@@ -38,6 +40,20 @@ export const ChatProvider = ({ children }) => {
           rideId: data.rideId,
         });
         setChats((prevChats) => [data, ...prevChats]); // Put the new chat data in front of the chats array
+        toast(
+          <div>
+           Group chat joined
+          </div>,
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: 0.7,
+          }
+        );
       } else {
         console.error("Failed to add chat");
       }

@@ -67,7 +67,8 @@ const postRide = async (req, res) => {
           imageUrl: userData.imageUrl
         }
       },
-      chatName: `${userData.name} (${source} to ${destination})`
+      chatName: `${userData.name} (${source.split(',')[0]} to ${destination.split(',')[0]})`
+
     });
     
     await chat.save();

@@ -4,12 +4,13 @@ import { Link } from "react-router-dom";
 import { getMessages,postMessage } from "../../Api/chatApi";
 import { v4 as uuidv4 } from "uuid";
 import ScrollToBottom from "react-scroll-to-bottom";
-
+import { checkToxicity } from "../../Api/perspectiveApi";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosSend } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 
 import { AuthContext } from "../../context/ContextProvider";
+import { toast } from "react-toastify";
 const msgPerLoad = 50;
 
 let myId;
@@ -82,7 +83,21 @@ export default function MessageContainer(props) {
     const _id = uuidv4();
 
     const msg = currMsg;
-
+    if(checkToxicity(msg)){
+      toast( <div>
+        Warning :  This message may be toxic
+      </div>,
+      {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: 0.7,
+      });
+      return;
+    }
     setMessages((prev) => {
       return [...prev, { _id: _id, senderId: myId, message: currMsg }];
     });
