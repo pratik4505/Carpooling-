@@ -20,13 +20,14 @@ import Login from "../components/Login/Login";
 import Register from "../components/Login/Register";
 import LoginPage from "../components/Auth/LoginPage";
 import SignUp from "../components/Auth/SignUp";
+import Error from "../components/Error/Error";
 
 const AppRoutes = () => {
   return (
     <Suspense fallback={<FallbackLoading />}>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<h1>Not Found</h1>} />
+        <Route path="*" element={<Error />} />
 
         <Route path="/register" element={<SignUp />} />
 
