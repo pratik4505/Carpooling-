@@ -1,9 +1,7 @@
-const ButtonLoadingSpinner = ({ loadingText }) => {
+const ButtonLoadingSpinner = () => {
   return (
     <div className="flex justify-center items-center">
-      <span className="mr-2">
-        {loadingText ? loadingText : "Just a moment..."}
-      </span>
+      
       <div className="flex justify-center items-center">
         <svg
           className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

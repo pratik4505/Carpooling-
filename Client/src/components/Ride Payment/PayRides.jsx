@@ -4,13 +4,15 @@ import {
   postDeclinePayment,
   getPaymentIntent,
 } from "../../Api/rideApi";
+import { toast } from "react-toastify";
 
 import { AuthContext } from "../../context/ContextProvider";
+import FallbackLoading from "../loader/FallbackLoading";
 
 export default function PayRides() {
   const [rides, setRides] = useState(null);
   const { userData } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRides = async () => {
@@ -18,11 +20,12 @@ export default function PayRides() {
         const res = await getAcceptedRides();
         if (!res.error) {
           setRides(res.data);
-          setLoading(false);
+          
         }
       } catch (error) {
         console.error("Error fetching rides:", error);
       }
+      setLoading(false);
     };
     fetchRides();
   }, []);
@@ -69,10 +72,22 @@ export default function PayRides() {
   const declinePayment = async (key) => {
     if (loading) return;
     try {
-      // setLoading(true);
+      setLoading(true);
       const res = await postDeclinePayment(key);
       if (!res.error) {
         const updatedRides = { ...rides };
+        toast( <div>
+          Payment Request Declined
+        </div>,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          
+        });
         delete updatedRides[key];
         setRides(updatedRides);
       }
@@ -87,7 +102,7 @@ export default function PayRides() {
       <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
         Book your rides
       </h1>
-
+      {loading&&<FallbackLoading/>}
       {rides &&
         Object.entries(rides).map(([key, value]) => (
           <div key={key} className="border-b border-gray-300 py-4">

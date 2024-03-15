@@ -1,9 +1,10 @@
 import React, { useEffect, useState,useContext} from "react";
 import { getRequests, postRequest } from "../../Api/rideApi";
 import { Link } from "react-router-dom";
-
+import { toast } from "react-toastify";
 import GoogleMapUtil from "../GoogleMapUtil";
 import { AuthContext } from "../../context/ContextProvider";
+import FallbackLoading from "../loader/FallbackLoading";
 
 export default function Requests() {
   const [requests, setRequests] = useState(null);
@@ -39,10 +40,23 @@ export default function Requests() {
         });
         const updatedRequests = { ...requests };
         delete updatedRequests[key];
-        setRequests(updatedRequests);
+        toast( <div>
+          {`Request ${action==='accept'?'accepted':'declined'}`}
+        </div>,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          
+        });
+
+       setRequests(updatedRequests);
         setSelectedRequests(null);
       }
-      console.log(res);
+     
       setLoading(false);
     } catch (error) {
       console.error("Error fetching requests:", error);
@@ -55,6 +69,7 @@ export default function Requests() {
         <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
           Ride Requests
         </h1>
+        {loading&&<FallbackLoading/>}
         {requests &&
           Object.entries(requests).map(([key, value]) => (
             <div

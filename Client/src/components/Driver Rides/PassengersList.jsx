@@ -3,32 +3,14 @@ import { Link } from "react-router-dom";
 import { verifyCode } from "../../Api/rideApi";
 import { VerifiedIcon } from "../icons";
 import CommonLoading from "../loader/CommonLoading";
+import { modifyRide } from "../../utils/util";
+
 export default function PassengersList(props) {
   const passengers = props.data;
   const [Verify, setVerify] = useState(true);
   const [code, setCode] = useState({});
   const [loading, setLoading] = useState(false);
-  function modifyRide(
-    rides,
-    rideId,
-    passengerId,
-    newCodeVerified,
-    newRideCancelled
-  ) {
-    // Modify the rides array
-    for (let i = 0; i < rides.length; i++) {
-      if (rides[i]._id === rideId) {
-        const passengers = rides[i].passengers;
-        for (let j = 0; j < passengers.length; j++) {
-          if (passengers[j]._id === passengerId) {
-            passengers[j].codeVerified = newCodeVerified;
-            passengers[j].rideCancelled = newRideCancelled;
-            return; // Stop searching once passenger is modified
-          }
-        }
-      }
-    }
-  }
+  
   const sendCode = async (id) => {
     if (!code[id]) return;
     setLoading(true);
@@ -38,7 +20,7 @@ export default function PassengersList(props) {
         const { codeVerified, rideCancelled } = res.data;
         setVerify(codeVerified);
         const rides = props.rides;
-        //show a message if code verified is false
+        
         modifyRide(rides, props.rideId, id, codeVerified, rideCancelled);
 
         props.updateRides(rides);

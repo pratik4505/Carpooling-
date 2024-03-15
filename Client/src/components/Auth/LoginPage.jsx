@@ -35,8 +35,8 @@ export default function LoginPage() {
       if (response.data) {
         localStorage.setItem("profile", JSON.stringify(response.data));
         initialLoad();
-        navigate("/searchride");
-        return <Navigate to="/searchride" />;
+        navigate("/");
+        return <Navigate to="/" />;
       } else {
         setResponseMessage(response.data);
       }

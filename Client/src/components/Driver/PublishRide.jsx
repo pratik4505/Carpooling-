@@ -8,11 +8,11 @@ import {
 import { useRef } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/ContextProvider";
-
+import ButtonLoadingSpinner from "../loader/ButtonLoadingSpinner";
+import { toast } from "react-toastify";
 const center = { lat: 48.8584, lng: 2.2945 };
 
 export default function PublishRide() {
-  console.log("I come in backend");
   
   const {userData,isLoaded}=useContext(AuthContext);
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(null);
@@ -22,6 +22,8 @@ export default function PublishRide() {
   const [datetime, setDatetime] = useState("");
   const [unitCost, setUnitCost] = useState("");
   const [vehicleType, setVehicleType] = useState("");
+  const [routeLoading,setRouteLoading]=useState(false);
+  const [isPublishing,setIsPublishing] = useState(false);
 
   const originRef = useRef();
   const destiantionRef = useRef();
@@ -44,22 +46,60 @@ export default function PublishRide() {
 
   async function calculateRoute() {
     if (originRef.current.value === "" || destiantionRef.current.value === "") {
+      toast(
+        <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-3 shadow-md">
+          Please enter Origin and Destination
+        </div>,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
       return;
     }
+    
+    setRouteLoading(true);
     const directionsService = new google.maps.DirectionsService();
-    const results = await directionsService.route({
-      origin: originRef.current.value,
-      destination: destiantionRef.current.value,
-      provideRouteAlternatives: true,
-      travelMode: google.maps.TravelMode.DRIVING,
-    });
-    if (results.status !== "OK") {
-      console.error("Error: " + results.status);
-      return;
+  
+    try {
+      const results = await directionsService.route({
+        origin: originRef.current.value,
+        destination: destiantionRef.current.value,
+        provideRouteAlternatives: true,
+        travelMode: google.maps.TravelMode.DRIVING,
+      });
+  
+      setRouteLoading(false);
+  
+      if (results.status !== "OK") {
+        throw new Error("Error: " + results.status);
+      }
+  
+      console.log(results);
+      setDirectionsResponses(results);
+    } catch (error) {
+      console.error("Error calculating route:", error);
+      toast(
+        <div className="border border-red-500 text-red-500 font-semibold rounded-md p-3 shadow-md">
+          Error calculating route: {error.message}
+        </div>,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
+      setRouteLoading(false);
     }
-    console.log(results);
-    setDirectionsResponses(results);
   }
+  
 
   function clearRoute() {
     setDirectionsResponses(null);
@@ -87,8 +127,22 @@ export default function PublishRide() {
   }
 
   async function handlePublishRide() {
-    if (!directionsResponses || !datetime) return;
-
+    if (!directionsResponses || !datetime||!unitCost ||!vehicleType){ 
+      toast(
+        <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-3 shadow-md">
+          Please fill all input fields
+        </div>,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
+      return;}
+        setIsPublishing(true);
     try {
       const data = new Date(datetime);
       const date = data.toISOString().slice(0, 10);
@@ -137,6 +191,7 @@ export default function PublishRide() {
     } catch (error) {
       console.error("Error publishing ride:", error);
     }
+    setIsPublishing(false);
   }
 
   return (
@@ -223,12 +278,14 @@ export default function PublishRide() {
               type="submit"
               className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
               onClick={calculateRoute}
+              disabled={routeLoading}
             >
-              Calculate Routes
+              Calculate Routes{routeLoading&&<ButtonLoadingSpinner/>}
             </button>
             <button
               className="p-2 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-400"
               onClick={clearRoute}
+              disabled={routeLoading}
             >
               Clear Routes
             </button>
@@ -237,8 +294,10 @@ export default function PublishRide() {
             type="submit"
             className="px-4 py-2 bg-pink-500 w-[50%] m-auto text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
             onClick={handlePublishRide}
+            disabled={isPublishing}
           >
             Publish Ride
+            {isPublishing&&<ButtonLoadingSpinner/>}
           </button>
         </div>
         {directionsResponses && (

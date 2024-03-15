@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { getCoRiders, postRatings } from "../../Api/rideApi";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import { toast } from "react-toastify";
 export default function RatingList({ rideId, passengers, driver, onCancel }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(rideId? true : false);
   const [coriders, setCoriders] = useState(passengers);
   const [ratings, setRatings] = useState({});
 
@@ -55,6 +55,18 @@ export default function RatingList({ rideId, passengers, driver, onCancel }) {
     try {
       const res = await postRatings(ratings);
       if (!res.error) {
+        toast( <div>
+          Users Rated Successfully
+        </div>,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          
+        });
         onCancel();
       }
     } catch (error) {

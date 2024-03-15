@@ -3,6 +3,8 @@ import { getDriverRides } from "../../Api/rideApi";
 import GoogleMapUtil from "../GoogleMapUtil";
 import PassengersList from "./PassengersList";
 import RatingList from "../Booked Rides/RatingList";
+import { toast } from "react-toastify";
+import FallbackLoading from "../loader/FallbackLoading";
 export default function PublishedRides() {
   const [rides, setRides] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +34,7 @@ export default function PublishedRides() {
         <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
           Driver Rides
         </h1>
+        {loading&&<FallbackLoading/>}
         {rides &&
           rides.map((value, key) => (
             <div key={key} className="border-b border-gray-300 py-4">

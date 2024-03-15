@@ -12,7 +12,9 @@ import {
 import { rideRequest } from "../../Api/rideApi";
 import { AuthContext } from "../../context/ContextProvider";
 import { ChatContext } from "../../context/ChatProvider";
-
+import FallbackLoading from "../loader/FallbackLoading";
+import { toast } from "react-toastify";
+import ButtonLoadingSpinner from "../loader/ButtonLoadingSpinner";
 const FindRide = () => {
   
   const { userData,isLoaded} = useContext(AuthContext);
@@ -33,6 +35,7 @@ const FindRide = () => {
   const timeFromRef = useRef();
   const timeToRef = useRef();
   const seatsRef = useRef();
+  const [isSearching,setIsSearching]=useState(false);
   //console.log(availableRides);
   useEffect(() => {
     // Fetch the real-time location and set it as the center of the map
@@ -44,7 +47,7 @@ const FindRide = () => {
     }
   }, []);
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <FallbackLoading/>;
   }
   function isTimeBetween(startTime, endTime, targetTime) {
     const startSeconds = convertTimeToSeconds(startTime);
@@ -90,9 +93,22 @@ const FindRide = () => {
   };
   const serachRide = async () => {
     if (sourceRef.current.value === "" || destinationRef.current.value === "") {
+      toast(
+        <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-3 shadow-md">
+          Please enter Origin and Destination
+        </div>,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
       return;
     }
-
+    setIsSearching(true);
     const source = sourceRef.current.value;
     const destination = destinationRef.current.value;
     const date = dateRef.current.value;
@@ -245,15 +261,31 @@ const FindRide = () => {
             }
           }
         }
+        if(ridesWithValidRoutes.length===0){
+          toast(
+            <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-4 shadow-md bg-transparent">
+              No Rides Found
+            </div>,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            }
+          );
+        }
 
         // rest of the code...
       } else {
         console.error("Failed to fetch available rides");
         // Handle error
       }
+      setIsSearching(false);
     } catch (error) {
       console.error("Error:", error);
-      // Handle error
+      setIsSearching(false);
     }
   };
 
@@ -409,8 +441,10 @@ const FindRide = () => {
             <button
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
               onClick={serachRide}
+              disabled={isSearching}
             >
               Search Ride
+              {isSearching&&<ButtonLoadingSpinner/>}
             </button>
           </div>
         </div>

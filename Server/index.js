@@ -12,6 +12,7 @@ const rideRoutes = require("./routes/rideRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const authRoutes = require("./routes/authRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const userRoutes=require('./routes/userRoutes');
 const { paymentWebhook } = require("./controllers/paymentController");
 const bodyParser = require("body-parser");
 db.connect().catch((err) =>
@@ -37,6 +38,7 @@ app.use("/chat", chatRoutes);
 app.use("/auth", authRoutes);
 app.use("/rides", rideRoutes);
 app.use("/payment", paymentRoutes);
+app.use('/user', userRoutes);
 
 app.get("/server-status", (req, res) => {
   res.status(200).json({ message: "Server is up and running!" });

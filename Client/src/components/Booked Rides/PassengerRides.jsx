@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getBookedRides } from "../../Api/rideApi";
 import GoogleMapUtil from "../GoogleMapUtil";
 import RatingList from "./RatingList";
+import FallbackLoading from "../loader/FallbackLoading";
 export default function PassengerRides() {
   const [rides, setRides] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +29,7 @@ export default function PassengerRides() {
         <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
           Booked Rides
         </h1>
+        {loading&&<FallbackLoading/>}
         {rides &&
           rides.map((value, key) => (
             <div key={key} className="border-b border-gray-300 py-4">

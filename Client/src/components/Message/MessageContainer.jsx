@@ -11,6 +11,7 @@ import { FaRegUser } from "react-icons/fa";
 
 import { AuthContext } from "../../context/ContextProvider";
 import { toast } from "react-toastify";
+import FallbackLoading from "../loader/FallbackLoading";
 const msgPerLoad = 50;
 
 let myId;
@@ -19,7 +20,7 @@ export default function MessageContainer(props) {
   const [messages, setMessages] = useState([]);
   const [loadMore, setLoadMore] = useState(false);
   const [currMsg, setCurrMsg] = useState("");
-
+  const [loading,setLoading]=useState(true);
   const {userData,socket}=useContext(AuthContext);
 
   const messageLoader = async () => {
@@ -30,10 +31,7 @@ export default function MessageContainer(props) {
         messages.length > 0 ? messages[0].createdAt : new Date();
 
       const response = await getMessages(limit,props.data.rideId,createdAt);
-        
-        
      
-
       if (response.data) {
         const data = response.data
         
@@ -47,6 +45,7 @@ export default function MessageContainer(props) {
       } else {
         console.error("Failed to fetch messages");
       }
+      setLoading(false);
     } catch (error) {
       console.error("An error occurred while fetching messages:", error);
     }
@@ -149,6 +148,7 @@ export default function MessageContainer(props) {
         
         
       </div>
+      {loading&&<FallbackLoading/>}
       <ScrollToBottom className="flex flex-col overflow-y-auto h-[80%] px-2">
         {loadMore && (
           <button

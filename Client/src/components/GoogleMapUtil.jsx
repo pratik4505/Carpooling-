@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useJsApiLoader, GoogleMap, Marker, Polyline } from "@react-google-maps/api";
 import { AuthContext } from "../context/ContextProvider";
+import FallbackLoading from "./loader/FallbackLoading";
 
 function GoogleMapUtil({ coordinates, polyline }) {
   const {isLoaded}=useContext(AuthContext)
@@ -45,7 +46,7 @@ function GoogleMapUtil({ coordinates, polyline }) {
   };
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <FallbackLoading/>
   }
 
   return (
