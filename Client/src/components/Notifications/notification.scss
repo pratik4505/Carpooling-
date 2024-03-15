@@ -1,0 +1,13 @@
+.notification-container {
+    background-color: #f0f0f0;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  
+    /* Add more styles as needed for animation, hover effect, etc. */
+  }
+  
+  .notification-container:hover {
+    background-color: #e0e0e0;
+  }

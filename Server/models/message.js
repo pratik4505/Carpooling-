@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const messageSchema = new Schema(
   {
-    rideId: { //rideId
+    rideId: {
+      //rideId
       type: String,
       required: true,
     },
@@ -15,11 +16,13 @@ const messageSchema = new Schema(
       type: String,
       required: true,
     },
+  },
+  {
+    timestamps: true,
   }
-  
 );
 
-messageSchema.index({rideId:1});
+messageSchema.index({ rideId: 1 });
 
 const Message = mongoose.model("Message", messageSchema);
 

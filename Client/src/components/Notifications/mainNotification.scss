@@ -1,0 +1,37 @@
+/* MainNotification.css */
+.main-notification-container {
+    display: flex;
+    flex-direction: column;
+   
+    
+    margin:auto;
+    margin-top: 2rem;
+   
+  }
+  
+  /* Notification.css */
+ 
+  
+  h3 {
+    color: #333;
+  }
+  
+  p {
+    color: #666;
+  }
+  
+  .loadMore {
+    background: #49b2f8;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 'background' 0.3s ease;
+    width:30%;
+    min-width:40px;
+    margin:auto;
+  }
+  
