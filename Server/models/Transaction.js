@@ -51,6 +51,9 @@ const transactionSchema = new Schema({
     created: Date,
     arrival_date: Date,
   },
+},
+{
+  timestamps: true,
 });
 
 transactionSchema.index({rideId:1});

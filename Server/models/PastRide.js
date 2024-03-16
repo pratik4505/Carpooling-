@@ -39,6 +39,9 @@ const pastRideSchema = new Schema({
     type: Boolean,
     default: false,
   },
+},
+{
+  timestamps: true,
 });
 
 const PastRide = mongoose.model("PastRide", pastRideSchema);

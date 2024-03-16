@@ -15,6 +15,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  about:String,
   imageUrl: String,
   rideRequests: {
     type: Map,
@@ -91,6 +92,9 @@ const userSchema = new Schema({
       pickUpTime: String,
     },
   },
+},
+{
+  timestamps: true,
 });
 
 const User = mongoose.model("User", userSchema);

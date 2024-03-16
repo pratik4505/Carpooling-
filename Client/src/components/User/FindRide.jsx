@@ -132,7 +132,7 @@ const FindRide = () => {
       if (response.status === 200) {
         // Initialize array to hold rides with valid routes
         const ridesWithValidRoutes = [];
-
+        var rideFound=false;
         // Iterate through each ride in the response array
         for (const ride of response.data) {
           // Parse the overview polyline from the backend response
@@ -228,7 +228,7 @@ const FindRide = () => {
               ride.dropOffPoint = destinationFound;
               ride.overview_path = routeCoordinates;
               ride.rideDistance = distanceFromEnd - distanceFromStart;
-
+              rideFound=true;
               // Geocode pickup point
               geocoder.geocode(
                 { location: ride.pickUpPoint },
@@ -261,7 +261,7 @@ const FindRide = () => {
             }
           }
         }
-        if(ridesWithValidRoutes.length===0){
+        if(!rideFound){
           toast(
             <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-4 shadow-md bg-transparent">
               No Rides Found
@@ -282,6 +282,9 @@ const FindRide = () => {
         console.error("Failed to fetch available rides");
         // Handle error
       }
+
+
+
       setIsSearching(false);
     } catch (error) {
       console.error("Error:", error);

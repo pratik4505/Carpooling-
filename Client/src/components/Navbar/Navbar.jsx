@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Navbar.scss";
 
+
 const Navbar = () => {
+  const userData=JSON.parse(localStorage.getItem("profile"));
+ 
   return (
     <div>
       <nav>
@@ -146,7 +149,7 @@ const Navbar = () => {
               </div>
             </li> */}
             <li>
-              <a href="/profile">Profile</a>
+              <a href={`/profile/${userData.userId}`}>Profile</a>
             </li>
             <li>
               <a href="/riderequests">Ride Requests</a>

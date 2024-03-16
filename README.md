@@ -1,11 +1,8 @@
 
-# Innodev 2024
-
-
 
 ## Carpooling Site
 
-**Team Name:** WebkreatX                                                       
+**Team Name:** Code Slayers                                                       
 **Team Members name:**
  - [Vaibhav Kumar Maurya](https://github.com/Vaibhavdev309)  
  - [Kushagra Verma](https://github.com/kushagra572)  
@@ -34,10 +31,10 @@
 
 #### Tech Stack:
 
-**Client:** React, TailwindCSS, BootStrap, Figma
+**Client:** React, TailwindCSS, BootStrap
 
 **Server:** Node, Express, MongoDB
 
-**API Used:** Google Map, Aadhar Verification, Socket.io, Stripe Payment, Nodemailer, Node-Cron
+**API Used:** Google Map, Aadhar and Licence Verification, Socket.io, Stripe Payment, Nodemailer, Node-Cron
 
 

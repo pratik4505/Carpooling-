@@ -19,7 +19,7 @@ const notificationSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    strict: false, // Allow any fields not explicitly specified in the schema
+   
   }
 );
 
