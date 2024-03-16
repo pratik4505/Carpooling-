@@ -37,7 +37,6 @@ export default function MainMessage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <IoMdAddCircleOutline className="text-white text-3xl cursor-pointer hover:text-gray-200" />
           </div>
         </div>
         <div className="flex flex-col h-[80vh] overflow-auto ">

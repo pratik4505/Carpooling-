@@ -14,10 +14,11 @@ import { checkToxicity } from "../../Api/perspectiveApi";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosSend } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
-
 import { AuthContext } from "../../context/ContextProvider";
 import { toast } from "react-toastify";
 import FallbackLoading from "../loader/FallbackLoading";
+import { MdPlace } from "react-icons/md";
+
 const msgPerLoad = 50;
 
 let myId;
@@ -33,16 +34,13 @@ export default function MessageContainer(props) {
   const messageLoader = async () => {
     try {
       const limit = msgPerLoad;
-
       const createdAt =
         messages.length > 0 ? messages[0].createdAt : new Date();
-
       const response = await getMessages(limit, props.data.rideId, createdAt);
 
       if (response.data) {
         const data = response.data;
 
-        // If the response is not empty, update the messages array
         if (data.length > 0) {
           setMessages((prevMessages) => [...data, ...prevMessages]);
           setLoadMore(true);
@@ -64,7 +62,6 @@ export default function MessageContainer(props) {
     setMessages([]);
     messageLoader();
     socket.on("receiveMessage", (data) => {
-      console.log("useEffect");
       if (data.senderId !== myId) {
         setMessages((prev) => {
           return [
@@ -82,14 +79,15 @@ export default function MessageContainer(props) {
       }
     });
   }, [props.data.chatId]);
+
   const scrollToBottom = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollToBottom();
     }
   };
+
   const sendMsg = async () => {
     const _id = uuidv4();
-
     const msg = currMsg;
 
     if ((await checkToxicity(msg)) === true) {
@@ -114,7 +112,7 @@ export default function MessageContainer(props) {
         createdAt: new Date(),
         userData: userData,
       });
-      console.log("I am here");
+
       const data = {
         senderId: myId,
         rideId: props.data.rideId,
@@ -140,9 +138,59 @@ export default function MessageContainer(props) {
     }
   };
 
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          const locationMsg = `My current location is: <a href="https://www.google.com/maps?q=${latitude},${longitude}" target="_blank">View Location</a>`;
+          setMessages((prev) => [
+            ...prev,
+            { _id: uuidv4(), senderId: myId, message: locationMsg },
+          ]);
+
+          // Post the location message to the server
+          const data = {
+            senderId: myId,
+            rideId: props.data.rideId,
+            message: locationMsg,
+          };
+          try {
+            const response = await postMessage(data);
+            if (response.error) {
+              console.error("Failed to save message to the server");
+            }
+          } catch (error) {
+            console.error(
+              "An error occurred while posting the message:",
+              error
+            );
+          }
+
+          socket.emit("sendMessage", {
+            room: props.data.rideId,
+            message: locationMsg,
+            senderId: myId,
+            createdAt: new Date(),
+            userData: userData,
+          });
+          scrollToBottom();
+        },
+        (error) => {
+          console.error("Error getting the user's location:", error);
+          toast.error("Error getting user location. Please try again later.");
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      toast.error("Geolocation is not supported by this browser.");
+    }
+  };
+
   const [personName, chatPlaceWithTrailingParenthesis] =
     props.data.chatName.split("(");
   const chatPlace = chatPlaceWithTrailingParenthesis.replace(/\)$/, "").trim();
+
   return (
     <div className="w-full md:w-[70%] bg-white shadow-5xl">
       <div className="bg-primary-300 h-[10%]  flex items-center justify-between px-[2%]  ">
@@ -194,11 +242,17 @@ export default function MessageContainer(props) {
                   {props.data.members[msg.senderId]?.name}
                 </h3>
               </Link>
-              {msg.message}
+              <div dangerouslySetInnerHTML={{ __html: msg.message }} />
             </div>
           ))}
       </ScrollToBottom>
       <div className="flex w-full border-none  text-base outline-none bg-gray-100 h-[10%]">
+        <button
+          onClick={getLocation}
+          className=" bg-primary-100 text-white p-2"
+        >
+          <MdPlace size={24} />
+        </button>
         <textarea
           id="textarea"
           value={currMsg}
