@@ -23,21 +23,11 @@ router.post("/postRequests", verifyJWT, postRequests);
 router.get("/getAccepetedRides", verifyJWT, getAcceptedRides);
 router.post("/postDeclinePayment", verifyJWT, postDeclinePayment);
 
-<<<<<<< HEAD
 router.get("/getBookedRides", verifyJWT, getBookedRides);
 router.get("/getCoRiders/:rideId", verifyJWT, getCoRiders);
 router.post("/postRatings", verifyJWT, postRatings);
 router.get("/getDriverRides", verifyJWT, getDriverRides);
 router.post("/rideRequest", verifyJWT, rideRequest);
-router.post("/verifyCode", verifyCode);
+router.post("/verifyCode", verifyJWT, verifyCode);
 router.get("/pastrides", verifyJWT, getPastRides);
-=======
-router.get("/getBookedRides",verifyJWT, getBookedRides);
-router.get("/getCoRiders/:rideId",verifyJWT, getCoRiders);
-router.post("/postRatings", verifyJWT,postRatings);
-router.get("/getDriverRides",verifyJWT, getDriverRides);
-router.post("/rideRequest",verifyJWT,rideRequest);
-router.post('/verifyCode',verifyJWT,verifyCode);
->>>>>>> b6113afe277d96fd0e215d493109521030dbbce9
-
 module.exports = router;
