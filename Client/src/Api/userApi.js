@@ -32,3 +32,15 @@ export const getProfile = async (ownerId) => {
       return handleApiError(error);
     }
   };
+
+  export const getNotifications = async () => {
+    try { 
+      const res = await API.get(`/notification/getNotifications`);
+     
+      if (res.status === 200) return { error: null, data: res.data };
+      else return { error: res, data: null };
+    } catch (error) {
+      return handleApiError(error);
+    }
+  };
+
