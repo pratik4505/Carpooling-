@@ -42,6 +42,9 @@ const Navbar = () => {
                 <li>
                   <Link to="/bookedrides">Booked Ride</Link>
                 </li>
+                <li>
+                  <Link to="/pastrides">Past Ride</Link>
+                </li>
               </ul>
             </li>
             <li>
@@ -63,20 +66,8 @@ const Navbar = () => {
             </li>
             <li>
               <Link to="/chats" className="desktop-item">
-                Messages
+                Chats
               </Link>
-              <input type="checkbox" id="showDrop" />
-              <label htmlFor="showDrop" className="mobile-item">
-                Messages
-              </label>
-              <ul className="drop-menu">
-                <li>
-                  <Link to="/chats">Chats</Link>
-                </li>
-                <li>
-                  <Link to="/notifications">Notificatons</Link>
-                </li>
-              </ul>
             </li>
             {/* <li>
               <Link to="#" className="desktop-item">
@@ -149,10 +140,13 @@ const Navbar = () => {
               </div>
             </li> */}
             <li>
-              <Link to={`/profile/${userData.userId}`}>Profile</Link>
+              <Link to="/riderequests">Ride Requests</Link>
             </li>
             <li>
-              <Link to="/riderequests">Ride Requests</Link>
+              <Link to="/notifications">Notifications</Link>
+            </li>
+            <li>
+              <Link to={`/profile/${userData.userId}`}>Profile</Link>
             </li>
           </ul>
           <label htmlFor="menu-btn" className="btn menu-btn">

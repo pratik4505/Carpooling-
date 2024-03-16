@@ -1,34 +1,32 @@
 import React, { useEffect, useState, useContext } from "react";
-import { getTransactions } from "../../Api/transactions";
-import Transaction from "./Transaction";
 import FallbackLoading from "../loader/FallbackLoading";
 import { AuthContext } from "../../context/ContextProvider";
+import { getPastRides } from "../../Api/rideApi";
+import PastRide from "./PastRide";
 
-const Transactions = () => {
-  const [transactions, setTransactions] = useState(null);
+const PastRides = () => {
+  const [pastRides, setPastRides] = useState(null);
   const { userData } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const fetchTransactions = async () => {
+    const fetchPastRides = async () => {
       try {
-        const res = await getTransactions();
+        const res = await getPastRides();
         if (!res.error) {
-          const updatedTransactions = res.map((transaction) => {
-            const dateTime = new Date(transaction.createdAt);
+          const updatedPastRides = res.map((pastRide) => {
+            const dateTime = new Date(pastRide.createdAt);
             const date = dateTime.toLocaleDateString();
             const time = dateTime.toLocaleTimeString();
-            return { ...transaction, date, time };
+            return { ...pastRide, date, time };
           });
-          setTransactions(updatedTransactions);
-          console.log(updatedTransactions);
-          console.log("I updated the transaction");
+          setPastRides(updatedPastRides);
           setLoading(false);
         }
       } catch (error) {
-        console.error("Error fetching Transactions: ", error);
+        console.error("Error fetching Past Rides : ", error);
       }
     };
-    fetchTransactions();
+    fetchPastRides();
   }, []);
   return (
     <div>
@@ -81,10 +79,10 @@ const Transactions = () => {
                         S.No.
                       </th>
                       <th className="font-normal text-center px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-                        Method
+                        Role
                       </th>
                       <th className="font-normal text-center px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-                        To Whom
+                        Status
                       </th>
                       <th className="font-normal text-center px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 hidden md:table-cell">
                         Source
@@ -93,28 +91,28 @@ const Transactions = () => {
                         Destination
                       </th>
                       <th className="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 hidden md:table-cell">
-                        Seats
+                        Rating
                       </th>
                       <th className="font-normal text-center px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-                        Amount
-                      </th>
-                      <th className="font-normal text-center px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 hidden sm:table-cell">
                         Date
                       </th>
+                      <th className="font-normal text-center px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
+                        Time
+                      </th>
                     </tr>
-                    {transactions &&
-                      transactions.map((transaction, index) => (
-                        <Transaction
+                    {pastRides &&
+                      pastRides.map((pastRide, index) => (
+                        <PastRide
                           key={index}
                           serialNumber={index + 1}
-                          method="Card"
-                          toWhom={transaction.driverName}
-                          from={transaction.source}
-                          to={transaction.destination}
-                          seats={transaction.seats}
-                          amount={transaction.amountPaid}
-                          date={transaction.date}
-                          time={transaction.time}
+                          role={pastRide.user}
+                          status={pastRide.rideCancelled}
+                          from={pastRide.source}
+                          to={pastRide.destination}
+                          rating={pastRide.averageRating}
+                          date={pastRide.date}
+                          time={pastRide.time}
+                          polyline={pastRide.overview_polyline}
                         />
                       ))}
                   </thead>
@@ -129,4 +127,4 @@ const Transactions = () => {
   );
 };
 
-export default Transactions;
+export default PastRides;

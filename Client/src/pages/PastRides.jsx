@@ -1,7 +1,8 @@
-import React from 'react'
+import React from "react";
+import PastRides from "../components/PastRides/PastRides";
 
-export const PastRides = () => {
-  return (
-    <div>PastRides</div>
-  )
-}
+const DoneRides = () => {
+  return <PastRides />;
+};
+
+export default DoneRides;

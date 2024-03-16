@@ -28,7 +28,7 @@ export default function ChatList(props) {
         <FaRegUser className="w-10 h-10 bg-red-500 rounded-full flex-shrink-0 mr-3" />
         <div className="flex flex-col">
           <p className="font-semibold text-lg text-gray-800">{personName}</p>
-          <p className="font-semibold text-lg text-gray-800">{chatPlace}</p>
+          <p className="font-semibold text-sm text-gray-800">{chatPlace}</p>
           {/* You can add more details here like last message, time, etc. */}
         </div>
         {/* Add unread message indicator if needed */}

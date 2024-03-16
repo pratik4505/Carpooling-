@@ -8,6 +8,7 @@ function formatDOB(date) {
   const [year, month, day] = date.split("-");
   return `${day}-${month}-${year}`;
 }
+import "./verification.scss";
 
 function requestOptions(dlNumber, dob) {
   return {
@@ -77,7 +78,6 @@ export const DlVerify = () => {
   return (
     <div className="w-full h-full">
       <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-md shadow-md my-auto ">
-        <h2 className="text-2xl font-semibold mb-4">Driving License Form</h2>
         {!Verify && (
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
@@ -86,7 +86,8 @@ export const DlVerify = () => {
             <strong className="font-bold">Data didn't matched</strong>
           </div>
         )}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="verify-box">
+          <h2>Driving License Form</h2>
           <div className="mb-4">
             <label
               htmlFor="licenseNumber"
@@ -117,13 +118,20 @@ export const DlVerify = () => {
               required
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-          >
-            Verify
-            {loading && <ButtonLoadingSpinner />}
-          </button>
+          <a onClick={DlVerify} className="cursor-pointer">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <div>
+              {loading ? (
+                <div>Loading...</div>
+              ) : (
+                <div onClick={DlVerify}>Verify</div>
+              )}
+            </div>
+          </a>
+          {loading && <ButtonLoadingSpinner />}
         </form>
       </div>
     </div>
