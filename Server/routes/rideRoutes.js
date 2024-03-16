@@ -10,23 +10,25 @@ const {
   getDriverRides,
   getCoRiders,
   rideRequest,
-  verifyCode
+  verifyCode,
+  getPastRides,
 } = require("../controllers/rideController");
 const { findRides } = require("../controllers/getRides");
-const verifyJWT=require('../middleware/verifyJWT')
-router.post("/publishRide",verifyJWT, postRide);
-router.post("/getAvaliableRides",verifyJWT, findRides);
-router.get("/getRequests",verifyJWT, getRequests);
-router.post("/postRequests",verifyJWT, postRequests);
+const verifyJWT = require("../middleware/verifyJWT");
+router.post("/publishRide", verifyJWT, postRide);
+router.post("/getAvaliableRides", verifyJWT, findRides);
+router.get("/getRequests", verifyJWT, getRequests);
+router.post("/postRequests", verifyJWT, postRequests);
 
-router.get("/getAccepetedRides",verifyJWT, getAcceptedRides);
-router.post("/postDeclinePayment",verifyJWT, postDeclinePayment);
+router.get("/getAccepetedRides", verifyJWT, getAcceptedRides);
+router.post("/postDeclinePayment", verifyJWT, postDeclinePayment);
 
-router.get("/getBookedRides",verifyJWT, getBookedRides);
-router.get("/getCoRiders/:rideId",verifyJWT, getCoRiders);
-router.post("/postRatings", verifyJWT,postRatings);
-router.get("/getDriverRides",verifyJWT, getDriverRides);
-router.post("/rideRequest",verifyJWT,rideRequest);
-router.post('/verifyCode',verifyCode);
+router.get("/getBookedRides", verifyJWT, getBookedRides);
+router.get("/getCoRiders/:rideId", verifyJWT, getCoRiders);
+router.post("/postRatings", verifyJWT, postRatings);
+router.get("/getDriverRides", verifyJWT, getDriverRides);
+router.post("/rideRequest", verifyJWT, rideRequest);
+router.post("/verifyCode", verifyCode);
+router.get("/pastrides", verifyJWT, getPastRides);
 
 module.exports = router;

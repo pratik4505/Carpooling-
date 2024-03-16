@@ -5,9 +5,7 @@ const PastRide = require("../models/PastRide");
 const Chat = require("../models/Chat");
 const uuid = require("uuid");
 const Transaction = require("../models/Transaction");
-const stripe = require("stripe")(
-  process.env.STRIPE_SECRET_KEY
-);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const postRide = async (req, res) => {
   // Extract data from request body
@@ -425,19 +423,46 @@ const verifyCode = async (req, res) => {
     }
 
     transaction.codeVerified = true;
-     await transaction.save();
+    await transaction.save();
 
     // const payout = await stripe.payouts.create({
     //   amount: 1100,
     //   currency: "usd",
     // });
 
-   // console.log(payout);
+    // console.log(payout);
 
     return res.json({ rideCancelled: false, codeVerified: true });
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).json({ error: "An error occurred" });
+  }
+};
+const getPastRides = async (req, res) => {
+  try {
+    const userId = req.userId; // Assuming userId is available in req.userId
+    // Find all documents from PastRide schema where userId matches
+    const pastRides = await PastRide.find({ userId });
+
+    // Calculate average rating for each past ride
+    const pastRidesWithAverageRating = pastRides.map((ride) => {
+      let totalRating = 0;
+      let numberOfRatings = 0;
+      for (const [, rating] of ride.ratings.entries()) {
+        totalRating += rating.rating;
+        numberOfRatings++;
+      }
+      const averageRating =
+        numberOfRatings > 0 ? totalRating / numberOfRatings : 0;
+      return { ...ride.toObject(), averageRating };
+    });
+
+    console.log("The past rides is ", pastRidesWithAverageRating);
+    // Send the past rides data with average rating as response
+    res.status(200).json(pastRidesWithAverageRating);
+  } catch (error) {
+    console.error("Error fetching Past Rides :", error);
+    res.status(500).json({ error: "Unable to fetch past rides" });
   }
 };
 
@@ -453,4 +478,5 @@ module.exports = {
   getDriverRides,
   rideRequest,
   verifyCode,
+  getPastRides,
 };

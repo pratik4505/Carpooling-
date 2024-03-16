@@ -21,6 +21,7 @@ import Register from "../components/Login/Register";
 import LoginPage from "../components/Auth/LoginPage";
 import SignUp from "../components/Auth/SignUp";
 import Error from "../components/Error/Error";
+import DoneRides from "../pages/PastRides";
 
 const AppRoutes = () => {
   return (
@@ -43,6 +44,7 @@ const AppRoutes = () => {
           <Route path="/profile/:ownerId" element={<Profile />} />
           <Route path="/rideRequests" element={<RideRequests />} />
           <Route path="/transactions" element={<Transactions />} />
+          <Route path="/pastrides" element={<DoneRides />} />
           {/* <Route path="/login" element = {<Login/>}/>
           <Route path="/Register" element = {<Register/>}/> */}
         </Route>
