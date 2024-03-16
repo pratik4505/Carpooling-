@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useContext} from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { getRequests, postRequest } from "../../Api/rideApi";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -40,23 +40,24 @@ export default function Requests() {
         });
         const updatedRequests = { ...requests };
         delete updatedRequests[key];
-        toast( <div>
-          {`Request ${action==='accept'?'accepted':'declined'}`}
-        </div>,
-        {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          
-        });
+        toast(
+          <div>
+            {`Request ${action === "accept" ? "accepted" : "declined"}`}
+          </div>,
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
 
-       setRequests(updatedRequests);
+        setRequests(updatedRequests);
         setSelectedRequests(null);
       }
-     
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching requests:", error);
@@ -69,14 +70,10 @@ export default function Requests() {
         <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
           Ride Requests
         </h1>
-        {loading&&<FallbackLoading/>}
+        {loading && <FallbackLoading />}
         {requests &&
           Object.entries(requests).map(([key, value]) => (
-            <div
-              key={key}
-              className="border-b border-gray-300 py-4"
-             
-            >
+            <div key={key} className="border-b border-gray-300 py-4">
               <Link to={`/profile/${value.requesterId}`}>
                 {value.requesterImageUrl && (
                   <img
@@ -95,7 +92,7 @@ export default function Requests() {
                   {value.driverDestination}
                 </span>
               </p>
-             
+
               <p className="text-gray-600">
                 <span className="font-semibold">Seats Booked:</span>{" "}
                 {value.seats}

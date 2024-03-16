@@ -95,10 +95,10 @@
 //   text-decoration: underline;
 // }
 
-// <div class="login-box">
+// <div className="login-box">
 //         <h2>Register</h2>
 //         <form>
-//           <div class="user-box">
+//           <div className="user-box">
 //           <input
 //           type="text"
 //           name="username"
@@ -108,7 +108,7 @@
 //         />
 //             <label>UserName</label>
 //           </div>
-//           <div class="user-box">
+//           <div className="user-box">
 //           <input
 //           type="text"
 //           name="email"
@@ -118,7 +118,7 @@
 //         />
 //             <label>Email</label>
 //           </div>
-//           <div class="user-box">
+//           <div className="user-box">
 //           <input
 //           type="password"
 //           name="password"
