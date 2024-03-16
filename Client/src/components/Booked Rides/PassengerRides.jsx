@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { getBookedRides } from "../../Api/rideApi";
 import GoogleMapUtil from "../GoogleMapUtil";
 import RatingList from "./RatingList";
 import FallbackLoading from "../loader/FallbackLoading";
+import { ChatContext } from "../../context/ChatProvider";
 export default function PassengerRides() {
   const [rides, setRides] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedRide, setSelectedRide] = useState(null);
   const [rating, setRating] = useState(null);
-
+  const {chatAdder}=useContext(ChatContext)
   useEffect(() => {
     const fetchRides = async () => {
       try {
@@ -98,6 +99,12 @@ export default function PassengerRides() {
                 className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
               >
                 Show on Map
+              </button>
+              <button
+                onClick={() => chatAdder(value.rideId)}
+                className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
+              >
+                Join Group Chat
               </button>
             </div>
           ))}
