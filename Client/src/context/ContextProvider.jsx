@@ -70,7 +70,13 @@ export const ContextProvider = ({ children }) => {
       console.error("An error occurred while authorizing:");
     }
   }, [socket, listen]);
-
+  const signOut=() =>{
+    // Remove user profile from local storage
+    localStorage.removeItem("profile");
+  
+    // Reload the window to reflect sign-out
+    window.location.reload();
+  }
   useEffect(() => {
     // Function to send a ping to the server
 
@@ -98,6 +104,7 @@ export const ContextProvider = ({ children }) => {
         isLoaded,
         isDlVerified,
         setIsDlVerified,
+        signOut
       }}
     >
       {children}
