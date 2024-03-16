@@ -1,4 +1,5 @@
 import { FaRegUser } from "react-icons/fa";
+// import "./Chats.scss";
 
 export default function ChatList(props) {
   // const [unreadMsg, setUnreadMsg] = useState(undefined);
@@ -13,22 +14,30 @@ export default function ChatList(props) {
   //     setUnreadMsg(data.message);
   //   }
   // });
-
+  const [personName, chatPlaceWithTrailingParenthesis] =
+    props.chat.chatName.split("(");
+  const chatPlace = chatPlaceWithTrailingParenthesis.replace(/\)$/, "").trim();
   return (
-    <div
-      onClick={() => {
-        props.onChatClick(props.chat);
-      }}
-      className="flex p-3 shadow-sm "
-    >
-      <FaRegUser className="h-full w-[10%] mr-2" />
-
-      <p>
-        <b>{props.chat.chatName}</b>
-      </p>
-      {/* {unreadMsg && props.currChat.chatId !== props.chat.chatId && (
-        <p className="text-green-500">{unreadMsg}</p>
-      )} */}
-    </div>
+    <>
+      <div
+        onClick={() => {
+          props.onChatClick(props.chat);
+        }}
+        className="flex items-center bg-green-100 p-3 rounded-md shadow-md cursor-pointer transition duration-300 hover:bg-green-200"
+      >
+        <FaRegUser className="w-10 h-10 bg-red-500 rounded-full flex-shrink-0 mr-3" />
+        <div className="flex flex-col">
+          <p className="font-semibold text-lg text-gray-800">{personName}</p>
+          <p className="font-semibold text-lg text-gray-800">{chatPlace}</p>
+          {/* You can add more details here like last message, time, etc. */}
+        </div>
+        {/* Add unread message indicator if needed */}
+        {/* {unreadMsg && props.currChat.chatId !== props.chat.chatId && (
+    <span className="ml-auto px-2 py-1 text-sm font-semibold text-green-700 bg-green-200 rounded-full">
+      {unreadMsg}
+    </span>
+  )} */}
+      </div>
+    </>
   );
 }
