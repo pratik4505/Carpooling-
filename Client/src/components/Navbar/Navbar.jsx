@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import "./Navbar.scss";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/ContextProvider";
 
 const Navbar = () => {
   const userData = JSON.parse(localStorage.getItem("profile"));
-
+  const {signOut}=useContext(AuthContext)
   return (
     <div>
       <nav>
@@ -69,6 +70,7 @@ const Navbar = () => {
                 Chats
               </Link>
             </li>
+            
             {/* <li>
               <Link to="#" className="desktop-item">
                 Mega Menu
@@ -147,6 +149,9 @@ const Navbar = () => {
             </li>
             <li>
               <Link to={`/profile/${userData.userId}`}>Profile</Link>
+            </li>
+            <li onClick={signOut}>
+            <Link to={`/login`}> Sign Out</Link>
             </li>
           </ul>
           <label htmlFor="menu-btn" className="btn menu-btn">

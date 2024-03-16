@@ -87,6 +87,20 @@ export default function LoginPage() {
               )}
             </div>
           </a>
+          <a onClick={()=> navigate("/register")}>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <div>
+              {loading ? (
+                <div>Loading...</div>
+              ) : (
+                <div onClick={()=> navigate("/register")}>Register</div>
+              )}
+            </div>
+          </a>
+          <Link to='/forgotPassword'>Forgot Password</Link>
         </form>
       </div>
     </div>

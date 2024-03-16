@@ -25,12 +25,14 @@ import DoneRides from "../pages/PastRides";
 import Transactions from "../components/Transactions/Transactions";
 import { DlVerify } from "../components/DL verification/DlVerify";
 import { DlCheck } from "./DlCheck";
+import ForgotPassword from "../components/Auth/ForgotPassword";
 
 const AppRoutes = () => {
   return (
     <Suspense fallback={<FallbackLoading />}>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgotPassword" element={<ForgotPassword/>} />
         <Route path="*" element={<Error />} />
 
         <Route path="/register" element={<SignUp />} />
