@@ -12,7 +12,6 @@ const PastRides = () => {
     const fetchPastRides = async () => {
       try {
         const res = await getPastRides();
-        console.log("The response of the Past rides is ", res);
         if (!res.error) {
           const updatedPastRides = res.map((pastRide) => {
             const dateTime = new Date(pastRide.createdAt);
@@ -113,6 +112,7 @@ const PastRides = () => {
                           rating={pastRide.averageRating}
                           date={pastRide.date}
                           time={pastRide.time}
+                          polyline={pastRide.overview_polyline}
                         />
                       ))}
                   </thead>

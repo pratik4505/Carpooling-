@@ -4,7 +4,9 @@ const Transaction = (props) => {
   return (
     <tr className="text-gray-600 dark:text-gray-100">
       <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
-        <div className="flex  justify-center items-center">{props.key}</div>
+        <div className="flex  justify-center items-center">
+          {props.serialNumber}
+        </div>
       </td>
       <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
         <div className="flex  justify-center items-center">{props.method}</div>

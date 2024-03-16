@@ -12,7 +12,6 @@ const Transactions = () => {
     const fetchTransactions = async () => {
       try {
         const res = await getTransactions();
-        console.log("The response of the transactions is ", res);
         if (!res.error) {
           const updatedTransactions = res.map((transaction) => {
             const dateTime = new Date(transaction.createdAt);

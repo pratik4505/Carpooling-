@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useJsApiLoader, GoogleMap, Marker, Polyline } from "@react-google-maps/api";
+import {
+  useJsApiLoader,
+  GoogleMap,
+  Marker,
+  Polyline,
+} from "@react-google-maps/api";
 import { AuthContext } from "../context/ContextProvider";
 import FallbackLoading from "./loader/FallbackLoading";
 
 function GoogleMapUtil({ coordinates, polyline }) {
-  const {isLoaded}=useContext(AuthContext)
+  console.log("The cordinates and polyline is ", coordinates, polyline);
+  const { isLoaded } = useContext(AuthContext);
 
   const [map, setMap] = useState(null);
   const [route, setRoute] = useState(null);
@@ -12,13 +18,13 @@ function GoogleMapUtil({ coordinates, polyline }) {
 
   useEffect(() => {
     if (!polyline || !map) return;
-    const routeCoordinates = window.google.maps.geometry.encoding.decodePath(polyline);
+    const routeCoordinates =
+      window.google.maps.geometry.encoding.decodePath(polyline);
     setRoute(routeCoordinates);
   }, [polyline, map]);
 
   useEffect(() => {
     if (!coordinates || coordinates.length === 0 || !map) return;
-
     const newMarkers = coordinates.map((coordinate, index) => {
       const marker = new window.google.maps.Marker({
         position: coordinate,
@@ -32,7 +38,7 @@ function GoogleMapUtil({ coordinates, polyline }) {
 
     // Zoom to fit all markers
     const bounds = new window.google.maps.LatLngBounds();
-    newMarkers.forEach(marker => {
+    newMarkers.forEach((marker) => {
       bounds.extend(marker.getPosition());
     });
     map.fitBounds(bounds);
@@ -46,7 +52,7 @@ function GoogleMapUtil({ coordinates, polyline }) {
   };
 
   if (!isLoaded) {
-    return <FallbackLoading/>
+    return <FallbackLoading />;
   }
 
   return (
@@ -58,7 +64,11 @@ function GoogleMapUtil({ coordinates, polyline }) {
       onLoad={(loaded) => setMap(loaded)}
     >
       {markers.map((marker, index) => (
-        <Marker key={index} position={marker.getPosition()} title={marker.getTitle()} />
+        <Marker
+          key={index}
+          position={marker.getPosition()}
+          title={marker.getTitle()}
+        />
       ))}
       {route && (
         <Polyline

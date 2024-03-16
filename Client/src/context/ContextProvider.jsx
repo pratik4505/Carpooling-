@@ -56,10 +56,9 @@ export const ContextProvider = ({ children }) => {
 
       if (token && userId) {
         setUserData({ ...data });
-        const res=await getDlVerified();
-        console.log(res);
-        if(!res.error){
-          setIsDlVerified(res.data.dlVerified)
+        const res = await getDlVerified();
+        if (!res.error) {
+          setIsDlVerified(res.data.dlVerified);
         }
         socket.emit("setup", userId);
         listen();
