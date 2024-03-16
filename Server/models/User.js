@@ -92,6 +92,9 @@ const userSchema = new Schema({
       pickUpTime: String,
     },
   },
+  
+  dlNumber:String,
+  dob:String,
 },
 {
   timestamps: true,

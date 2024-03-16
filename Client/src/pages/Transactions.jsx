@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import React from 'react'
 
 export default function Transactions() {
- 
-
-  return <div>Transaction</div>
+  return (
+    <div>Transactions</div>
+  )
 }
