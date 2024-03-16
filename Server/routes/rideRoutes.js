@@ -27,6 +27,6 @@ router.get("/getCoRiders/:rideId",verifyJWT, getCoRiders);
 router.post("/postRatings", verifyJWT,postRatings);
 router.get("/getDriverRides",verifyJWT, getDriverRides);
 router.post("/rideRequest",verifyJWT,rideRequest);
-router.post('/verifyCode',verifyCode);
+router.post('/verifyCode',verifyJWT,verifyCode);
 
 module.exports = router;

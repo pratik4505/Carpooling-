@@ -51,6 +51,18 @@ const transactionSchema = new Schema({
     created: Date,
     arrival_date: Date,
   },
+  driverName:{
+    type: String,
+    required: true,
+  },
+  source:{
+    type: String,
+    required: true,
+  },
+  destination:{
+    type: String,
+    required: true,
+  }
 },
 {
   timestamps: true,

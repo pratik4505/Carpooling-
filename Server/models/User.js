@@ -92,6 +92,10 @@ const userSchema = new Schema({
       pickUpTime: String,
     },
   },
+  UID:String,
+  phoneNo:String,
+  dlNumber:String,
+  dob:String,
 },
 {
   timestamps: true,

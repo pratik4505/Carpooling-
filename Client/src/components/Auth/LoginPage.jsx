@@ -16,7 +16,7 @@ export default function LoginPage() {
   });
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
-  const { initialLoad } = useContext(AuthContext);
+  const { initialLoad,setIsDlVerified } = useContext(AuthContext);
   const navigate = useNavigate();
   const change = (e) => {
     setFormData({
@@ -33,7 +33,8 @@ export default function LoginPage() {
 
       console.log(response);
       if (response.data) {
-        localStorage.setItem("profile", JSON.stringify(response.data));
+        setIsDlVerified(response.data.isDlVerified)
+        localStorage.setItem("profile", JSON.stringify(response.data.data));
         initialLoad();
         navigate("/");
         return <Navigate to="/" />;

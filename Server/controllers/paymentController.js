@@ -135,6 +135,9 @@ console.log('-------------------------------------------------------------------
           distance: value.distance,
           seats: value.seats,
           rideId: value.rideId,
+          driverName:driver.name,
+          source:value.pickUpAddress,
+          destination: value.destinationAddress
         });
         await transaction.save();
 

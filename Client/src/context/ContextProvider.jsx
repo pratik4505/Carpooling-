@@ -2,10 +2,7 @@ import { createContext, useState, useEffect, useCallback } from "react";
 import io from "socket.io-client";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import {
-  useJsApiLoader,
- 
-} from "@react-google-maps/api";
+import { useJsApiLoader } from "@react-google-maps/api";
 export const AuthContext = createContext();
 const baseUrl = import.meta.env.VITE_SERVER_BASE_URL;
 export const ContextProvider = ({ children }) => {
@@ -19,14 +16,15 @@ export const ContextProvider = ({ children }) => {
     })
   );
   const [userData, setUserData] = useState(null);
+  const [isDlVerified, setIsDlVerified] = useState(false);
   const [libraries, setLibraries] = useState(["places", "geometry"]);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
   });
-  const listen=useCallback(()=>{
-    socket.on("notification", (data)=>{
-      if(data.type==='handleRequest'){
+  const listen = useCallback(() => {
+    socket.on("notification", (data) => {
+      if (data.type === "handleRequest") {
         toast(
           <div>
             <Link to="/pendingPayments" className="text-blue-500 ">
@@ -47,8 +45,8 @@ export const ContextProvider = ({ children }) => {
           }
         );
       }
-    })
-  },[socket]);
+    });
+  }, [socket]);
   const initialLoad = useCallback(async () => {
     const data = JSON.parse(localStorage.getItem("profile"));
     if (data) {
@@ -66,8 +64,7 @@ export const ContextProvider = ({ children }) => {
     } else {
       console.error("An error occurred while authorizing:");
     }
-  }, [socket,listen]);
-
+  }, [socket, listen]);
 
   useEffect(() => {
     // Function to send a ping to the server
@@ -87,12 +84,17 @@ export const ContextProvider = ({ children }) => {
     };
   }, [socket, initialLoad]);
 
- 
-
-  
-
   return (
-    <AuthContext.Provider value={{ socket, userData ,initialLoad,isLoaded}}>
+    <AuthContext.Provider
+      value={{
+        socket,
+        userData,
+        initialLoad,
+        isLoaded,
+        isDlVerified,
+        setIsDlVerified,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
