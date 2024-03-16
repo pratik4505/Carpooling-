@@ -50,10 +50,7 @@ const PastRide = (props) => {
         </td>
       </tr>
       {isDivOpen && (
-        <div
-          className="fixed top-0 my-4 left-0 w-full h-screen bg-black bg-opacity-50 flex justify-center items-center"
-          onClick={handleClose} // Close when clicked outside the map
-        >
+        <div className="fixed top-0 my-4 left-0 w-full h-screen bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white rounded-lg p-2 w-[80vw] h-[80vh] ">
             <button
               className="absolute right-[5%] bg-red-700"
