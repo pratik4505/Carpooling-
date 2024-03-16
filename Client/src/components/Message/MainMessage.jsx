@@ -7,13 +7,10 @@ import { ChatContext } from "../../context/ChatProvider";
 
 export default function MainMessage() {
   const { chats } = useContext(ChatContext);
-  console.log("The chats is ", chats);
-
   const [currChat, setCurrChat] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const currChatHandler = (data) => {
-    console.log("I am clicked ");
     setCurrChat(data);
   };
 
@@ -24,7 +21,7 @@ export default function MainMessage() {
   useEffect(() => {}, []);
 
   return (
-    <div className="flex pt-[70px] w-full h-[100vh] ">
+    <div className="flex pt-[70px] w-full h-[100vh] overflow-hidden ">
       <div
         className={`w-full shadow-2xl relative md:w-[35%] h-full ${
           currChat ? "hidden" : "block"
@@ -43,7 +40,7 @@ export default function MainMessage() {
             <IoMdAddCircleOutline className="text-white text-3xl cursor-pointer hover:text-gray-200" />
           </div>
         </div>
-        <div className="flex flex-col overflow-y-auto">
+        <div className="flex flex-col h-[80vh] overflow-auto ">
           {filteredChats.map((chat) => (
             <ChatList
               key={chat._id}
