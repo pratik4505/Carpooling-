@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+const path = require('path');
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -15,9 +15,11 @@ const chatRoutes = require("./routes/chatRoutes");
 const userRoutes=require('./routes/userRoutes');
 const { paymentWebhook } = require("./controllers/paymentController");
 const bodyParser = require("body-parser");
+const upload=require('./middleware/fileUpload')
 db.connect().catch((err) =>
   console.error("Error connecting to database:", err)
 );
+app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(
   bodyParser.json({
     verify: function (req, res, buf) {
@@ -34,6 +36,7 @@ app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(upload);
 app.use("/chat", chatRoutes);
 app.use("/auth", authRoutes);
 app.use("/rides", rideRoutes);
