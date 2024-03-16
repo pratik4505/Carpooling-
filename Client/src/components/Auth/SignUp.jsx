@@ -36,10 +36,10 @@ export default function RegisterComponent() {
 
   return (
     <div>
-      <div class="login-box">
+      <div className="login-box">
         <h2>Register</h2>
         <form>
-          <div class="user-box">
+          <div className="user-box">
             <input
               type="text"
               name="username"
@@ -49,7 +49,7 @@ export default function RegisterComponent() {
             />
             <label>UserName</label>
           </div>
-          <div class="user-box">
+          <div className="user-box">
             <input
               type="text"
               name="email"
@@ -59,7 +59,7 @@ export default function RegisterComponent() {
             />
             <label>Email</label>
           </div>
-          <div class="user-box">
+          <div className="user-box">
             <input
               type="password"
               name="password"

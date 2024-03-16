@@ -10,6 +10,7 @@ const db = new Database(MONGODB_URI);
 const socketIo = require("./socket");
 const rideRoutes = require("./routes/rideRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
 const authRoutes = require("./routes/authRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -17,10 +18,11 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const { paymentWebhook } = require("./controllers/paymentController");
 const bodyParser = require("body-parser");
 const upload = require("./middleware/fileUpload");
+const { getTransactions } = require("./controllers/transactions");
 db.connect().catch((err) =>
   console.error("Error connecting to database:", err)
 );
-app.use("/public", express.static(path.join(__dirname, "public")));
+app.use("/public", express.static(path.join(__dirname, "p0ublic")));
 app.use(
   bodyParser.json({
     verify: function (req, res, buf) {
@@ -41,6 +43,7 @@ app.use(upload);
 app.use("/chat", chatRoutes);
 app.use("/auth", authRoutes);
 app.use("/rides", rideRoutes);
+app.use("/transactions", transactionRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/user", userRoutes);
 app.use("/notification", notificationRoutes);

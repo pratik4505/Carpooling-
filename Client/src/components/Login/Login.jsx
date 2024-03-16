@@ -3,18 +3,18 @@ import "./Login.scss";
 
 const Login = () => {
   return (
-    <div class="wrapper">
+    <div className="wrapper">
       <form action="">
         <h1>Login</h1>
-        <div class="input-box">
+        <div className="input-box">
           <input type="text" placeholder="Email" required />
-          <i class="bx bxs-user"></i>
+          <i className="bx bxs-user"></i>
         </div>
-        <div class="input-box">
+        <div className="input-box">
           <input type="password" placeholder="Password" required />
-          <i class="bx bxs-lock-alt"></i>
+          <i className="bx bxs-lock-alt"></i>
         </div>
-        <div class="remember-forget">
+        <div className="remember-forget">
           <label>
             <input type="checkbox" name="" id="" />
             Remember Me{" "}
@@ -22,20 +22,20 @@ const Login = () => {
           <a href="">Forgot Password ?</a>
         </div>
 
-        <button type="submit" class="btn">
+        <button type="submit" className="btn">
           Login
         </button>
 
-        <div class="register-link">
+        <div className="register-link">
           <p>
             Don't have an account ? <a href="">Register</a>
           </p>
         </div>
-        <div class="login-with">
-          <button type="submit" class="btn">
+        <div className="login-with">
+          <button type="submit" className="btn">
             Google
           </button>
-          <button type="submit" class="btn">
+          <button type="submit" className="btn">
             Facebook
           </button>
         </div>

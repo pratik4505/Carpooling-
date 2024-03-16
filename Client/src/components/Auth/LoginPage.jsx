@@ -50,10 +50,10 @@ export default function LoginPage() {
 
   return (
     <div>
-      <div class="login-box">
+      <div className="login-box">
         <h2>Login</h2>
         <form>
-          <div class="user-box">
+          <div className="user-box">
             <input
               type="text"
               name="email"
@@ -63,7 +63,7 @@ export default function LoginPage() {
             />
             <label>Email</label>
           </div>
-          <div class="user-box">
+          <div className="user-box">
             <input
               type="password"
               name="password"

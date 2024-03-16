@@ -6,69 +6,69 @@ const Error = () => {
   const navigate = useNavigate();
   return (
     <div>
-      <div class="about-error">
+      <div className="about-error">
         <a
-          class="bg_links social portfolio"
+          className="bg_links social portfolio"
           href="https://www.rafaelalucas.com"
           target="_blank"
         >
-          <span class="icon"></span>
+          <span className="icon"></span>
         </a>
         <a
-          class="bg_links social dribbble"
+          className="bg_links social dribbble"
           href="https://dribbble.com/rafaelalucas"
           target="_blank"
         >
-          <span class="icon"></span>
+          <span className="icon"></span>
         </a>
         <a
-          class="bg_links social linkedin"
+          className="bg_links social linkedin"
           href="https://www.linkedin.com/in/rafaelalucas/"
           target="_blank"
         >
-          <span class="icon"></span>
+          <span className="icon"></span>
         </a>
-        <a class="bg_links logo"></a>
+        <a className="bg_links logo"></a>
       </div>
 
-      <section class="wrapper">
-        <div class="container">
-          <div id="scene" class="scene" data-hover-only="false">
-            <div class="circle" data-depth="1.2"></div>
+      <section className="wrapper">
+        <div className="container">
+          <div id="scene" className="scene" data-hover-only="false">
+            <div className="circle" data-depth="1.2"></div>
 
-            <div class="one" data-depth="0.9">
-              <div class="content">
-                <span class="piece"></span>
-                <span class="piece"></span>
-                <span class="piece"></span>
+            <div className="one" data-depth="0.9">
+              <div className="content">
+                <span className="piece"></span>
+                <span className="piece"></span>
+                <span className="piece"></span>
               </div>
             </div>
 
-            <div class="two" data-depth="0.60">
-              <div class="content">
-                <span class="piece"></span>
-                <span class="piece"></span>
-                <span class="piece"></span>
+            <div className="two" data-depth="0.60">
+              <div className="content">
+                <span className="piece"></span>
+                <span className="piece"></span>
+                <span className="piece"></span>
               </div>
             </div>
 
-            <div class="three" data-depth="0.40">
-              <div class="content">
-                <span class="piece"></span>
-                <span class="piece"></span>
-                <span class="piece"></span>
+            <div className="three" data-depth="0.40">
+              <div className="content">
+                <span className="piece"></span>
+                <span className="piece"></span>
+                <span className="piece"></span>
               </div>
             </div>
 
-            <p class="p404" data-depth="0.50">
+            <p className="p404" data-depth="0.50">
               404
             </p>
-            <p class="p404" data-depth="0.10">
+            <p className="p404" data-depth="0.10">
               404
             </p>
           </div>
 
-          <div class="text">
+          <div className="text">
             <article>
               <p>
                 Uh oh! Looks like you got lost. <br />

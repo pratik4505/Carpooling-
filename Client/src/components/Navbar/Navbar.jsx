@@ -1,147 +1,147 @@
 import React, { useContext } from "react";
 import "./Navbar.scss";
-
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const userData=JSON.parse(localStorage.getItem("profile"));
- 
+  const userData = JSON.parse(localStorage.getItem("profile"));
+
   return (
     <div>
       <nav>
-        <div class="wrapper-nav">
-          <div class="logo">
-            <a href="#">Logo</a>
+        <div className="wrapper-nav">
+          <div className="logo">
+            <Link to="#">Logo</Link>
           </div>
           <input type="radio" name="slider" id="menu-btn" />
           <input type="radio" name="slider" id="close-btn" />
-          <ul class="nav-links">
-            <label htmlFor="close-btn" class="btn close-btn">
-              <i class="fas fa-times"></i>
+          <ul className="nav-links">
+            <label htmlFor="close-btn" className="btn close-btn">
+              <i className="fas fa-times"></i>
             </label>
             <li>
-              <a href="/">Home</a>
+              <Link to="/">Home</Link>
             </li>
             <li>
-              <a href="/searchride" class="desktop-item">
+              <Link to="/searchride" className="desktop-item">
                 Ride
-              </a>
+              </Link>
               <input type="checkbox" id="showDrop" />
-              <label htmlFor="showDrop" class="mobile-item">
+              <label htmlFor="showDrop" className="mobile-item">
                 Ride
               </label>
-              <ul class="drop-menu">
+              <ul className="drop-menu">
                 <li>
-                  <a href="/searchride">Search Ride</a>
+                  <Link to="/searchride">Search Ride</Link>
                 </li>
                 <li>
-                  <a href="/publishride">Publish Ride</a>
+                  <Link to="/publishride">Publish Ride</Link>
                 </li>
                 <li>
-                  <a href="/driverRides">Driver Ride</a>
+                  <Link to="/driverRides">Driver Ride</Link>
                 </li>
                 <li>
-                  <a href="/bookedrides">Booked Ride</a>
+                  <Link to="/bookedrides">Booked Ride</Link>
                 </li>
               </ul>
             </li>
             <li>
-              <a href="#" class="desktop-item">
+              <Link to="#" className="desktop-item">
                 Payments
-              </a>
+              </Link>
               <input type="checkbox" id="showDrop" />
-              <label htmlFor="showDrop" class="mobile-item">
+              <label htmlFor="showDrop" className="mobile-item">
                 Payments
               </label>
-              <ul class="drop-menu">
+              <ul className="drop-menu">
                 <li>
-                  <a href="/pendingpayments">Pending Payments</a>
+                  <Link to="/pendingpayments">Pending Payments</Link>
                 </li>
                 <li>
-                  <a href="/transaction">Transactions</a>
+                  <Link to="/transactions">Transactions</Link>
                 </li>
               </ul>
             </li>
             <li>
-              <a href="/chats" class="desktop-item">
+              <Link to="/chats" className="desktop-item">
                 Messages
-              </a>
+              </Link>
               <input type="checkbox" id="showDrop" />
-              <label htmlFor="showDrop" class="mobile-item">
+              <label htmlFor="showDrop" className="mobile-item">
                 Messages
               </label>
-              <ul class="drop-menu">
+              <ul className="drop-menu">
                 <li>
-                  <a href="/chats">Chats</a>
+                  <Link to="/chats">Chats</Link>
                 </li>
                 <li>
-                  <a href="/notifications">Notificatons</a>
+                  <Link to="/notifications">Notificatons</Link>
                 </li>
               </ul>
             </li>
             {/* <li>
-              <a href="#" class="desktop-item">
+              <Link to="#" className="desktop-item">
                 Mega Menu
-              </a>
+              </Link>
               <input type="checkbox" id="showMega" />
-              <label htmlFor="showMega" class="mobile-item">
+              <label htmlFor="showMega" className="mobile-item">
                 Mega Menu
               </label>
-              <div class="mega-box">
-                <div class="content">
-                  <div class="row">
+              <div className="mega-box">
+                <div className="content">
+                  <div className="row">
                     <img
                       src="https://fadzrinmadu.github.io/hosted-assets/responsive-mega-menu-and-dropdown-menu-using-only-html-and-css/img.jpg"
                       alt=""
                     />
                   </div>
-                  <div class="row">
+                  <div className="row">
                     <header>Design Services</header>
-                    <ul class="mega-links">
+                    <ul className="mega-links">
                       <li>
-                        <a href="#">Graphics</a>
+                        <Link to="#">Graphics</Link>
                       </li>
                       <li>
-                        <a href="#">Vectors</a>
+                        <Link to="#">Vectors</Link>
                       </li>
                       <li>
-                        <a href="#">Business cards</a>
+                        <Link to="#">Business cards</Link>
                       </li>
                       <li>
-                        <a href="#">Custom logo</a>
+                        <Link to="#">Custom logo</Link>
                       </li>
                     </ul>
                   </div>
-                  <div class="row">
+                  <div className="row">
                     <header>Email Services</header>
-                    <ul class="mega-links">
+                    <ul className="mega-links">
                       <li>
-                        <a href="#">Personal Email</a>
+                        <Link to="#">Personal Email</Link>
                       </li>
                       <li>
-                        <a href="#">Business Email</a>
+                        <Link to="#">Business Email</Link>
                       </li>
                       <li>
-                        <a href="#">Mobile Email</a>
+                        <Link to="#">Mobile Email</Link>
                       </li>
                       <li>
-                        <a href="#">Web Marketing</a>
+                        <Link to="#">Web Marketing</Link>
                       </li>
                     </ul>
                   </div>
-                  <div class="row">
+                  <div className="row">
                     <header>Security services</header>
-                    <ul class="mega-links">
+                    <ul className="mega-links">
                       <li>
-                        <a href="#">Site Seal</a>
+                        <Link to="#">Site Seal</Link>
                       </li>
                       <li>
-                        <a href="#">VPS Hosting</a>
+                        <Link to="#">VPS Hosting</Link>
                       </li>
                       <li>
-                        <a href="#">Privacy Seal</a>
+                        <Link to="#">Privacy Seal</Link>
                       </li>
                       <li>
-                        <a href="#">Website design</a>
+                        <Link to="#">Website design</Link>
                       </li>
                     </ul>
                   </div>
@@ -149,14 +149,14 @@ const Navbar = () => {
               </div>
             </li> */}
             <li>
-              <a href={`/profile/${userData.userId}`}>Profile</a>
+              <Link to={`/profile/${userData.userId}`}>Profile</Link>
             </li>
             <li>
-              <a href="/riderequests">Ride Requests</a>
+              <Link to="/riderequests">Ride Requests</Link>
             </li>
           </ul>
-          <label htmlFor="menu-btn" class="btn menu-btn">
-            <i class="fas fa-bars"></i>
+          <label htmlFor="menu-btn" className="btn menu-btn">
+            <i className="fas fa-bars"></i>
           </label>
         </div>
       </nav>
