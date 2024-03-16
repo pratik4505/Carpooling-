@@ -21,8 +21,6 @@ const PastRides = () => {
             return { ...pastRide, date, time };
           });
           setPastRides(updatedPastRides);
-          console.log("The updated Past Rides is equal to ", updatedPastRides);
-          console.log("The rating is ", updatedPastRides[0].ratings);
           setLoading(false);
         }
       } catch (error) {
@@ -115,7 +113,6 @@ const PastRides = () => {
                           rating={pastRide.averageRating}
                           date={pastRide.date}
                           time={pastRide.time}
-                          ratings={pastRide.ratings}
                         />
                       ))}
                   </thead>
