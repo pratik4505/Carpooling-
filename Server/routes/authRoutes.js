@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const authController = require("../controllers/authController");
-const {login,signUp,dlVerified} = require("../controllers/auth");
+const {login,signUp,dlVerified,getDlVerified} = require("../controllers/auth");
 const { body } = require('express-validator');
 const User=require("../models/User");
 const verifyJWT=require('../middleware/verifyJWT')
@@ -27,6 +27,6 @@ router.post('/signUp',[
     
   ],signUp);
 router.post('/login', login);
-router.post('/auth/dlVerified',verifyJWT,dlVerified);
-
+router.post('/dlVerified',verifyJWT,dlVerified);
+router.get('/getDlVerified',verifyJWT,getDlVerified);
 module.exports = router;

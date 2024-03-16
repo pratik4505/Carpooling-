@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import ButtonLoadingSpinner from "../loader/ButtonLoadingSpinner";
 import { AuthContext } from "../../context/ContextProvider";
-import { API } from "../../Api/utils";
+import { dlVerified } from "../../Api/authApi";
 import { useNavigate } from "react-router-dom";
 function formatDOB(date) {
   const [year, month, day] = date.split("-");
@@ -15,7 +15,7 @@ function requestOptions(dlNumber, dob) {
     url: "https://driving-license-verification1.p.rapidapi.com/DL/DLDetails",
     headers: {
       "content-type": "application/json",
-      "X-RapidAPI-Key": "694c4d3e59msh4f5c6895dd8b32fp15592djsnd19a3ecd623f",
+      "X-RapidAPI-Key": "21bf180744msh0e9fdf2fe276eb2p1c5282jsn9f2949f5f205",
       "X-RapidAPI-Host": "driving-license-verification1.p.rapidapi.com",
     },
     data: {
@@ -41,8 +41,8 @@ export const DlVerify = () => {
     setLoading(true);
     const formattedDOB = formatDOB(dob);
 
-    console.log((requestOptions(licenseNumber, formattedDOB)))
-    
+    console.log(requestOptions(licenseNumber, formattedDOB));
+
     try {
       const response = await axios.request(
         requestOptions(licenseNumber, formattedDOB)
@@ -50,23 +50,22 @@ export const DlVerify = () => {
       console.log(response.data);
       const data = response.data;
 
-      if (data.statusCode === "1") {
-      
-        // if (
-        //   data.Succeeded?.data.result.name.toLowerCase() ===
-        //   userData.name.toLowerCase()
-        // ) {
-          const res = await API.post("auth/dlVerified", {
+      if (data.Succeeded?.statusCode === "1") {
+        if (
+          data.Succeeded?.data.result.name.toLowerCase() ===
+          userData.name.toLowerCase()
+        ) {
+          const res = await dlVerified({
             dlNumber: licenseNumber,
             dob: formattedDOB,
           });
 
-          if (res.status === 200) {
+          if (!res.error) {
             setIsDlVerified(true);
             navigate("/publishRide");
           }
         }
-    //   }
+      }
       setVerify(false);
     } catch (error) {
       console.error(error);

@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useJsApiLoader } from "@react-google-maps/api";
+import { getDlVerified } from "../Api/authApi";
 export const AuthContext = createContext();
 const baseUrl = import.meta.env.VITE_SERVER_BASE_URL;
 export const ContextProvider = ({ children }) => {
@@ -55,7 +56,11 @@ export const ContextProvider = ({ children }) => {
 
       if (token && userId) {
         setUserData({ ...data });
-
+        const res=await getDlVerified();
+        console.log(res);
+        if(!res.error){
+          setIsDlVerified(res.data.dlVerified)
+        }
         socket.emit("setup", userId);
         listen();
       } else {
