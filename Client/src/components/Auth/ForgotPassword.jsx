@@ -1,48 +1,50 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { signUp, signUpOTP } from "../../Api/authApi";
+import { forgotOTP, changePassword as changePwdAPI } from "../../Api/authApi";
 import "./Login.scss";
 
-export default function RegisterComponent() {
+export default function ForgotPassword() {
   const navigate = useNavigate();
-  const [userName, setUsername] = useState("");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [otpId, setOtpId] = useState("");
 
-  const handleSignUp = async () => {
+  const handleChangePassword = async () => {
     if (!otpId) {
       toast.error("Please send OTP first.");
       return;
     }
     setLoading(true);
     try {
-      const response = await signUp({ userName, email, password, otp, otpId });
+      const response = await changePwdAPI({ email, password, otp, otpId });
 
       if (response.data) {
+        toast.success("Password Changed Successfully");
         navigate("/login");
       } else {
-        toast.error("Failed to sign up. Please try again.");
+        toast.error("OTP mismatch or password is not strong");
       }
     } catch (error) {
-      console.error("Error during signup:", error);
-      toast.error("An error occurred during signup. Please try again.");
+      console.error("Error during password change:", error);
+      toast.error("An error occurred during password change. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const sendotp = async () => {
+  const sendOTP = async () => {
     try {
-      const res = await signUpOTP({ email });
+      const res = await forgotOTP({ email });
       if (!res.error) {
         setOtpId(res.data._id);
         toast.success("OTP sent successfully.");
+        setOtp(""); // Clear OTP field after sending OTP
       } else {
-        toast.error("Email address already exists.");
+        toast.error("Email address is not registered");
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -55,16 +57,6 @@ export default function RegisterComponent() {
       <div className="login-box">
         <h2>Register</h2>
         <form>
-          <div className="user-box">
-            <input
-              type="text"
-              name="username"
-              value={userName}
-              placeholder="Full Name"
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <label>Full Name</label>
-          </div>
           <div className="user-box">
             <input
               type="text"
@@ -95,31 +87,19 @@ export default function RegisterComponent() {
             />
             <label>Password</label>
           </div>
-          <a onClick={handleSignUp}>
+          <a onClick={handleChangePassword} disabled={loading}>
             <span></span>
             <span></span>
             <span></span>
             <span></span>
-            <div>
-              {loading ? (
-                <div>Loading...</div>
-              ) : (
-                <div>Sign Up</div>
-              )}
-            </div>
+            <div>{loading ? "Loading..." : "Change Password"}</div>
           </a>
-          <a onClick={sendotp}>
+          <a onClick={sendOTP} disabled={loading}>
             <span></span>
             <span></span>
             <span></span>
             <span></span>
-            <div>
-              {loading ? (
-                <div>Loading...</div>
-              ) : (
-                <div>Send OTP</div>
-              )}
-            </div>
+            <div>{loading ? "Loading..." : "Send OTP"}</div>
           </a>
         </form>
       </div>

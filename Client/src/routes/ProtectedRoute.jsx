@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
-import { Outlet } from "react-router-dom"; // Import Outlet from react-router-dom
+import { Outlet } from "react-router-dom"; 
 
 const ProtectedRoute = () => {
   // Retrieve the accessToken from localStorage
