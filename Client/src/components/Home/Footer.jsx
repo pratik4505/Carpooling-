@@ -40,15 +40,7 @@ const Footer = () => {
           <div className="row">
             <div className="col-xl-4 col-lg-4 mb-50">
               <div className="footer-widget">
-                <div className="footer-logo">
-                  <a href="index.html">
-                    <img
-                      src="https://i.ibb.co/QDy827D/ak-logo.png"
-                      className="img-fluid"
-                      alt="logo"
-                    />
-                  </a>
-                </div>
+                <div className="footer-logo"></div>
                 <div className="footer-text">
                   <p>
                     Lorem ipsum dolor sit amet, consec tetur adipisicing elit,

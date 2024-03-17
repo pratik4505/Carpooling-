@@ -6,18 +6,6 @@ const ContactForm = () => {
     <div className="background-container md:w-[90vw] lg:w-[80vw] mx-auto">
       <div className="container-contact">
         <div className="screen-contact">
-          <div className="screen-contact-header">
-            <div className="screen-contact-header-left">
-              <div className="screen-contact-header-button close"></div>
-              <div className="screen-contact-header-button maximize"></div>
-              <div className="screen-contact-header-button minimize"></div>
-            </div>
-            <div className="screen-contact-header-right">
-              <div className="screen-contact-header-ellipsis"></div>
-              <div className="screen-contact-header-ellipsis"></div>
-              <div className="screen-contact-header-ellipsis"></div>
-            </div>
-          </div>
           <div className="screen-contact-body">
             <div className="screen-contact-body-item left">
               <div className="app-title">

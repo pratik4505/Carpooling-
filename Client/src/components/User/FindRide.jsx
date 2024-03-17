@@ -16,10 +16,10 @@ import FallbackLoading from "../loader/FallbackLoading";
 import { toast } from "react-toastify";
 import ButtonLoadingSpinner from "../loader/ButtonLoadingSpinner";
 const FindRide = () => {
-  
-  const { userData,isLoaded} = useContext(AuthContext);
-  const {chatAdder} = useContext(ChatContext);
+  const { userData, isLoaded } = useContext(AuthContext);
+  const { chatAdder } = useContext(ChatContext);
   const [center, setCenter] = useState(null);
+  const [finalAns, setFinalAns] = useState(null);
   const [userDirectionResponse, setUserDirectionRespone] = useState(null);
   const [directionsResponse, setDirectionResponse] = useState(null);
   const [map, setMap] = useState(null);
@@ -35,7 +35,7 @@ const FindRide = () => {
   const timeFromRef = useRef();
   const timeToRef = useRef();
   const seatsRef = useRef();
-  const [isSearching,setIsSearching]=useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   //console.log(availableRides);
   useEffect(() => {
     // Fetch the real-time location and set it as the center of the map
@@ -47,7 +47,7 @@ const FindRide = () => {
     }
   }, []);
   if (!isLoaded) {
-    return <FallbackLoading/>;
+    return <FallbackLoading />;
   }
   function isTimeBetween(startTime, endTime, targetTime) {
     const startSeconds = convertTimeToSeconds(startTime);
@@ -91,7 +91,7 @@ const FindRide = () => {
     ride.overview_path.forEach((point) => bounds.extend(point));
     map.fitBounds(bounds);
   };
-  const serachRide = async () => {
+  const searchRide = async () => {
     if (sourceRef.current.value === "" || destinationRef.current.value === "") {
       toast(
         <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-3 shadow-md">
@@ -130,9 +130,10 @@ const FindRide = () => {
       );
 
       if (response.status === 200) {
+        console.log("The response from the database is ", response);
         // Initialize array to hold rides with valid routes
         const ridesWithValidRoutes = [];
-        var rideFound=false;
+        var rideFound = false;
         // Iterate through each ride in the response array
         for (const ride of response.data) {
           // Parse the overview polyline from the backend response
@@ -218,17 +219,16 @@ const FindRide = () => {
             const startTime = timeFromRef.current.value;
             const endTime = timeToRef.current.value;
             let pickUpTime = convertSecondsToTimeString(
-              distanceFromStart / ride.speed
+              distanceFromStart / (ride.speed * (1000 / 3600))
             );
             pickUpTime = addTimes(ride.time, pickUpTime);
-
             if (isTimeBetween(startTime, endTime, pickUpTime)) {
               ride.pickUpTime = pickUpTime;
               ride.pickUpPoint = sourceFound;
               ride.dropOffPoint = destinationFound;
               ride.overview_path = routeCoordinates;
               ride.rideDistance = distanceFromEnd - distanceFromStart;
-              rideFound=true;
+              rideFound = true;
               // Geocode pickup point
               geocoder.geocode(
                 { location: ride.pickUpPoint },
@@ -244,7 +244,6 @@ const FindRide = () => {
                           // Push the ride into the array of valid routes
                           ridesWithValidRoutes.push(ride);
                           // Update state with the array of valid routes
-                          setAvailableRides(ridesWithValidRoutes);
                         } else {
                           console.error(
                             "Geocode failed for drop-off point:",
@@ -261,7 +260,9 @@ const FindRide = () => {
             }
           }
         }
-        if(!rideFound){
+        if (!rideFound) {
+          setFinalAns(false);
+          setAvailableRides([]);
           toast(
             <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-4 shadow-md bg-transparent">
               No Rides Found
@@ -276,14 +277,13 @@ const FindRide = () => {
             }
           );
         }
-
+        setFinalAns(true);
+        setAvailableRides(ridesWithValidRoutes);
         // rest of the code...
       } else {
         console.error("Failed to fetch available rides");
         // Handle error
       }
-
-
 
       setIsSearching(false);
     } catch (error) {
@@ -327,6 +327,13 @@ const FindRide = () => {
     setDuration("");
     sourceRef.current.value = "";
     destinationRef.current.value = "";
+  };
+  const markerIcon = {
+    path: window.google.maps.SymbolPath.CIRCLE,
+    fillColor: "green", // Change marker color to green
+    fillOpacity: 1,
+    strokeWeight: 0,
+    scale: 10, // Adjust the size of the marker
   };
 
   return (
@@ -443,16 +450,16 @@ const FindRide = () => {
           <div className="flex justify-center">
             <button
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
-              onClick={serachRide}
+              onClick={searchRide}
               disabled={isSearching}
             >
               Search Ride
-              {isSearching&&<ButtonLoadingSpinner/>}
+              {isSearching && <ButtonLoadingSpinner />}
             </button>
           </div>
         </div>
         <div className="bg-gray-200 mt-2 rounded-md">
-          {availableRides.length > 0 ? (
+          {finalAns ? (
             <div>
               <h2 className="text-2xl font-bold mt-2 p-2">Available Rides:</h2>
               <div className="bg-gray-200 p-4 max-h-[250px] rounded-md overflow-auto">
@@ -507,9 +514,17 @@ const FindRide = () => {
           }}
           onLoad={(loaded) => setMap(loaded)}
         >
-          <Marker position={userSource} />
+          <Marker
+            position={userSource}
+            icon={markerIcon}
+            label={{ text: "A", color: "white", fontWeight: "bold" }}
+          />
+          <Marker
+            position={userDestination}
+            icon={markerIcon}
+            label={{ text: "B", color: "white", fontWeight: "bold" }}
+          />{" "}
           <Marker position={center} />
-          <Marker position={userDestination} />
           {availableRides.map((ride, index) => (
             <Polyline
               key={index}

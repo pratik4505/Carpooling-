@@ -1,16 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   useJsApiLoader,
   GoogleMap,
   Autocomplete,
   DirectionsRenderer,
+  Marker,
 } from "@react-google-maps/api";
 import { useRef } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/ContextProvider";
 import ButtonLoadingSpinner from "../loader/ButtonLoadingSpinner";
 import { toast } from "react-toastify";
-const center = { lat: 48.8584, lng: 2.2945 };
 
 export default function PublishRide() {
   const { userData, isLoaded } = useContext(AuthContext);
@@ -23,9 +23,28 @@ export default function PublishRide() {
   const [vehicleType, setVehicleType] = useState("");
   const [routeLoading, setRouteLoading] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   const originRef = useRef();
   const destiantionRef = useRef();
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCurrentLocation({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error("Error getting user's location:", error);
+          toast.error("Error getting user's location");
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      toast.error("Geolocation is not supported by this browser.");
+    }
+  }, []);
 
   if (!isLoaded) {
     return <p>Loading</p>;
@@ -71,7 +90,6 @@ export default function PublishRide() {
         provideRouteAlternatives: true,
         travelMode: google.maps.TravelMode.DRIVING,
       });
-
       setRouteLoading(false);
 
       if (results.status !== "OK") {
@@ -104,25 +122,26 @@ export default function PublishRide() {
     originRef.current.value = "";
     destiantionRef.current.value = "";
   }
-  function convertAMPMTo24Hour(time) {
-    const [timePart, meridiem] = time.split(" ");
-    let [hours, minutes] = timePart.split(":");
+  // function convertAMPMTo24Hour(time) {
+  //   const [timePart, meridiem] = time.split(" ");
+  //   let [hours, minutes] = timePart.split(":");
 
-    hours = parseInt(hours);
-    minutes = parseInt(minutes);
+  //   hours = parseInt(hours);
+  //   minutes = parseInt(minutes);
 
-    if (meridiem === "PM" && hours !== 12) {
-      hours += 12;
-    } else if (meridiem === "AM" && hours === 12) {
-      hours = 0;
-    }
+  //   if (meridiem === "PM" && hours !== 12) {
+  //     hours += 12;
+  //   } else if (meridiem === "AM" && hours === 12) {
+  //     // Special case when hour is 12 AM (midnight)
+  //     hours = 0;
+  //   }
 
-    // Pad single digit hours and minutes with leading zeros
-    hours = hours < 10 ? "0" + hours : hours.toString();
-    minutes = minutes < 10 ? "0" + minutes : minutes.toString();
+  //   // Pad single digit hours and minutes with leading zeros
+  //   hours = hours < 10 ? "0" + hours : hours.toString();
+  //   minutes = minutes < 10 ? "0" + minutes : minutes.toString();
 
-    return `${hours}:${minutes}`;
-  }
+  //   return `${hours}:${minutes}`;
+  // }
 
   async function handlePublishRide() {
     if (!directionsResponses || !datetime || !unitCost || !vehicleType) {
@@ -143,18 +162,14 @@ export default function PublishRide() {
     }
     setIsPublishing(true);
     try {
-      const data = new Date(datetime);
-      const date = data.toISOString().slice(0, 10);
-      let time = data.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      time = convertAMPMTo24Hour(time);
+      const datetimeParts = datetime.split("T");
+      const date = datetimeParts[0];
+      const time = datetimeParts[1].slice(0, 5);
       const totalTime =
         directionsResponses.routes[selectedRouteIndex].legs[0].duration.value;
       const totalDistance =
         directionsResponses.routes[selectedRouteIndex].legs[0].distance.value;
-      const speed = totalDistance / totalTime;
+      const speed = (totalDistance / totalTime) * 3.6;
       const routeData = {
         source: directionsResponses.request.origin.query,
         destination: directionsResponses.request.destination.query,
@@ -169,7 +184,7 @@ export default function PublishRide() {
         speed,
         userData,
       };
-
+      console.log("The data that is going to published is ", routeData);
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_BASE_URL}/rides/publishRide`,
         routeData,
@@ -206,9 +221,9 @@ export default function PublishRide() {
   }
 
   return (
-    <div className="grid grid-cols-2 mt-[70px]">
-      <div className="h-full">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mt-[80px]">
+    <div className="grid grid-cols-2 pt-[70px]">
+      <div className="h-full pt-[70px]">
+        <h1 className="text-3xl font-bold text-center text-gray-800 ">
           Publish Ride
         </h1>
         <div className="w-[80%] m-auto flex p-3 flex-col mt-2 border">
@@ -339,9 +354,9 @@ export default function PublishRide() {
           </div>
         )}
       </div>
-      <div className="border border-gray-400 h-full">
+      <div className="border border-gray-400 h-[100vh]">
         <GoogleMap
-          center={center}
+          center={currentLocation}
           zoom={15}
           mapContainerStyle={{ width: "100%", height: "100%" }}
           options={{
@@ -352,6 +367,7 @@ export default function PublishRide() {
           }}
           onLoad={(map) => setMap(map)}
         >
+          {currentLocation && <Marker position={currentLocation} />}
           {directionsResponses &&
             directionsResponses.routes.map((route, index) => (
               <DirectionsRenderer
