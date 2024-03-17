@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const authController = require("../controllers/authController");
+
 const {
   login,
   signUp,
@@ -12,9 +12,8 @@ const {
 const { body } = require("express-validator");
 const User = require("../models/User");
 const verifyJWT = require("../middleware/verifyJWT");
-// router.post("/", authController.login);
-router.get("/refresh", authController.refresh);
-router.post("/logout", authController.logout);
+
+
 
 router.post(
   "/signUp",

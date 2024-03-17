@@ -115,6 +115,7 @@ const Transactions = () => {
                           amount={transaction.amountPaid}
                           date={transaction.date}
                           time={transaction.time}
+                          rideCancelled={transaction.rideCancelled}
                         />
                       ))}
                   </thead>

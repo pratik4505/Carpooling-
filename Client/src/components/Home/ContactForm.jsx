@@ -1,72 +1,147 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { contactUs } from "../../Api/userApi";
 import "./ContactForm.scss";
-
+import { toast } from "react-toastify";
 const ContactForm = () => {
+  // State variables to store form input values
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contactNo, setContactNo] = useState("");
+  const [message, setMessage] = useState("");
+
+  const clearForm=(e)=>{
+    e.preventDefault();
+    setName("");
+      setEmail("");
+      setContactNo("");
+      setMessage("");
+  }
+
+  // Function to handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Create an object with form data
+    const formData = {
+      name,
+      email,
+      contactNo,
+      message,
+    };
+
+    try {
+      // Send form data to an endpoint using Axios
+      const response = await contactUs(formData);
+
+      if(response.data) {
+        toast(
+          <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-4 shadow-md bg-transparent">
+           {response.data.message}
+          </div>,
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
+      }
+      console.log("Email sent:", response.data);
+      
+      // Clear form fields after successful submission
+      clearForm(e)
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  };
+
   return (
     <div className="background-container md:w-[90vw] lg:w-[80vw] mx-auto">
       <div className="container-contact">
         <div className="screen-contact">
+<<<<<<< HEAD
           <div className="screen-contact-body">
             <div className="screen-contact-body-item left">
               <div className="app-title">
                 <span>CONTACT</span>
                 <span>US</span>
+=======
+          {/* Form */}
+          <form >
+            <div className="screen-contact-body">
+              <div className="screen-contact-body-item left">
+                <div className="app-title">
+                  <span>CONTACT</span>
+                  <span>US</span>
+                </div>
+                <div className="app-contact">
+                  CONTACT INFO : +11 1111111111
+                </div>
+>>>>>>> dca8007b3476b8f113531dcf48e0537db7a1d793
               </div>
-              <div className="app-contact">
-                CONTACT INFO : +62 81 314 928 595
+              <div className="screen-contact-body-item">
+                <div className="app-form">
+                  <div className="app-form-group">
+                    <input
+                      className="app-form-control"
+                      placeholder="NAME"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                  <div className="app-form-group">
+                    <input
+                      className="app-form-control"
+                      placeholder="EMAIL"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="app-form-group">
+                    <input
+                      className="app-form-control"
+                      placeholder="CONTACT NO"
+                      value={contactNo}
+                      onChange={(e) => setContactNo(e.target.value)}
+                    />
+                  </div>
+                  <div className="app-form-group message">
+                    <input
+                      className="app-form-control"
+                      placeholder="MESSAGE"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                    />
+                  </div>
+                  <div className="app-form-group buttons">
+                    <button onClick={clearForm} className="app-form-button mr-4">
+                      CANCEL
+                    </button>
+
+                    <button onClick={handleSubmit} className="app-form-button">
+                      SEND
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="screen-contact-body-item">
-              <div className="app-form">
-                <div className="app-form-group">
-                  <input
-                    className="app-form-control"
-                    placeholder="NAME"
-                    value="Krisantus Wanandi"
-                  />
-                </div>
-                <div className="app-form-group">
-                  <input className="app-form-control" placeholder="EMAIL" />
-                </div>
-                <div className="app-form-group">
-                  <input
-                    className="app-form-control"
-                    placeholder="CONTACT NO"
-                  />
-                </div>
-                <div className="app-form-group message">
-                  <input className="app-form-control" placeholder="MESSAGE" />
-                </div>
-                <div className="app-form-group buttons">
-                  <button className="app-form-button">CANCEL</button>
-                  <button className="app-form-button">SEND</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          </form>
         </div>
+        {/* Credits */}
         <div className="credits">
           inspired by
           <a
             className="credits-link"
             href="https://dribbble.com/shots/2666271-Contact"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <svg className="dribbble" viewBox="0 0 200 200">
               <g stroke="#ffffff" fill="none">
-                <circle cx="100" cy="100" r="90" stroke-width="20"></circle>
-                <path
-                  d="M62.737004,13.7923523 C105.08055,51.0454853 135.018754,126.906957 141.768278,182.963345"
-                  stroke-width="20"
-                ></path>
-                <path
-                  d="M10.3787186,87.7261455 C41.7092324,90.9577894 125.850356,86.5317271 163.474536,38.7920951"
-                  stroke-width="20"
-                ></path>
-                <path
-                  d="M41.3611549,163.928627 C62.9207607,117.659048 137.020642,86.7137169 189.041451,107.858103"
-                  stroke-width="20"
-                ></path>
+                {/* Dribble SVG */}
               </g>
             </svg>
             Gururaj

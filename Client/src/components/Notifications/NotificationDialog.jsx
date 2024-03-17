@@ -43,7 +43,7 @@ const NotificationDialog = ({ onClose }) => {
           <p className="text-gray-700">{notification.description}</p>
         </div>
       ))}
-      <Link className="p-0 w-[100%]" to="/notificationss">
+      <Link className="p-0 w-[100%]" to="/notifications">
         <button className="w-[100%] font-black" onClick={onClose}>
           View All Notifications
         </button>

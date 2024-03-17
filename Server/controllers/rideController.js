@@ -431,7 +431,9 @@ const verifyCode = async (req, res) => {
     //   currency: "usd",
     // });
 
-    // console.log(payout);
+    const driver= await User.findById(req.userId);
+    driver.wallet+=transaction.amountPaid;
+    await driver.save();
 
     return res.json({ rideCancelled: false, codeVerified: true });
   } catch (error) {
@@ -442,30 +444,40 @@ const verifyCode = async (req, res) => {
 const getPastRides = async (req, res) => {
   try {
     const userId = req.userId; // Assuming userId is available in req.userId
+    
     // Find all documents from PastRide schema where userId matches
     const pastRides = await PastRide.find({ userId });
-
+    
     // Calculate average rating for each past ride
-    const pastRidesWithAverageRating = pastRides.map((ride) => {
+    const pastRidesWithAverageRating = await Promise.all(pastRides.map(async (ride) => {
       let totalRating = 0;
       let numberOfRatings = 0;
-      for (const [, rating] of ride.ratings.entries()) {
-        totalRating += rating.rating;
-        numberOfRatings++;
+      
+      if (ride.ratings && ride.ratings instanceof Map) {
+        ride.ratings.forEach((value) => {
+          if (value && typeof value === 'object' && value.rating !== undefined) {
+            totalRating += value.rating;
+            numberOfRatings++;
+          }
+        });
       }
-      const averageRating =
-        numberOfRatings > 0 ? totalRating / numberOfRatings : 0;
+      
+      const averageRating = numberOfRatings > 0 ? totalRating / numberOfRatings : 0;
+     
       return { ...ride.toObject(), averageRating };
-    });
+    }));
 
-    console.log("The past rides is ", pastRidesWithAverageRating);
+   // console.log("The past rides are:", pastRidesWithAverageRating);
+    
     // Send the past rides data with average rating as response
     res.status(200).json(pastRidesWithAverageRating);
   } catch (error) {
-    console.error("Error fetching Past Rides :", error);
+    console.error("Error fetching Past Rides:", error);
     res.status(500).json({ error: "Unable to fetch past rides" });
   }
 };
+
+
 
 const cancelRide = async (req, res) => {
   const { bookedId } = req.body;

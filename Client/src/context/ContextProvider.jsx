@@ -19,6 +19,7 @@ export const ContextProvider = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [isDlVerified, setIsDlVerified] = useState(false);
   const [libraries, setLibraries] = useState(["places", "geometry"]);
+  const [wallet, setWallet] = useState(0);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries,
@@ -60,6 +61,7 @@ export const ContextProvider = ({ children }) => {
        
         if(!res.error){
           setIsDlVerified(res.data.dlVerified? true:false)
+          setWallet(res.data.wallet)
         }
         socket.emit("setup", userId);
         listen();
@@ -104,7 +106,8 @@ export const ContextProvider = ({ children }) => {
         isLoaded,
         isDlVerified,
         setIsDlVerified,
-        signOut
+        signOut,
+        wallet
       }}
     >
       {children}

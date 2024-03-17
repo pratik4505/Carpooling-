@@ -23,7 +23,10 @@ export default function ChatList(props) {
         onClick={() => {
           props.onChatClick(props.chat);
         }}
-        className="flex items-center bg-green-100 p-3 rounded-md shadow-md cursor-pointer transition duration-300 hover:bg-green-200"
+        className={`flex items-center bg-green-100 p-3 rounded-md shadow-md cursor-pointer transition duration-300 hover:bg-green-200 ${
+          props.currChat?._id === props.chat._id ? 'bg-yellow-100' : ''
+        }`}
+        
       >
         {props.chat.members[props.chat.driverId].imageUrl && (
           <img

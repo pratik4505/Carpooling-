@@ -156,7 +156,7 @@ const getDlVerified = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.status(200).json({ dlVerified: user.dlNumber && user.dob });
+    res.status(200).json({ dlVerified: user.dlNumber && user.dob ,wallet: user.wallet});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });

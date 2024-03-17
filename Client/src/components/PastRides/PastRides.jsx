@@ -28,6 +28,7 @@ const PastRides = () => {
     };
     fetchPastRides();
   }, []);
+  console.log(pastRides)
   return (
     <div>
       <div className=" dark:bg-gray-900 dark:text-black text-gray-600 h-screen flex pt-[70px] overflow-hidden text-sm">
@@ -96,9 +97,7 @@ const PastRides = () => {
                       <th className="font-normal text-center px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
                         Date
                       </th>
-                      <th className="font-normal text-center px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">
-                        Time
-                      </th>
+                     
                     </tr>
                     {pastRides &&
                       pastRides.map((pastRide, index) => (
@@ -113,6 +112,8 @@ const PastRides = () => {
                           date={pastRide.date}
                           time={pastRide.time}
                           polyline={pastRide.overview_polyline}
+                          sourceCo={pastRide.sourceCo}
+                          destinationCo={pastRide.destinationCo}
                         />
                       ))}
                   </thead>

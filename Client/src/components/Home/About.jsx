@@ -7,19 +7,10 @@ const About = () => {
       <div class="responsive-container-block Container">
         <p class="text-blk heading">About Us</p>
         <p class="text-blk subHeading">
-          Welcome to the Imperial Mess Administration's Mess Complaint
-          Association! We are a dedicated team committed to addressing and
-          resolving mess-related issues on a global scale. With our roots firmly
-          embedded in a passion for cleanliness and order, our association was
-          established to provide individuals and communities around the world a
-          platform to voice their concerns about mess, clutter, and disarray.
-          Our mission is to empower people to take action against disorder,
-          fostering cleaner and more organized environments for all. Through a
-          collaborative effort, we aim to make the world a tidier and more
-          pleasant place to live, work, and thrive. Join us in our journey to
-          combat mess and promote a cleaner, more organized world for
-          generations to come. Together, we can create a cleaner and more
-          organized future.
+        Welcome to LiftLink
+        we're passionate about transforming the way people commute.
+        Our platform is dedicated to revolutionizing the concept of carpooling, making it easier, more efficient, and environmentally friendly.
+        Whether you're a daily commuter, an occasional traveler, or someone looking to share the journey, we've got you covered
         </p>
         <div class="social-icons-container">
           <a class="social-icon">

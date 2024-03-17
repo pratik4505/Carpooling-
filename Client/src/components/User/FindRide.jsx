@@ -312,7 +312,20 @@ const FindRide = () => {
       // console.log(rideData)
       const res = await rideRequest({ userData, rideData });
       if (!res.error) {
-        console.log("Request made");
+        toast(
+          <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-4 shadow-md bg-transparent">
+            Request sent
+          </div>,
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
+        
       }
     } catch (error) {
       console.error("Error fetching rides:", error);

@@ -12,7 +12,7 @@ const Transaction = (props) => {
         <div className="flex  justify-center items-center">{props.method}</div>
       </td>
       <td className="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
-        <div className="flex justify-center items-center">{props.toWhom}</div>
+        <div className="flex justify-center items-center">{props.rideCancelled ? 'You' : props.toWhom}</div>
       </td>
       <td className="sm:p-3 text-center py-2 px-1 border-b border-gray-200 dark:border-gray-800 md:table-cell hidden">
         {props.from}
@@ -25,10 +25,10 @@ const Transaction = (props) => {
       </td>
       <td
         className={`sm:p-3 text-center py-2 px-1 border-b border-gray-200 dark:border-gray-800 ${
-          props.amount >= 0 ? "text-green-500" : "text-red-500"
+          (props.rideCancelled) ? "text-green-500" : "text-red-500"
         }`}
       >
-        {props.amount}
+        {props.rideCancelled? '+':'-'}{props.amount}
       </td>
       <td className="sm:p-3 py-2 text-center px-1 border-b border-gray-200 dark:border-gray-800">
         <div className="flex text-center items-center">
