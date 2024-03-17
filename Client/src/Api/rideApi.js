@@ -133,3 +133,15 @@ export const cancelRide = async (bookedId) => {
     throw new Error("Failed to fetch past rides"); // Throw custom error
   }
 };
+
+
+export const cancelPublishedRide = async (rideId) => {
+  try {
+    const res = await API.post("/rides/cancelPublishedRide",{rideId});
+    // Assuming the API response contains transactions data
+    return res.data;
+  } catch (error) {
+    handleApiError(error); // Handle API errors
+    throw new Error("Failed to fetch past rides"); // Throw custom error
+  }
+};

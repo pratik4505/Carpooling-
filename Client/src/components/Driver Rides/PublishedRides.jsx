@@ -5,36 +5,65 @@ import PassengersList from "./PassengersList";
 import RatingList from "../Booked Rides/RatingList";
 import { toast } from "react-toastify";
 import FallbackLoading from "../loader/FallbackLoading";
+import { cancelPublishedRide } from "../../Api/rideApi";
 export default function PublishedRides() {
   const [rides, setRides] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedRide, setSelectedRide] = useState(null);
   const [passengers, setPassengers] = useState(null);
   const [rating, setRating] = useState(null);
+  const [reload, setReload] = useState(false);
   useEffect(() => {
+   
     const fetchRides = async () => {
       try {
         const res = await getDriverRides();
         if (!res.error) {
           setRides(res.data);
-          setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching rides:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchRides();
-  }, []);
+  }, [reload]);
 
   
 
+  const cancellationHandler = async (rideId) => {
+    setLoading(true);
+    try {
+      const res = await cancelPublishedRide(rideId);
+      // Handle success response if needed
+      toast(
+        <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-4 shadow-md bg-transparent">
+          {res.message}
+        </div>,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
+      setReload((prev) => !prev);
+    } catch (error) {
+      console.error("Error cancelling ride:", error);
+    }finally{
+      setLoading(false);
+    }
+  };
   return (
     <div className="grid grid-cols-2 h-[87vh]">
       <div className="border border-gray-400 h-full p-4 overflow-y-auto">
         <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
           Driver Rides
         </h1>
-        {loading&&<FallbackLoading/>}
+        {loading && <FallbackLoading />}
         {rides &&
           rides.map((value, key) => (
             <div key={key} className="border-b border-gray-300 py-4">
@@ -52,7 +81,7 @@ export default function PublishedRides() {
                 <span className="font-semibold">Start Time:</span> {value.time}
               </p>
 
-            {/* commented one is the main code ,next one is for testing */}
+              {/* commented one is the main code ,next one is for testing */}
               {/* {!value.rideCancelled && value.codeVerified && (
                 <button
                   onClick={() => {
@@ -64,19 +93,21 @@ export default function PublishedRides() {
                   Rate Passengers
                 </button>
               )} */}
-              { (
+              {
                 <button
                   onClick={() => {
                     setRating(value.passengers);
                   }}
-                 
                   className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
                 >
                   Rate Passengers
                 </button>
-              )}
+              }
               {!value.rideCancelled && !value.codeVerified && (
-                <button className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400">
+                <button
+                  onClick={() => cancellationHandler(value._id)}
+                  className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
+                >
                   Cancel Ride
                 </button>
               )}
@@ -88,7 +119,6 @@ export default function PublishedRides() {
               </button>
               <button
                 onClick={() => setPassengers(value)}
-                
                 className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
               >
                 Passengers
@@ -115,7 +145,7 @@ export default function PublishedRides() {
               <PassengersList
                 rides={rides}
                 rideId={passengers._id}
-                updateRides={(data)=>setRides(data)}
+                updateRides={(data) => setRides(data)}
                 data={passengers.passengers}
                 onCancel={() => setPassengers(null)}
               />
@@ -126,7 +156,7 @@ export default function PublishedRides() {
       <div className="border border-gray-400 h-full">
         {selectedRide && (
           <GoogleMapUtil
-          coordinates={selectedRide.passengers.map(value => value.pickUp)}
+            coordinates={selectedRide.passengers.map((value) => value.pickUp)}
             polyline={selectedRide.overview_polyline}
           />
         )}

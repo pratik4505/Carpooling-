@@ -274,7 +274,7 @@ const changePassword = async (req, res) => {
     if (emailModel.email !== email || emailModel.verificationCode !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
-
+    await emailModel.deleteOne();
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
     
