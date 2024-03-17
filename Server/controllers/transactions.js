@@ -13,15 +13,18 @@ const getTransactions = async (req, res) => {
     // If userId is not provided, send a 400 Bad Request response
     return res.status(400).json({ error: "User ID is required" });
   }
-
+ 
   try {
     // Find transactions by paidBy userId
-    const transactions = await Transaction.find({ paidBy: userId });
+    const transactions = await Transaction.find({
+      $or: [
+        { paidBy: userId },
+        { paidTo: userId }
+      ]
+    });
+    
 
-    if (!transactions || transactions.length === 0) {
-      // If no transactions are found, send a 404 Not Found response
-      return res.status(404).json({ error: "No transactions found" });
-    }
+  
 
     // Send transactions as the response
     return res.status(200).json(transactions);
