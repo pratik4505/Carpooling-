@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getProfile, getRatings,updateProfile } from "../../Api/userApi";
+import { getProfile, getRatings, updateProfile } from "../../Api/userApi";
 import { FaUserCircle } from "react-icons/fa";
 import Ratings from "./Ratings";
 import CommonLoading from "../loader/CommonLoading";
@@ -39,22 +39,22 @@ export const UserProfile = ({ ownerId }) => {
     };
     fetchRatings();
   }, [ownerId]);
-  console.log(profileData)
+  console.log(profileData);
   const updateDetails = async () => {
     setLoading(true); // Set loading state to true while updating
-  
+
     try {
       const formData = new FormData();
       formData.append("name", profileData.name);
       formData.append("about", profileData.about);
       formData.append("image", profileData.image); // Assuming profileData.image is a File object
-  
-      const res = await updateProfile(formData) ;
-  
+
+      const res = await updateProfile(formData);
+
       if (res.error) {
         throw new Error("Failed to update profile details");
       }
-      
+
       setProfileData(res.data);
       setPopUp(false); // Close the pop-up after successful update
     } catch (error) {
@@ -64,10 +64,9 @@ export const UserProfile = ({ ownerId }) => {
       setLoading(false); // Reset loading state after updating
     }
   };
-  
 
   return (
-    <div>
+    <div className="pt-[80px] my-auto h-[100vh]">
       {profileData && (
         <div className="max-w-lg mx-auto bg-white shadow-md rounded-lg overflow-hidden">
           <div className="px-4 py-6 sm:px-6">
@@ -76,7 +75,6 @@ export const UserProfile = ({ ownerId }) => {
                 {profileData.imageUrl ? (
                   <img
                     className="h-12 w-12 rounded-full"
-                   
                     src={`${BASE_URL}/${profileData.imageUrl}`}
                     alt={profileData.name}
                   />
@@ -88,7 +86,6 @@ export const UserProfile = ({ ownerId }) => {
                 <h2 className="text-lg font-semibold text-gray-800">
                   {profileData.name}
                 </h2>
-                
               </div>
             </div>
           </div>
@@ -97,12 +94,11 @@ export const UserProfile = ({ ownerId }) => {
             <p className="text-base text-gray-700">{profileData.about}</p>
           </div>
           <button
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
-              onClick={()=>setPopUp(true)}
-              
-            >
-              Update Details
-            </button>
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
+            onClick={() => setPopUp(true)}
+          >
+            Update Details
+          </button>
         </div>
       )}
       {popUp && (

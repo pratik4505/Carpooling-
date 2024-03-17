@@ -3,7 +3,7 @@ import "./ContactForm.scss";
 
 const ContactForm = () => {
   return (
-    <div className="background-container">
+    <div className="background-container md:w-[90vw] lg:w-[80vw] mx-auto">
       <div className="container-contact">
         <div className="screen-contact">
           <div className="screen-contact-header">

@@ -1,6 +1,6 @@
 import React from "react";
 import Hero from "../components/Home/Hero";
-import AboutUs from "../components/Home/AboutUs";
+import About from "../components/Home/About";
 import Footer from "../components/Home/Footer";
 import Services from "../components/Home/Services";
 import ContactForm from "../components/Home/ContactForm";
@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      {/* <AboutUs /> */}
+      <About />
       <Services />
       <FAQ />
       <ContactForm />

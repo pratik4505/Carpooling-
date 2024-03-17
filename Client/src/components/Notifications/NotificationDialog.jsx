@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CommonLoading from "../loader/CommonLoading";
 import { getLatestNotifications } from "../../Api/userApi";
+import "./Notification.scss";
 
 const NotificationDialog = ({ onClose }) => {
   const [notifications, setNotifications] = useState([]);
@@ -29,22 +30,23 @@ const NotificationDialog = ({ onClose }) => {
   }
 
   return (
-    <div className="relative top-0">
+    <div className="rounded-lg bg-black relative top-0">
       {/* Dialog box content */}
       {notifications.map((notification, index) => (
         <div
           key={index}
           className={`border rounded-lg p-2  ${
-            notification.seen ? "bg-red-700" : "bg-blue-100"
+            notification.seen ? "bg-blue-100" : "bg-blue-500"
           }`}
         >
           <h3 className="font-bold text-lg ">{notification.title}</h3>
           <p className="text-gray-700">{notification.description}</p>
         </div>
       ))}
-
-      <Link to="/notifications">
-        <button onClick={onClose}>View All Notifications</button>
+      <Link className="p-0 w-[100%]" to="/notificationss">
+        <button className="w-[100%] font-black" onClick={onClose}>
+          View All Notifications
+        </button>
       </Link>
     </div>
   );

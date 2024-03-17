@@ -3,8 +3,8 @@ import "./Services.scss";
 
 const Services = () => {
   return (
-    <div>
-      <section className="section-services">
+    <div className="">
+      <section className="section-services ">
         <div className="container">
           <div className="row justify-content-center text-center">
             <div className="col-md-10 col-lg-8">
