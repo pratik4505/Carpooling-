@@ -45,7 +45,9 @@ const Navbar = () => {
               <i className="fas fa-times"></i>
             </label>
             <li>
-              <Link to="/">Home</Link>
+              <Link className="desktop-item" to="/">
+                Home
+              </Link>
             </li>
             <li>
               <Link to="/searchride" className="desktop-item">
@@ -77,13 +79,16 @@ const Navbar = () => {
               <Link to="#" className="desktop-item">
                 Payments
               </Link>
-              <input type="checkbox" id="showDrop" />
-              <label htmlFor="showDrop" className="mobile-item">
+              <input type="checkbox" id="showsDrop" />
+              <label htmlFor="showsDrop" className="mobile-item">
                 Payments
               </label>
               <ul className="drop-menu">
                 <li>
                   <Link to="/pendingpayments">Pending Payments</Link>
+                </li>
+                <li>
+                  <Link to="/transactions">Transactions</Link>
                 </li>
               </ul>
             </li>
@@ -93,12 +98,14 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link to="/riderequests">Ride Requests</Link>
+              <Link className="desktop-item" to="/riderequests">
+                Ride Requests
+              </Link>
             </li>
             <li>
               <Link
                 to="#"
-                className="relative"
+                className="relative desktop-item"
                 onClick={handleNotificationClick}
               >
                 Notifications
@@ -114,10 +121,15 @@ const Navbar = () => {
               )}
             </li>
             <li>
-              <Link to={`/profile/${userData.userId}`}>Profile</Link>
+              <Link className="desktop-item" to={`/profile/${userData.userId}`}>
+                Profile
+              </Link>
             </li>
             <li onClick={signOut}>
-              <Link to={`/login`}> Sign Out</Link>
+              <Link className="desktop-item" to={`/login`}>
+                {" "}
+                Sign Out
+              </Link>
             </li>
           </ul>
           <label htmlFor="menu-btn" className="btn menu-btn">

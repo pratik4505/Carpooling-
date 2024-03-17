@@ -2,7 +2,7 @@ import React from "react";
 
 const FAQ = () => {
   return (
-    <section className="dark:bg-gray-800 dark:text-gray-100">
+    <section className="dark:bg-[#3e3e3e] md:w-[90vw] rounded-lg mb-10 lg:w-[80vw] mx-auto dark:text-gray-100">
       <div className="container flex flex-col justify-center p-4 mx-auto md:p-8">
         <p className="p-2 text-sm font-medium tracking-wider text-center uppercase">
           How it works
@@ -34,6 +34,74 @@ const FAQ = () => {
                 aspernatur quae, eos explicabo odit minima libero veniam
                 similique quibusdam doloribus facilis ipsa accusantium vel
                 maiores corrupti! Libero voluptate a doloribus?
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary className="py-2 outline-none cursor-pointer focus:underline">
+              Magni reprehenderit possimus debitis?
+            </summary>
+            <div className="px-4 pb-4 space-y-2">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut
+                voluptates aspernatur dolores in consequatur doloremque
+                inventore reprehenderit, consequuntur perspiciatis architecto.
+              </p>
+              <p>
+                Sed consectetur quod tenetur! Voluptatibus culpa incidunt
+                veritatis velit quasi cupiditate unde eaque! Iure, voluptatibus
+                autem eaque unde possimus quae.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary className="py-2 outline-none cursor-pointer focus:underline">
+              Magni reprehenderit possimus debitis?
+            </summary>
+            <div className="px-4 pb-4 space-y-2">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut
+                voluptates aspernatur dolores in consequatur doloremque
+                inventore reprehenderit, consequuntur perspiciatis architecto.
+              </p>
+              <p>
+                Sed consectetur quod tenetur! Voluptatibus culpa incidunt
+                veritatis velit quasi cupiditate unde eaque! Iure, voluptatibus
+                autem eaque unde possimus quae.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary className="py-2 outline-none cursor-pointer focus:underline">
+              Magni reprehenderit possimus debitis?
+            </summary>
+            <div className="px-4 pb-4 space-y-2">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut
+                voluptates aspernatur dolores in consequatur doloremque
+                inventore reprehenderit, consequuntur perspiciatis architecto.
+              </p>
+              <p>
+                Sed consectetur quod tenetur! Voluptatibus culpa incidunt
+                veritatis velit quasi cupiditate unde eaque! Iure, voluptatibus
+                autem eaque unde possimus quae.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary className="py-2 outline-none cursor-pointer focus:underline">
+              Magni reprehenderit possimus debitis?
+            </summary>
+            <div className="px-4 pb-4 space-y-2">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut
+                voluptates aspernatur dolores in consequatur doloremque
+                inventore reprehenderit, consequuntur perspiciatis architecto.
+              </p>
+              <p>
+                Sed consectetur quod tenetur! Voluptatibus culpa incidunt
+                veritatis velit quasi cupiditate unde eaque! Iure, voluptatibus
+                autem eaque unde possimus quae.
               </p>
             </div>
           </details>
