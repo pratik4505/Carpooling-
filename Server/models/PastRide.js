@@ -20,6 +20,14 @@ const pastRideSchema = new Schema({
     type: String,
     required: true,
   },
+  sourceCo: {
+    lat: Number,
+    lng: Number,
+  },
+  destinationCo:{
+    lat: Number,
+    lng: Number,
+  },
   user: {
     type: String, // Can be 'driver' or 'passenger'
     required: true,

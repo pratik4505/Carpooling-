@@ -154,8 +154,8 @@ const paymentWebhook = async (request, response) => {
           user: "passenger",
           rating: {},
           overview_polyline: availableRide.overview_polyline, // Ensure overview_polyline exists
-          pickUp: value.pickUp,
-          destination: value.destination,
+          sourceCo:value.pickUp,
+          destinationCo:value.destination
         });
         await pastRide.save();
 
