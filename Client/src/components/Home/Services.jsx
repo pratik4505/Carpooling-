@@ -11,10 +11,14 @@ const Services = () => {
               <div className="header-section">
                 <h2 className="title">Exclusive Services</h2>
                 <p className="description">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Curabitur malesuada fermentum purus, eu volutpat nisi laoreet
-                  id. Phasellus fringilla accumsan metus, at tempor est
-                  hendrerit et.
+                  Book and publish a ride and location shown using Google Maps
+                  <br />
+                  Cashless payment using any type of card
+                  <br />
+                  Rating co-riders and drivers
+                  <br />
+                  Chat service is available
+                  <br />
                 </p>
               </div>
             </div>
@@ -29,9 +33,10 @@ const Services = () => {
                   </span>
                   <h3 className="title">Global coverage</h3>
                   <p className="description">
-                    Mauris volutpat urna tristique finibus iaculis. Morbi
-                    facilisis, justo eu vulputate elementum, est augue tincidunt
-                    ante, sed efficitur leo ligula vel velit.
+                  Product, service, or entity is available and accessible worldwide
+                  <br />
+                  Payment through the card all types of card are accepeted
+                  
                   </p>
                   <a href="#" className="learn-more">
                     Learn More
@@ -48,11 +53,15 @@ const Services = () => {
                   <span className="icon">
                     <i className="fab fa-asymmetrik"></i>
                   </span>
-                  <h3 className="title">It Management</h3>
+                  <h3 className="title">Authorization</h3>
                   <p className="description">
-                    Mauris volutpat urna tristique finibus iaculis. Morbi
-                    facilisis, justo eu vulputate elementum, est augue tincidunt
-                    ante, sed efficitur leo ligula vel velit.
+                  User Registration and Verification 
+                    <br />
+                  Safety and Security Measures only verified drivers are only allow to publish rides.
+                  <br />
+                  Scheduling and Booking rides and payment refund on cancellation of ride
+                  <br />
+                  Safety and Security Measures and the Driving licence authentication of each Drivers
                   </p>
                   <a href="#" className="learn-more">
                     Learn More
@@ -69,11 +78,11 @@ const Services = () => {
                   <span className="icon">
                     <i className="fab fa-artstation"></i>
                   </span>
-                  <h3 className="title">Software Development</h3>
+                  <h3 className="title">Google Maps</h3>
                   <p className="description">
-                    Mauris volutpat urna tristique finibus iaculis. Morbi
-                    facilisis, justo eu vulputate elementum, est augue tincidunt
-                    ante, sed efficitur leo ligula vel velit.
+                  Book rides using Google Maps and check the location of your ride.
+                  Various routes are shown in Google Maps. 
+                  It shows your live location.   
                   </p>
                   <a href="#" className="learn-more">
                     Learn More
@@ -90,11 +99,11 @@ const Services = () => {
                   <span className="icon">
                     <i className="fab fa-500px"></i>
                   </span>
-                  <h3 className="title">Brand Strategy</h3>
+                  <h3 className="title">Chat Services</h3>
                   <p className="description">
-                    Mauris volutpat urna tristique finibus iaculis. Morbi
-                    facilisis, justo eu vulputate elementum, est augue tincidunt
-                    ante, sed efficitur leo ligula vel velit.
+                  Chat services allow users to communicate with each other in real-time using text-based messages
+                  Share your live location through the Chats.
+                  Vulgar text are not allow to send.
                   </p>
                   <a href="#" className="learn-more">
                     Learn More
@@ -111,11 +120,11 @@ const Services = () => {
                   <span className="icon">
                     <i className="fas fa-chart-pie"></i>
                   </span>
-                  <h3 className="title">Business Consulting</h3>
+                  <h3 className="title">Payment</h3>
                   <p className="description">
-                    Mauris volutpat urna tristique finibus iaculis. Morbi
-                    facilisis, justo eu vulputate elementum, est augue tincidunt
-                    ante, sed efficitur leo ligula vel velit.
+                    Cashless Payment through the card accept the all type of the cards world wide
+                    Contactless Payments Enable seamless online transactions through secure payment gateways
+                    Offer support for multiple currencies to accommodate international transactions and cater to a diverse customer 
                   </p>
                   <a href="#" className="learn-more">
                     Learn More
@@ -130,11 +139,11 @@ const Services = () => {
                   <span className="icon">
                     <i className="fas fa-laptop-code"></i>
                   </span>
-                  <h3 className="title">Website Design</h3>
+                  <h3 className="title">Rating</h3>
                   <p className="description">
-                    Mauris volutpat urna tristique finibus iaculis. Morbi
-                    facilisis, justo eu vulputate elementum, est augue tincidunt
-                    ante, sed efficitur leo ligula vel velit.
+                   Rate the co-riders using and the drivers on the scale of the 5.
+                   Rate the co-riders and driver according to their behavior.
+                   Verified drivers are only allow to publish rides
                   </p>
                   <a href="#" className="learn-more">
                     Learn More

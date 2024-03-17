@@ -2,7 +2,7 @@ import React from "react";
 
 const FAQ = () => {
   return (
-    <section className="dark:bg-[#3e3e3e] md:w-[90vw] rounded-lg mb-10 lg:w-[80vw] mx-auto dark:text-gray-100">
+    <section className="dark:bg-[#f7eedd] md:w-[90vw] rounded-lg mb-10 lg:w-[80vw] mx-auto dark:text-black">
       <div className="container flex flex-col justify-center p-4 mx-auto md:p-8">
         <p className="p-2 text-sm font-medium tracking-wider text-center uppercase">
           How it works
