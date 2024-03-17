@@ -18,7 +18,7 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const { paymentWebhook } = require("./controllers/paymentController");
 const bodyParser = require("body-parser");
 const upload = require("./middleware/fileUpload");
-const cron = require('node-cron');
+const cron = require("node-cron");
 const { getTransactions } = require("./controllers/transactions");
 db.connect().catch((err) =>
   console.error("Error connecting to database:", err)

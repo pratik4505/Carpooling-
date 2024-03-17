@@ -113,7 +113,7 @@ const Navbar = () => {
               {showNotification && (
                 <div
                   ref={notificationRef}
-                  className="fixed top-[70px] right-0 notification-dialog"
+                  className="absolute top-[70px] right-10 notification-dialog"
                 >
                   {/* Content of your notification dialog */}
                   <NotificationDialog onClose={handleNotificationClick} />
