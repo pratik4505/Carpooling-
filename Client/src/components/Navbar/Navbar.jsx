@@ -1,11 +1,36 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./Navbar.scss";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/ContextProvider";
+import NotificationDialog from "../Notifications/NotificationDialog";
 
 const Navbar = () => {
+  const [showNotification, setShowNotification] = useState(false);
   const userData = JSON.parse(localStorage.getItem("profile"));
-  const {signOut}=useContext(AuthContext)
+  const { signOut } = useContext(AuthContext);
+  const notificationRef = useRef(null);
+  const handleNotificationClick = () => {
+    setShowNotification(!showNotification);
+  };
+  const handleOutsideClick = (event) => {
+    if (
+      notificationRef.current &&
+      !notificationRef.current.contains(event.target)
+    ) {
+      setShowNotification(false);
+    }
+  };
+  useEffect(() => {
+    if (showNotification) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    } else {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [showNotification]);
   return (
     <div>
       <nav>
@@ -60,9 +85,6 @@ const Navbar = () => {
                 <li>
                   <Link to="/pendingpayments">Pending Payments</Link>
                 </li>
-                <li>
-                  <Link to="/transactions">Transactions</Link>
-                </li>
               </ul>
             </li>
             <li>
@@ -70,88 +92,32 @@ const Navbar = () => {
                 Chats
               </Link>
             </li>
-            
-            {/* <li>
-              <Link to="#" className="desktop-item">
-                Mega Menu
-              </Link>
-              <input type="checkbox" id="showMega" />
-              <label htmlFor="showMega" className="mobile-item">
-                Mega Menu
-              </label>
-              <div className="mega-box">
-                <div className="content">
-                  <div className="row">
-                    <img
-                      src="https://fadzrinmadu.github.io/hosted-assets/responsive-mega-menu-and-dropdown-menu-using-only-html-and-css/img.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="row">
-                    <header>Design Services</header>
-                    <ul className="mega-links">
-                      <li>
-                        <Link to="#">Graphics</Link>
-                      </li>
-                      <li>
-                        <Link to="#">Vectors</Link>
-                      </li>
-                      <li>
-                        <Link to="#">Business cards</Link>
-                      </li>
-                      <li>
-                        <Link to="#">Custom logo</Link>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="row">
-                    <header>Email Services</header>
-                    <ul className="mega-links">
-                      <li>
-                        <Link to="#">Personal Email</Link>
-                      </li>
-                      <li>
-                        <Link to="#">Business Email</Link>
-                      </li>
-                      <li>
-                        <Link to="#">Mobile Email</Link>
-                      </li>
-                      <li>
-                        <Link to="#">Web Marketing</Link>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="row">
-                    <header>Security services</header>
-                    <ul className="mega-links">
-                      <li>
-                        <Link to="#">Site Seal</Link>
-                      </li>
-                      <li>
-                        <Link to="#">VPS Hosting</Link>
-                      </li>
-                      <li>
-                        <Link to="#">Privacy Seal</Link>
-                      </li>
-                      <li>
-                        <Link to="#">Website design</Link>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </li> */}
             <li>
               <Link to="/riderequests">Ride Requests</Link>
             </li>
             <li>
-              <Link to="/notifications">Notifications</Link>
+              <Link
+                to="#"
+                className="relative"
+                onClick={handleNotificationClick}
+              >
+                Notifications
+              </Link>
+              {showNotification && (
+                <div
+                  ref={notificationRef}
+                  className="fixed top-[70px] right-0 notification-dialog"
+                >
+                  {/* Content of your notification dialog */}
+                  <NotificationDialog onClose={handleNotificationClick} />
+                </div>
+              )}
             </li>
             <li>
               <Link to={`/profile/${userData.userId}`}>Profile</Link>
             </li>
             <li onClick={signOut}>
-            <Link to={`/login`}> Sign Out</Link>
+              <Link to={`/login`}> Sign Out</Link>
             </li>
           </ul>
           <label htmlFor="menu-btn" className="btn menu-btn">

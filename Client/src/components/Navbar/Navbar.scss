@@ -5,6 +5,14 @@
 //   box-sizing: border-box;
 //   font-family: 'Poppins', sans-serif;
 // }
+.notification-dialog {
+  position: absolute;
+  top: calc(100% + 10px); // Adjust as needed
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 999;
+}
+
 nav{
   position: fixed;
   z-index: 99;

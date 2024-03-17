@@ -29,7 +29,7 @@ export default function MainNotification() {
   }
 
   return (
-    <div className="max-w-lg mx-auto mt-8">
+    <div className="max-w-lg mx-auto pt-[70px]">
       <h1 className="text-3xl font-bold mb-8 text-center">Notifications</h1>
       <div>
         {notifications.map((notification, index) => (
