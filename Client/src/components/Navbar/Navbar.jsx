@@ -7,7 +7,7 @@ import NotificationDialog from "../Notifications/NotificationDialog";
 const Navbar = () => {
   const [showNotification, setShowNotification] = useState(false);
   const userData = JSON.parse(localStorage.getItem("profile"));
-  const { signOut } = useContext(AuthContext);
+  const { signOut,wallet } = useContext(AuthContext);
   const notificationRef = useRef(null);
   const handleNotificationClick = () => {
     setShowNotification(!showNotification);
@@ -129,6 +129,12 @@ const Navbar = () => {
               <Link className="desktop-item" to={`/login`}>
                 {" "}
                 Sign Out
+              </Link>
+            </li>
+            <li >
+              <Link className="desktop-item" >
+                
+                Wallet : {wallet}
               </Link>
             </li>
           </ul>

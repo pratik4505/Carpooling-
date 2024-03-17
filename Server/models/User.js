@@ -95,6 +95,10 @@ const userSchema = new Schema({
   
   dlNumber:String,
   dob:String,
+  wallet:{
+    type:Number,
+    default:0
+  }
 },
 {
   timestamps: true,

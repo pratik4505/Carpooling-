@@ -431,7 +431,9 @@ const verifyCode = async (req, res) => {
     //   currency: "usd",
     // });
 
-    // console.log(payout);
+    const driver= await User.findById(req.userId);
+    driver.wallet+=transaction.amountPaid;
+    await driver.save();
 
     return res.json({ rideCancelled: false, codeVerified: true });
   } catch (error) {
