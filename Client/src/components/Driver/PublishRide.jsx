@@ -206,7 +206,7 @@ export default function PublishRide() {
   }
 
   return (
-    <div className="grid grid-cols-2 max-h-[100vh]">
+    <div className="grid grid-cols-2 mt-[70px]">
       <div className="h-full">
         <h1 className="text-3xl font-bold text-center text-gray-800 mt-[80px]">
           Publish Ride
