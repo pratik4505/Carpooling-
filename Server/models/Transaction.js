@@ -11,7 +11,10 @@ const transactionSchema = new Schema(
       type: Number,
       required: true,
     },
-    charge: Number,
+    latest_charge:{
+      type: String,
+      required: true,
+    },
     paidBy: {
       type: Schema.Types.ObjectId,
       ref: "User",

@@ -13,8 +13,7 @@ import { toast } from "react-toastify";
 const center = { lat: 48.8584, lng: 2.2945 };
 
 export default function PublishRide() {
-  
-  const {userData,isLoaded}=useContext(AuthContext);
+  const { userData, isLoaded } = useContext(AuthContext);
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(null);
   const [availableSeats, setAvailableSeats] = useState(1);
   const [map, setMap] = useState(null);
@@ -22,8 +21,8 @@ export default function PublishRide() {
   const [datetime, setDatetime] = useState("");
   const [unitCost, setUnitCost] = useState("");
   const [vehicleType, setVehicleType] = useState("");
-  const [routeLoading,setRouteLoading]=useState(false);
-  const [isPublishing,setIsPublishing] = useState(false);
+  const [routeLoading, setRouteLoading] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
 
   const originRef = useRef();
   const destiantionRef = useRef();
@@ -61,10 +60,10 @@ export default function PublishRide() {
       );
       return;
     }
-    
+
     setRouteLoading(true);
     const directionsService = new google.maps.DirectionsService();
-  
+
     try {
       const results = await directionsService.route({
         origin: originRef.current.value,
@@ -72,13 +71,13 @@ export default function PublishRide() {
         provideRouteAlternatives: true,
         travelMode: google.maps.TravelMode.DRIVING,
       });
-  
+
       setRouteLoading(false);
-  
+
       if (results.status !== "OK") {
         throw new Error("Error: " + results.status);
       }
-  
+
       console.log(results);
       setDirectionsResponses(results);
     } catch (error) {
@@ -99,7 +98,6 @@ export default function PublishRide() {
       setRouteLoading(false);
     }
   }
-  
 
   function clearRoute() {
     setDirectionsResponses(null);
@@ -127,7 +125,7 @@ export default function PublishRide() {
   }
 
   async function handlePublishRide() {
-    if (!directionsResponses || !datetime||!unitCost ||!vehicleType){ 
+    if (!directionsResponses || !datetime || !unitCost || !vehicleType) {
       toast(
         <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-3 shadow-md">
           Please fill all input fields
@@ -141,8 +139,9 @@ export default function PublishRide() {
           draggable: true,
         }
       );
-      return;}
-        setIsPublishing(true);
+      return;
+    }
+    setIsPublishing(true);
     try {
       const data = new Date(datetime);
       const date = data.toISOString().slice(0, 10);
@@ -184,7 +183,19 @@ export default function PublishRide() {
       );
 
       if (response.status === 201) {
-        console.log("Ride published successfully:", response.data);
+        toast(
+          <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-4 shadow-md bg-transparent">
+            Ride published successfully
+          </div>,
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
       } else {
         console.error("Unexpected response status:", response.status);
       }
@@ -280,7 +291,7 @@ export default function PublishRide() {
               onClick={calculateRoute}
               disabled={routeLoading}
             >
-              Calculate Routes{routeLoading&&<ButtonLoadingSpinner/>}
+              Calculate Routes{routeLoading && <ButtonLoadingSpinner />}
             </button>
             <button
               className="p-2 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-400"
@@ -297,7 +308,7 @@ export default function PublishRide() {
             disabled={isPublishing}
           >
             Publish Ride
-            {isPublishing&&<ButtonLoadingSpinner/>}
+            {isPublishing && <ButtonLoadingSpinner />}
           </button>
         </div>
         {directionsResponses && (

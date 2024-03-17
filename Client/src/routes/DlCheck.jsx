@@ -7,7 +7,7 @@ import CreateRide from '../pages/CreateRide';
 export const DlCheck = () => {
 
     const {isDlVerified}=useContext(AuthContext)
-
+  
     return isDlVerified ? (
         <CreateRide />
       ) : (

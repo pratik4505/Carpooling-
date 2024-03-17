@@ -1,6 +1,6 @@
 import { FaRegUser } from "react-icons/fa";
 // import "./Chats.scss";
-
+const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 export default function ChatList(props) {
   // const [unreadMsg, setUnreadMsg] = useState(undefined);
   // const gloContext = useContext(GlobalContext);
@@ -25,7 +25,20 @@ export default function ChatList(props) {
         }}
         className="flex items-center bg-green-100 p-3 rounded-md shadow-md cursor-pointer transition duration-300 hover:bg-green-200"
       >
-        <FaRegUser className="w-10 h-10 bg-red-500 rounded-full flex-shrink-0 mr-3" />
+        {props.chat.members[props.chat.driverId].imageUrl && (
+          <img
+            src={`${BASE_URL}/${
+              props.chat.members[props.chat.driverId].imageUrl
+            }`}
+            alt="Profile"
+            className="w-12 h-12 rounded-full mr-2"
+           
+          />
+        )}
+        {!props.chat.members[props.chat.driverId].imageUrl && (
+          <FaRegUser className="w-10 h-10 bg-red-500 rounded-full flex-shrink-0 mr-3" />
+        )}
+        
         <div className="flex flex-col">
           <p className="font-semibold text-lg text-gray-800">{personName}</p>
           <p className="font-semibold text-sm text-gray-800">{chatPlace}</p>

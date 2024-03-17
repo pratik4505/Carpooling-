@@ -122,3 +122,14 @@ export const getPastRides = async () => {
     throw new Error("Failed to fetch past rides"); // Throw custom error
   }
 };
+
+export const cancelRide = async (bookedId) => {
+  try {
+    const res = await API.post("/rides/cancelRide",{bookedId});
+    // Assuming the API response contains transactions data
+    return res.data;
+  } catch (error) {
+    handleApiError(error); // Handle API errors
+    throw new Error("Failed to fetch past rides"); // Throw custom error
+  }
+};

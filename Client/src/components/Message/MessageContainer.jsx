@@ -18,7 +18,7 @@ import { AuthContext } from "../../context/ContextProvider";
 import { toast } from "react-toastify";
 import FallbackLoading from "../loader/FallbackLoading";
 import { MdPlace } from "react-icons/md";
-
+const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 const msgPerLoad = 50;
 
 let myId;
@@ -190,7 +190,7 @@ export default function MessageContainer(props) {
   const [personName, chatPlaceWithTrailingParenthesis] =
     props.data.chatName.split("(");
   const chatPlace = chatPlaceWithTrailingParenthesis.replace(/\)$/, "").trim();
-
+  console.log(props.data)
   return (
     <div className="w-full md:w-[70%] bg-white shadow-5xl">
       <div className="bg-primary-300 h-[10%]  flex items-center justify-between px-[2%]  ">
@@ -200,8 +200,21 @@ export default function MessageContainer(props) {
             color="#ffff"
             onClick={() => props.closeContainer()}
           />
+           {props.data.members[props.data.driverId].imageUrl && (
+          <img
+            src={`${BASE_URL}/${
+              props.data.members[props.data.driverId].imageUrl
+            }`}
+            alt="Profile"
+            className="w-12 h-12 rounded-full mr-2"
+           
+          />
+        )}
+        {!props.data.members[props.data.driverId].imageUrl && (
+          <FaRegUser className="w-10 h-10 bg-red-500 rounded-full flex-shrink-0 mr-3" />
+        )}
 
-          <FaRegUser size={28} className="mx-2" />
+          {/* <FaRegUser size={28} className="mx-2" /> */}
           <div className="flex flex-col">
             <h1 className="text-2xl ml-2 text-[#ffffff]">{personName}</h1>
             <p className="text-1xl ml-2 text-[#ffffff]">{chatPlace}</p>
@@ -213,14 +226,14 @@ export default function MessageContainer(props) {
         className="flex flex-col overflow-y-auto h-[80%] px-2"
         ref={scrollRef}
       >
-        {loadMore && (
+        {/* {loadMore && (
           <button
             onClick={messageLoader}
             className="btn btn-primary loadmore-messaging-section m-auto"
           >
             Load More
           </button>
-        )}
+        )} */}
 
         {messages &&
           messages.map((msg) => (

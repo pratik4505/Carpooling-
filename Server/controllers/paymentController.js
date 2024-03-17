@@ -141,6 +141,7 @@ const paymentWebhook = async (request, response) => {
           driverName: driver.name,
           source: value.pickUpAddress,
           destination: value.destinationAddress,
+          latest_charge:session.latest_charge
         });
         await transaction.save();
 

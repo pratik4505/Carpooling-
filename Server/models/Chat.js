@@ -16,6 +16,10 @@ const chatSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  driverId:{
+    type: String,
+    required: true,
+  }
 },
 {
   timestamps: true,

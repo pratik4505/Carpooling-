@@ -71,6 +71,7 @@ const postRide = async (req, res) => {
       chatName: `${userData.name} (${source.split(",")[0]} to ${
         destination.split(",")[0]
       })`,
+      driverId:userData.userId
     });
 
     await chat.save();
@@ -253,7 +254,7 @@ const getBookedRides = async (req, res) => {
 
     // Find all booked rides where passengerId is equal to userId
     const bookedRides = await BookedRide.find({ passengerId: userId });
-
+   
     // Send the booked rides as the response
     res.json(bookedRides);
   } catch (error) {
@@ -466,6 +467,74 @@ const getPastRides = async (req, res) => {
   }
 };
 
+const cancelRide = async (req, res) => {
+  const { bookedId } = req.body;
+ 
+  try {
+    const bookedRide = await BookedRide.findById(bookedId.toString());
+    
+    if (!bookedRide) {
+      return res.json({ message: "Too late to cancel ride" });
+    }
+
+    if (bookedRide.codeVerified) {
+      return res.json({ message: "Cannot cancel after sharing verification code" });
+    }
+
+    if (bookedRide.rideCancelled) {
+      return res.json({ message: "Ride already cancelled" });
+    }
+   
+    const prevTransaction = await Transaction.findById(bookedRide.transactionId);
+
+    const refund = await stripe.refunds.create({
+      charge: prevTransaction.latest_charge
+    });
+    
+    if (refund.status !== 'succeeded') {
+      return res.json({ message: "Refund failed" });
+    }
+
+    bookedRide.rideCancelled = true;
+    await bookedRide.save();
+
+    prevTransaction.rideCancelled = true;
+    await prevTransaction.save();
+
+    const newTransaction = new Transaction({
+      intentId: refund.payment_intent,
+      amountPaid: refund.amount,
+      latest_charge: refund.charge,
+      paidBy: '65f551b716afb9bbd90758c0',
+      paidTo: prevTransaction.paidBy,
+      unitCost: prevTransaction.unitCost,
+      distance: prevTransaction.distance,
+      seats: prevTransaction.seats,
+      codeVerified: false,
+      rideCancelled: true,
+      rideId: prevTransaction.rideId,
+      driverName: prevTransaction.driverName,
+      source: prevTransaction.source,
+      destination: prevTransaction.destination
+    });
+
+     await newTransaction.save();
+    console.log(bookedRide.pastRideId)
+    const pastRide = await PastRide.findById(bookedRide.pastRideId);
+    pastRide.rideCancelled = true;
+    await pastRide.save();
+
+    // Send success message
+    return res.status(200).json({ message: "Ride cancelled successfully" });
+
+  } catch (error) {
+    console.error("Error cancelling ride:", error);
+    // Handle other errors
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+
 module.exports = {
   postRide,
   getRequests,
@@ -479,4 +548,5 @@ module.exports = {
   rideRequest,
   verifyCode,
   getPastRides,
+  cancelRide
 };
