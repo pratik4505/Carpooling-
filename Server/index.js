@@ -23,7 +23,7 @@ const { getTransactions } = require("./controllers/transactions");
 db.connect().catch((err) =>
   console.error("Error connecting to database:", err)
 );
-app.use("/public", express.static(path.join(__dirname, "p0ublic")));
+app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(
   bodyParser.json({
     verify: function (req, res, buf) {

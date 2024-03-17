@@ -32,7 +32,7 @@ const login = async (req, res, next) => {
   const password = req.body.password;
 
   try {
-    let loadedUser = await User.findOne({ emailId: email });
+    let loadedUser = await User.findOne({ emailId: email.toLowerCase() });
     if (!loadedUser) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
@@ -78,6 +78,7 @@ const signUp = async (req, res, next) => {
   const errors = validationResult(req);
 
   const { userName, email, password, otp, otpId } = req.body;
+  
   try {
     // Check for validation errors
     if (!errors.isEmpty()) {
@@ -85,7 +86,7 @@ const signUp = async (req, res, next) => {
     }
 
     // Check if email already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ emailId:email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
     }
@@ -106,7 +107,7 @@ const signUp = async (req, res, next) => {
 
     // Create a new user
     const newUser = new User({
-      emailId: email,
+      emailId: email.toLowerCase(),
       password: hashedPassword,
       name: userName,
     });
@@ -164,7 +165,7 @@ const getDlVerified = async (req, res) => {
 
 const signUpOTP = async (req, res, next) => {
   const { email } = req.body;
-
+  
   const errors = validationResult(req);
   const verificationCode = generateUniqueCode();
   try {
@@ -186,14 +187,14 @@ const signUpOTP = async (req, res, next) => {
     
     const info = transporter.sendMail({
      
-      to: [email],
+      to: [email.toLowerCase()],
       subject: "Email verification for carpooling website",
       text: `Your OTP is : ${verificationCode}`,
     });
     
 
     const emailModel = new EmailModel({
-      email: email,
+      email: email.tolowercase(),
       verificationCode,
     });
     await emailModel.save();
@@ -210,7 +211,7 @@ const signUpOTP = async (req, res, next) => {
 
 const forgotOTP = async (req, res, next) => {
   const { email } = req.body;
-
+  
   const errors = validationResult(req);
   const verificationCode = generateUniqueCode();
   try {
@@ -232,14 +233,14 @@ const forgotOTP = async (req, res, next) => {
     
     const info = transporter.sendMail({
      
-      to: [email],
+      to: [email.toLowerCase()],
       subject: "Email verification for carpooling website",
       text: `Your OTP is : ${verificationCode}`,
     });
     
 
     const emailModel = new EmailModel({
-      email: email,
+      email: email.toLowerCase(),
       verificationCode,
     });
     await emailModel.save();
@@ -258,6 +259,7 @@ const changePassword = async (req, res) => {
   const errors = validationResult(req);
 
   const { email, password, otp, otpId } = req.body;
+ 
   try {
     // Check for validation errors
     if (!errors.isEmpty()) {
@@ -271,7 +273,7 @@ const changePassword = async (req, res) => {
     }
 
     // Compare email and OTP
-    if (emailModel.email !== email || emailModel.verificationCode !== otp) {
+    if (emailModel.email !== email.toLowerCase() || emailModel.verificationCode !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
     await emailModel.deleteOne();
@@ -279,7 +281,7 @@ const changePassword = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     
     // Update the user's password
-    const user = await User.findOneAndUpdate({ emailId:email }, { password: hashedPassword });
+    const user = await User.findOneAndUpdate({ emailId:email.toLowerCase() }, { password: hashedPassword });
     if (!user) {
       return res.status(401).json({ message: "Invalid email" });
     }
