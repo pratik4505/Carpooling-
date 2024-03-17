@@ -37,8 +37,8 @@ export const DlVerify = () => {
   const [Verify, setVerify] = useState(true);
   const { userData, setIsDlVerified } = useContext(AuthContext);
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    
     setLoading(true);
     const formattedDOB = formatDOB(dob);
 
@@ -52,20 +52,21 @@ export const DlVerify = () => {
       const data = response.data;
 
       if (data.Succeeded?.statusCode === "1") {
-        if (
-          data.Succeeded?.data.result.name.toLowerCase() ===
-          userData.name.toLowerCase()
-        ) {
+        // if (
+        //   data.Succeeded?.data.result.name.toLowerCase() ===
+        //   userData.name.toLowerCase()
+        // ) {
           const res = await dlVerified({
             dlNumber: licenseNumber,
             dob: formattedDOB,
           });
 
           if (!res.error) {
+            console.log('verified')
             setIsDlVerified(true);
             navigate("/publishRide");
           }
-        }
+        // }
       }
       setVerify(false);
     } catch (error) {
@@ -86,7 +87,7 @@ export const DlVerify = () => {
             <strong className="font-bold">Data didn't matched</strong>
           </div>
         )}
-        <form onSubmit={handleSubmit} className="verify-box">
+        <form  className="verify-box">
           <h2>Driving License Form</h2>
           <div className="mb-4">
             <label
@@ -118,7 +119,7 @@ export const DlVerify = () => {
               required
             />
           </div>
-          <a onClick={DlVerify} className="cursor-pointer">
+          <a onClick={handleSubmit} className="cursor-pointer">
             <span></span>
             <span></span>
             <span></span>
@@ -127,7 +128,7 @@ export const DlVerify = () => {
               {loading ? (
                 <div>Loading...</div>
               ) : (
-                <div onClick={DlVerify}>Verify</div>
+                <div >Verify</div>
               )}
             </div>
           </a>

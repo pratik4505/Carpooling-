@@ -18,11 +18,12 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const { paymentWebhook } = require("./controllers/paymentController");
 const bodyParser = require("body-parser");
 const upload = require("./middleware/fileUpload");
+const cron = require('node-cron');
 const { getTransactions } = require("./controllers/transactions");
 db.connect().catch((err) =>
   console.error("Error connecting to database:", err)
 );
-app.use("/public", express.static(path.join(__dirname, "p0ublic")));
+app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(
   bodyParser.json({
     verify: function (req, res, buf) {
@@ -50,7 +51,7 @@ app.use("/notification", notificationRoutes);
 app.get("/server-status", (req, res) => {
   res.status(200).json({ message: "Server is up and running!" });
 });
-
+// cron.schedule('*/10 * * * *', cleanUpFunction);
 const server = app.listen(PORT, () =>
   console.log(`Server up and running on port ${PORT}!`)
 );
