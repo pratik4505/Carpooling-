@@ -91,11 +91,39 @@ const FindRide = () => {
     ride.overview_path.forEach((point) => bounds.extend(point));
     map.fitBounds(bounds);
   };
+  function formatDate(dateString) {
+    return new Date(dateString).toISOString().split("T")[0];
+  }
+
+  function convertToAMPM(time) {
+    // Split the time string into hours and minutes
+    const [hours, minutes] = time.split(":").map(Number);
+
+    // Determine whether it's AM or PM
+    const meridiem = hours >= 12 ? "PM" : "AM";
+
+    // Convert hours to 12-hour format
+    const hours12 = hours % 12 || 12;
+
+    // Format minutes with leading zero if necessary
+    const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    // Construct the formatted time string
+    return `${hours12}:${paddedMinutes} ${meridiem}`;
+  }
+
   const searchRide = async () => {
-    if (sourceRef.current.value === "" || destinationRef.current.value === "") {
+    if (
+      sourceRef.current.value === "" ||
+      destinationRef.current.value === "" ||
+      seatsRef.current.value === "" ||
+      timeFromRef.current.value === "" ||
+      timeToRef.current.value === "" ||
+      dateRef.current.value === ""
+    ) {
       toast(
-        <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-3 shadow-md">
-          Please enter Origin and Destination
+        <div className="border border-blue-500 text-blue-500 font-semibold rounded-md shadow-md">
+          Please Fill All The Details To Proceed
         </div>,
         {
           position: "top-right",
@@ -114,12 +142,13 @@ const FindRide = () => {
     const date = dateRef.current.value;
     const timeFrom = timeFromRef.current.value;
     const timeTo = timeToRef.current.value;
+    const seats = seatsRef.current.value;
 
     try {
       // Send request to backend
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_BASE_URL}/rides/getAvaliableRides`,
-        { source, destination, date, timeFrom, timeTo },
+        { date, seats },
         {
           headers: {
             Authorization: `Bearer ${
@@ -228,6 +257,12 @@ const FindRide = () => {
               ride.dropOffPoint = destinationFound;
               ride.overview_path = routeCoordinates;
               ride.rideDistance = distanceFromEnd - distanceFromStart;
+              const rideDistanceInKm = ride.rideDistance / 1000;
+              const baseAmount =
+                rideDistanceInKm * ride.unitCost * seatsRef.current.value;
+              const commission = baseAmount * 0.012; // 1.2% commission
+              ride.amount = baseAmount + commission;
+              console.log(ride.amount);
               rideFound = true;
               // Geocode pickup point
               geocoder.geocode(
@@ -325,7 +360,6 @@ const FindRide = () => {
             draggable: true,
           }
         );
-        
       }
     } catch (error) {
       console.error("Error fetching rides:", error);
@@ -338,8 +372,15 @@ const FindRide = () => {
     setDirectionResponse(null);
     setDistance("");
     setDuration("");
+    setAvailableRides([]);
     sourceRef.current.value = "";
     destinationRef.current.value = "";
+    timeFromRef.current.value = "";
+    timeToRef.current.value = "";
+    dateRef.current.value = "";
+    seatsRef.current.value = "";
+    setUserSource(null);
+    setUserDestination(null);
   };
   const markerIcon = {
     path: window.google.maps.SymbolPath.CIRCLE,
@@ -460,13 +501,20 @@ const FindRide = () => {
             </div>
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex gap-10 justify-center">
             <button
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
               onClick={searchRide}
               disabled={isSearching}
             >
               Search Ride
+              {isSearching && <ButtonLoadingSpinner />}
+            </button>
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
+              onClick={clearRoute}
+            >
+              Clear Route
               {isSearching && <ButtonLoadingSpinner />}
             </button>
           </div>
@@ -483,15 +531,32 @@ const FindRide = () => {
                       className="bg-white rounded-md shadow-md p-4 mb-2 cursor-pointer"
                       onClick={() => displayRoute(ride, index)}
                     >
-                      <div className="font-bold">Source: {ride.source}</div>
-                      <div className="font-bold">
-                        Destination: {ride.destination}
+                      <div>
+                        <span className="font-bold">Source:</span> {ride.source}
                       </div>
-                      <div className="font-bold">Date: {ride.date}</div>
-                      <div className="font-bold">Speed: {ride.speed}</div>
-                      <div className="font-bold">
-                        PickUpTime: {ride.pickUpTime}
+
+                      <div>
+                        <span className="font-bold">Destination: </span>
+                        {ride.destination}
                       </div>
+                      <div>
+                        <span className="font-bold">Date: </span>
+                        {formatDate(ride.date)}
+                      </div>
+                      <div>
+                        <span className="font-bold">Speed: </span>
+                        {parseFloat(ride.speed).toFixed(2)} Km/h
+                      </div>
+                      <div>
+                        <span className="font-bold">Amount: </span>
+                        {Math.ceil(ride.amount)}
+                      </div>
+
+                      <div>
+                        <span className="font-bold">PickUpTime: </span>
+                        {convertToAMPM(ride.pickUpTime)}
+                      </div>
+                      <div className="font-bold"></div>
                       <button
                         className="px-4 py-2 mx-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
                         onClick={() => makeRideRequest(ride, index)}

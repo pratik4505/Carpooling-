@@ -10,18 +10,18 @@ const ContactForm = () => {
   const [contactNo, setContactNo] = useState("");
   const [message, setMessage] = useState("");
 
-  const clearForm=(e)=>{
+  const clearForm = (e) => {
     e.preventDefault();
     setName("");
-      setEmail("");
-      setContactNo("");
-      setMessage("");
-  }
+    setEmail("");
+    setContactNo("");
+    setMessage("");
+  };
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Create an object with form data
     const formData = {
       name,
@@ -34,10 +34,10 @@ const ContactForm = () => {
       // Send form data to an endpoint using Axios
       const response = await contactUs(formData);
 
-      if(response.data) {
+      if (response.data) {
         toast(
           <div className="border border-blue-500 text-blue-500 font-semibold rounded-md p-4 shadow-md bg-transparent">
-           {response.data.message}
+            {response.data.message}
           </div>,
           {
             position: "top-right",
@@ -50,9 +50,9 @@ const ContactForm = () => {
         );
       }
       console.log("Email sent:", response.data);
-      
+
       // Clear form fields after successful submission
-      clearForm(e)
+      clearForm(e);
     } catch (error) {
       console.error("Error sending email:", error);
     }
@@ -62,25 +62,15 @@ const ContactForm = () => {
     <div className="background-container md:w-[90vw] lg:w-[80vw] mx-auto">
       <div className="container-contact">
         <div className="screen-contact">
-<<<<<<< HEAD
-          <div className="screen-contact-body">
-            <div className="screen-contact-body-item left">
-              <div className="app-title">
-                <span>CONTACT</span>
-                <span>US</span>
-=======
           {/* Form */}
-          <form >
+          <form>
             <div className="screen-contact-body">
               <div className="screen-contact-body-item left">
                 <div className="app-title">
                   <span>CONTACT</span>
                   <span>US</span>
                 </div>
-                <div className="app-contact">
-                  CONTACT INFO : +11 1111111111
-                </div>
->>>>>>> dca8007b3476b8f113531dcf48e0537db7a1d793
+                <div className="app-contact">CONTACT INFO : +11 1111111111</div>
               </div>
               <div className="screen-contact-body-item">
                 <div className="app-form">
@@ -117,7 +107,10 @@ const ContactForm = () => {
                     />
                   </div>
                   <div className="app-form-group buttons">
-                    <button onClick={clearForm} className="app-form-button mr-4">
+                    <button
+                      onClick={clearForm}
+                      className="app-form-button mr-4"
+                    >
                       CANCEL
                     </button>
 
