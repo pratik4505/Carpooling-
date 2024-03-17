@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login</title>
+    <!-- Include the Google Sign-In API -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- Specify your Google API Client ID -->
+    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        button {
+            background-color: #4285f4;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #357ae8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Sign-In button -->
+    <button ><a href="/auth/google">Login with Google</a></button>
+
+    
+</body>
+</html>
