@@ -460,7 +460,7 @@ const getPastRides = async (req, res) => {
     const userId = req.userId; // Assuming userId is available in req.userId
 
     // Find all documents from PastRide schema where userId matches
-    const pastRides = await PastRide.find({ userId });
+    const pastRides = await PastRide.find({ userId }).sort({ createdAt: -1 });
 
     // Calculate average rating for each past ride
     const pastRidesWithAverageRating = await Promise.all(
