@@ -4,7 +4,7 @@ import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 export default function RatingList({ rideId, passengers, driver, onCancel }) {
-  const [loading, setLoading] = useState(rideId? true : false);
+  const [loading, setLoading] = useState(rideId ? true : false);
   const [coriders, setCoriders] = useState(passengers);
   const [ratings, setRatings] = useState({});
 
@@ -25,7 +25,7 @@ export default function RatingList({ rideId, passengers, driver, onCancel }) {
   }, [rideId, passengers]);
 
   const handleRatingChange = (Id, value) => {
-    console.log(value)
+    console.log(value);
     setRatings((prevRatings) => ({
       ...prevRatings,
       [Id]: {
@@ -47,7 +47,6 @@ export default function RatingList({ rideId, passengers, driver, onCancel }) {
 
   const submitRatings = async () => {
     setLoading(true);
-
     if (Object.keys(ratings).length === 0 && ratings.constructor === Object) {
       onCancel();
     }
@@ -55,17 +54,13 @@ export default function RatingList({ rideId, passengers, driver, onCancel }) {
     try {
       const res = await postRatings(ratings);
       if (!res.error) {
-        toast( <div>
-          Users Rated Successfully
-        </div>,
-        {
+        toast(<div>Users Rated Successfully</div>, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          
         });
         onCancel();
       }
@@ -94,24 +89,26 @@ export default function RatingList({ rideId, passengers, driver, onCancel }) {
             </h3>
           </Link>
           <div>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <span
-          key={star}
-          className="star cursor-pointer"
-          style={{
-            color: ratings[driver.driverPastId]?.rating  >= star ? "gold" : "gray",
-            fontSize: "35px",
-          }}
-          onClick={() => {
-            
-            handleRatingChange(driver.driverPastId, star);
-          }}
-        >
-          {" "}
-          ★{" "}
-        </span>
-      ))}
-    </div>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span
+                key={star}
+                className="star cursor-pointer"
+                style={{
+                  color:
+                    ratings[driver.driverPastId]?.rating >= star
+                      ? "gold"
+                      : "gray",
+                  fontSize: "35px",
+                }}
+                onClick={() => {
+                  handleRatingChange(driver.driverPastId, star);
+                }}
+              >
+                {" "}
+                ★{" "}
+              </span>
+            ))}
+          </div>
 
           <textarea
             value={ratings[driver.driverPastId]?.description || ""}
@@ -140,23 +137,25 @@ export default function RatingList({ rideId, passengers, driver, onCancel }) {
               </h3>
             </Link>
             <div>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <span
-          key={star}
-          className="star cursor-pointer"
-          style={{
-            color: ratings[data.pastRideId]?.rating  >= star ? "gold" : "gray",
-            fontSize: "35px",
-          }}
-          onClick={() => handleRatingChange(data.pastRideId, star)}
-        >
-          {" "}
-          ★{" "}
-        </span>
-      ))}
-    </div>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  className="star cursor-pointer"
+                  style={{
+                    color:
+                      ratings[data.pastRideId]?.rating >= star
+                        ? "gold"
+                        : "gray",
+                    fontSize: "35px",
+                  }}
+                  onClick={() => handleRatingChange(data.pastRideId, star)}
+                >
+                  {" "}
+                  ★{" "}
+                </span>
+              ))}
+            </div>
 
-           
             <textarea
               value={ratings[data.pastRideId]?.description || ""}
               onChange={(event) =>
