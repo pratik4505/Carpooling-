@@ -44,7 +44,7 @@ const checkout = async (req, res) => {
             product_data: {
               name: data.description,
             },
-            unit_amount: Math.min(9999, amountInCents), //max amount 9999usd allowed
+            unit_amount: Math.min(999999, amountInCents), //max amount 9999usd allowed
           },
           quantity: 1,
         },

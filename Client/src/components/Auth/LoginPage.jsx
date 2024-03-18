@@ -16,7 +16,7 @@ export default function LoginPage() {
   });
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
-  const { initialLoad,setIsDlVerified } = useContext(AuthContext);
+  const { initialLoad, setIsDlVerified } = useContext(AuthContext);
   const navigate = useNavigate();
   const change = (e) => {
     setFormData({
@@ -33,7 +33,7 @@ export default function LoginPage() {
 
       console.log(response);
       if (response.data) {
-        setIsDlVerified(response.data.isDlVerified)
+        setIsDlVerified(response.data.isDlVerified);
         localStorage.setItem("profile", JSON.stringify(response.data.data));
         initialLoad();
         navigate("/");
@@ -74,33 +74,36 @@ export default function LoginPage() {
             />
             <label>Password</label>
           </div>
-          <a onClick={handleLogin}>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <div>
-              {loading ? (
-                <div>Loading...</div>
-              ) : (
-                <div onClick={handleLogin}>Log in</div>
-              )}
-            </div>
-          </a>
-          <a onClick={()=> navigate("/register")}>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <div>
-              {loading ? (
-                <div>Loading...</div>
-              ) : (
-                <div onClick={()=> navigate("/register")}>Register</div>
-              )}
-            </div>
-          </a>
-          <Link to='/forgotPassword'>Forgot Password</Link>
+          <div className="flex justify-between">
+            <a className="cursor-pointer" onClick={handleLogin}>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <div>
+                {loading ? (
+                  <div>Loading...</div>
+                ) : (
+                  <div onClick={handleLogin}>Log in</div>
+                )}
+              </div>
+            </a>
+            <a className="cursor-pointer" onClick={() => navigate("/register")}>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <div>
+                {loading ? (
+                  <div>Loading...</div>
+                ) : (
+                  <div onClick={() => navigate("/register")}>Register</div>
+                )}
+              </div>
+            </a>
+          </div>
+
+          <Link to="/forgotPassword">Forgot Password</Link>
         </form>
       </div>
     </div>

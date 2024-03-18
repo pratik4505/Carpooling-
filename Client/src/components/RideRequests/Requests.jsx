@@ -96,7 +96,7 @@ export default function Requests() {
   return (
     <div className="grid pt-[70px] bg-white grid-cols-2 h-[100vh]">
       <div className="border border-gray-400 h-full p-4 overflow-y-auto">
-        <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
+        <h1 className="text-5xl font-bold text-center text-gray-800 my-2">
           Ride Requests
         </h1>
         {loading && <FallbackLoading />}
@@ -104,14 +104,7 @@ export default function Requests() {
           Object.entries(requests).map(([key, value]) => (
             <div key={key} className="border-b border-gray-300 py-4">
               <Link to={`/profile/${value.requesterId}`}>
-                {value.requesterImageUrl && (
-                  <img
-                    src={value.requesterImageUrl}
-                    alt="avatar"
-                    className="w-12 h-12 rounded-full mx-auto mb-2"
-                  />
-                )}
-                <h3 className="text-lg font-semibold text-center text-gray-700 mb-1">
+                <h3 className="text-[30px]  text-left font-bold text-gray-700 mb-1">
                   {value.requesterName}
                 </h3>
               </Link>
@@ -179,19 +172,12 @@ export default function Requests() {
             polyline={requests[selectedRequests].overview_polyline}
           />
         ) : userLocation ? (
-          <GoogleMap
-            center={userLocation}
-            zoom={15}
-            mapContainerStyle={{ width: "100%", height: "100%" }}
-            options={{
-              zoomControl: false,
-              streetViewControl: false,
-              mapTypeControl: false,
-              fullscreenControl: false,
-            }}
-          >
-            <Marker position={userLocation} />
-          </GoogleMap>
+          <GoogleMapUtil
+            coordinates={[
+              userLocation,
+              // Add more coordinates as needed
+            ]}
+          />
         ) : (
           <p>Loading map...</p>
         )}
