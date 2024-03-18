@@ -1,7 +1,14 @@
 import React from "react";
 import "./Hero.scss";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/searchride");
+  };
+
   return (
     <div>
       <div className="hero__unique relative h-screen bg-cover bg-center">
@@ -12,7 +19,10 @@ const Hero = () => {
               Book your ride on LiftLink and Sharing Rides, Saving Miles,
               Building Smiles
             </div>
-            <button className="px-4 py-3 bg-[#008DDA] text-white rounded-full text-lg hover:bg-[#0400da] transition cursor-pointer duration-300">
+            <button
+              onClick={handleClick}
+              className="px-4 py-3 bg-[#008DDA] text-white rounded-full text-lg hover:bg-[#0400da] transition cursor-pointer duration-300"
+            >
               Book your ride
             </button>
           </div>

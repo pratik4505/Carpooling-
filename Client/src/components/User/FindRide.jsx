@@ -262,7 +262,6 @@ const FindRide = () => {
                 rideDistanceInKm * ride.unitCost * seatsRef.current.value;
               const commission = baseAmount * 0.012; // 1.2% commission
               ride.amount = baseAmount + commission;
-              console.log(ride.amount);
               rideFound = true;
               // Geocode pickup point
               geocoder.geocode(
@@ -292,6 +291,7 @@ const FindRide = () => {
                   }
                 }
               );
+              ridesWithValidRoutes.push(ride);
             }
           }
         }
