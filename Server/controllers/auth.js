@@ -194,7 +194,7 @@ const signUpOTP = async (req, res, next) => {
     
 
     const emailModel = new EmailModel({
-      email: email.tolowercase(),
+      email: email.toLowerCase(),
       verificationCode,
     });
     await emailModel.save();

@@ -38,11 +38,11 @@ export default function RegisterComponent() {
   const sendotp = async () => {
     try {
       const res = await signUpOTP({ email });
-      if (!res.error) {
+      if (res.data) {
         setOtpId(res.data._id);
         toast.success("OTP sent successfully.");
       } else {
-        toast.error("Email address already exists.");
+        toast.error("Email error.");
       }
     } catch (error) {
       console.error("Error sending OTP:", error);

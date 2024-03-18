@@ -45,8 +45,7 @@ export const signUpOTP = async (data) => {
   try {
     const res = await API.post("/auth/signUpOTP", data);
     console.log(res)
-    if (res.status === 200) return { error: null, data: res.data };
-    else return { error: res.data.error, data: null };
+    return res;
   } catch (error) {
     return handleApiError(error);
   }

@@ -85,8 +85,10 @@ const FindRide = () => {
     return `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
   }
   const displayRoute = (ride, index) => {
+    
     //console.log("The selected ride is ", ride);
     setSelectedRouteIndex(index);
+   
     const bounds = new window.google.maps.LatLngBounds();
     ride.overview_path.forEach((point) => bounds.extend(point));
     map.fitBounds(bounds);
@@ -113,6 +115,8 @@ const FindRide = () => {
   }
 
   const searchRide = async () => {
+    setAvailableRides([]);
+    console.log("search function called")
     if (
       sourceRef.current.value === "" ||
       destinationRef.current.value === "" ||
@@ -161,7 +165,7 @@ const FindRide = () => {
       if (response.status === 200) {
         console.log("The response from the database is ", response);
         // Initialize array to hold rides with valid routes
-        const ridesWithValidRoutes = [];
+        let ridesWithValidRoutes = [];
         var rideFound = false;
         // Iterate through each ride in the response array
         for (const ride of response.data) {
@@ -242,7 +246,6 @@ const FindRide = () => {
               return;
             }
           });
-
           // If both source and destination are on the route, add the ride to the array
           if (isSourceOnRoute && isDestinationOnRoute) {
             const startTime = timeFromRef.current.value;
@@ -570,6 +573,7 @@ const FindRide = () => {
                       >
                         Join Chat Group
                       </button>
+                      
                     </li>
                   ))}
                 </ul>
