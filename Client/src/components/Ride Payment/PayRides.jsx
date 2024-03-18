@@ -44,7 +44,7 @@ export default function PayRides() {
     // Construct the formatted time string
     return `${hours12}:${paddedMinutes} ${meridiem}`;
   }
-
+ 
   const payHandler = async (key) => {
     const value = rides[key];
     const data = {
