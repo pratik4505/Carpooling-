@@ -130,9 +130,8 @@ export default function PassengerRides() {
                 {value.vehicleType}
               </p>
 
-              {/* commented one is the main code ,next one is for testing */}
-              {/* {!value.rideCancelled &&
-                value.codeVerified &&
+              <div className="flex gap-2">
+                {!value.rideCancelled &&value.codeVerified &&
                  (
                   <button
                     onClick={() => {
@@ -142,16 +141,9 @@ export default function PassengerRides() {
                   >
                     Rate Co-riders
                   </button>
-                )} */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => {
-                    setRating(value);
-                  }}
-                  className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
-                >
-                  Rate Co-riders
-                </button>
+                )}
+              
+              
 
                 {!value.rideCancelled && !value.codeVerified && (
                   <button
@@ -173,7 +165,7 @@ export default function PassengerRides() {
                 >
                   Join Group Chat
                 </button>
-              </div>
+                </div>
             </div>
           ))}
       </div>

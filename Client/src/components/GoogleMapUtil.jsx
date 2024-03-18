@@ -14,6 +14,7 @@ function GoogleMapUtil({ coordinates, polyline }) {
   const [map, setMap] = useState(null);
   const [route, setRoute] = useState(null);
   const [markers, setMarkers] = useState([]);
+
   useEffect(() => {
     // Fetch the real-time location and set it as the center of the map
     if (navigator.geolocation) {
@@ -23,8 +24,13 @@ function GoogleMapUtil({ coordinates, polyline }) {
       });
     }
   }, []);
+
   useEffect(() => {
     if (!polyline || !map) return;
+
+    // Clear previous route
+    setRoute(null);
+
     const routeCoordinates =
       window.google.maps.geometry.encoding.decodePath(polyline);
     setRoute(routeCoordinates);
@@ -32,6 +38,10 @@ function GoogleMapUtil({ coordinates, polyline }) {
 
   useEffect(() => {
     if (!coordinates || coordinates.length === 0 || !map) return;
+
+    // Clear previous markers
+    markers.forEach(marker => marker.setMap(null));
+
     const newMarkers = coordinates.map((coordinate, index) => {
       const marker = new window.google.maps.Marker({
         position: coordinate,

@@ -8,6 +8,9 @@ function formatDOB(date) {
   const [year, month, day] = date.split("-");
   return `${day}-${month}-${year}`;
 }
+function replaceUnderscore(name) {
+  return name.toLowerCase();
+}
 import "./verification.scss";
 
 function requestOptions(dlNumber, dob) {
@@ -16,7 +19,7 @@ function requestOptions(dlNumber, dob) {
     url: "https://driving-license-verification1.p.rapidapi.com/DL/DLDetails",
     headers: {
       "content-type": "application/json",
-      "X-RapidAPI-Key": "21bf180744msh0e9fdf2fe276eb2p1c5282jsn9f2949f5f205",
+      "X-RapidAPI-Key": "caee9e01f2mshaaac7fa31e8959fp14c242jsnd96c0d0b7166",
       "X-RapidAPI-Host": "driving-license-verification1.p.rapidapi.com",
     },
     data: {
@@ -38,7 +41,6 @@ export const DlVerify = () => {
   const { userData, setIsDlVerified } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleSubmit = async () => {
-    
     setLoading(true);
     const formattedDOB = formatDOB(dob);
 
@@ -53,19 +55,19 @@ export const DlVerify = () => {
 
       if (data.Succeeded?.statusCode === "1") {
         // if (
-        //   data.Succeeded?.data.result.name.toLowerCase() ===
+        //   data.Succeeded?.data.result.name.toLowerCase()===
         //   userData.name.toLowerCase()
         // ) {
-          const res = await dlVerified({
-            dlNumber: licenseNumber,
-            dob: formattedDOB,
-          });
+        const res = await dlVerified({
+          dlNumber: licenseNumber,
+          dob: formattedDOB,
+        });
 
-          if (!res.error) {
-            console.log('verified')
-            setIsDlVerified(true);
-            navigate("/publishRide");
-          }
+        if (!res.error) {
+          console.log("verified");
+          setIsDlVerified(true);
+          navigate("/publishRide");
+        }
         // }
       }
       setVerify(false);
@@ -87,7 +89,7 @@ export const DlVerify = () => {
             <strong className="font-bold">Data didn't matched</strong>
           </div>
         )}
-        <form  className="verify-box">
+        <form className="verify-box">
           <h2>Driving License Form</h2>
           <div className="mb-4">
             <label
@@ -124,13 +126,7 @@ export const DlVerify = () => {
             <span></span>
             <span></span>
             <span></span>
-            <div>
-              {loading ? (
-                <div>Loading...</div>
-              ) : (
-                <div >Verify</div>
-              )}
-            </div>
+            <div>{loading ? <div>Loading...</div> : <div>Verify</div>}</div>
           </a>
           {loading && <ButtonLoadingSpinner />}
         </form>

@@ -297,8 +297,7 @@ export default function PublishRide() {
               />
             </div>
           </div>
-        </div>
-        <div className=" border w-[80%] m-auto flex flex-col gap-2">
+          <div className="  w-[80%] m-auto flex flex-col gap-2 mt-2">
           <div className="flex space-x-4 m-auto ">
             <button
               type="submit"
@@ -326,6 +325,8 @@ export default function PublishRide() {
             {isPublishing && <ButtonLoadingSpinner />}
           </button>
         </div>
+        </div>
+        
         {directionsResponses && (
           <div className=" mt-4 p-4 border w-[80%] m-auto flex flex-col gap-4 overflow-y-auto h-[200px]">
             {directionsResponses.routes.map((route, index) => (

@@ -106,28 +106,19 @@ export default function PublishedRides() {
               </p>
 
               {/* commented one is the main code ,next one is for testing */}
-              {/* {!value.rideCancelled && value.codeVerified && (
+              {!value.rideCancelled && value.codeVerified && (
                 <button
                   onClick={() => {
                     setRating(value.passengers);
                   }}
-                  onc
+                  
                   className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
                 >
                   Rate Passengers
                 </button>
-              )} */}
+              )}
               <div className="flex gap-2">
-                {
-                  <button
-                    onClick={() => {
-                      setRating(value.passengers);
-                    }}
-                    className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
-                  >
-                    Rate Passengers
-                  </button>
-                }
+                
                 {!value.rideCancelled && !value.codeVerified && (
                   <button
                     onClick={() => cancellationHandler(value._id)}

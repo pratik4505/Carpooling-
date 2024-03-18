@@ -32,7 +32,7 @@ const getLatestNotifications = async (req, res) => {
       userId: req.userId,
     })
       .sort({ createdAt: -1 })
-      .limit(10);
+      .limit(5);
 
     // Extracting notification IDs
     const notificationIds = notifications.map(
