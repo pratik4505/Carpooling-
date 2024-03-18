@@ -190,7 +190,7 @@ export default function MessageContainer(props) {
   const [personName, chatPlaceWithTrailingParenthesis] =
     props.data.chatName.split("(");
   const chatPlace = chatPlaceWithTrailingParenthesis.replace(/\)$/, "").trim();
-  console.log(props.data)
+  console.log(props.data);
   return (
     <div className="w-full md:w-[70%] bg-white shadow-5xl">
       <div className="bg-primary-300 h-[10%]  flex items-center justify-between px-[2%]  ">
@@ -200,19 +200,18 @@ export default function MessageContainer(props) {
             color="#ffff"
             onClick={() => props.closeContainer()}
           />
-           {props.data.members[props.data.driverId]?.imageUrl && (
-          <img
-            src={`${BASE_URL}/${
-              props.data.members[props.data.driverId].imageUrl
-            }`}
-            alt="Profile"
-            className="w-12 h-12 rounded-full mr-2"
-           
-          />
-        )}
-        {!props.data.members[props.data.driverId]?.imageUrl && (
-          <FaRegUser className="w-10 h-10 bg-red-500 rounded-full flex-shrink-0 mr-3" />
-        )}
+          {props.data.members[props.data.driverId]?.imageUrl && (
+            <img
+              src={`${BASE_URL}/${
+                props.data.members[props.data.driverId].imageUrl
+              }`}
+              alt="Profile"
+              className="w-12 h-12 rounded-full mr-2"
+            />
+          )}
+          {!props.data.members[props.data.driverId]?.imageUrl && (
+            <FaRegUser className="w-10 h-10 bg-red-500 rounded-full flex-shrink-0 mr-3" />
+          )}
 
           {/* <FaRegUser size={28} className="mx-2" /> */}
           <div className="flex flex-col">
@@ -244,13 +243,6 @@ export default function MessageContainer(props) {
               key={msg._id}
             >
               <Link to={`/profile/${msg.senderId}`}>
-                {props.data.members[msg.senderId]?.imageUrl && (
-                  <img
-                    src={props.data.members[msg.senderId]?.imageUrl}
-                    alt="avatar"
-                    className="w-12 h-12 rounded-full mx-auto mb-2"
-                  />
-                )}
                 <h3 className="text-lg font-semibold text-center text-gray-700 mb-1">
                   {props.data.members[msg.senderId]?.name}
                 </h3>
