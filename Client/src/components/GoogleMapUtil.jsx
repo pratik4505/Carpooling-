@@ -9,7 +9,6 @@ import { AuthContext } from "../context/ContextProvider";
 import FallbackLoading from "./loader/FallbackLoading";
 
 function GoogleMapUtil({ coordinates, polyline }) {
-  console.log("The cordinates and polyline is ", coordinates, polyline);
   const { isLoaded } = useContext(AuthContext);
   const [center, setCenter] = useState(null);
   const [map, setMap] = useState(null);
