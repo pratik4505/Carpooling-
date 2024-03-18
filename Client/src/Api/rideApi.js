@@ -125,7 +125,7 @@ export const getPastRides = async () => {
 
 export const cancelRide = async (bookedId) => {
   try {
-    const res = await API.post("/rides/cancelRide",{bookedId});
+    const res = await API.post("/rides/cancelRide", { bookedId });
     // Assuming the API response contains transactions data
     return res.data;
   } catch (error) {
@@ -134,10 +134,9 @@ export const cancelRide = async (bookedId) => {
   }
 };
 
-
 export const cancelPublishedRide = async (rideId) => {
   try {
-    const res = await API.post("/rides/cancelPublishedRide",{rideId});
+    const res = await API.post("/rides/cancelPublishedRide", { rideId });
     // Assuming the API response contains transactions data
     return res.data;
   } catch (error) {

@@ -11,11 +11,19 @@ import FallbackLoading from "./loader/FallbackLoading";
 function GoogleMapUtil({ coordinates, polyline }) {
   console.log("The cordinates and polyline is ", coordinates, polyline);
   const { isLoaded } = useContext(AuthContext);
-
+  const [center, setCenter] = useState(null);
   const [map, setMap] = useState(null);
   const [route, setRoute] = useState(null);
   const [markers, setMarkers] = useState([]);
-
+  useEffect(() => {
+    // Fetch the real-time location and set it as the center of the map
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        setCenter({ lat: latitude, lng: longitude });
+      });
+    }
+  }, []);
   useEffect(() => {
     if (!polyline || !map) return;
     const routeCoordinates =
@@ -57,7 +65,7 @@ function GoogleMapUtil({ coordinates, polyline }) {
 
   return (
     <GoogleMap
-      // center={{ lat: 25.3176, lng: 82.9739 }}
+      center={center}
       zoom={15}
       mapContainerStyle={{ width: "100%", height: "100%" }}
       options={mapOptions}

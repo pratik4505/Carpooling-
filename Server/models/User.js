@@ -1,108 +1,113 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  emailId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  about:String,
-  imageUrl: String,
-  rideRequests: {
-    type: Map,
-    of: {
-      requesterId: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    emailId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    about: String,
+    imageUrl: String,
+    rideRequests: {
+      type: Map,
+      of: {
+        requesterId: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+        requesterImageUrl: String,
+        requesterName: String,
+        rideId: {
+          type: Schema.Types.ObjectId,
+          ref: "AvailableRide",
+        },
+        pickUp: {
+          lat: Number,
+          lng: Number,
+        },
+        destination: {
+          lat: Number,
+          lng: Number,
+        },
+        pickUpAddress: {
+          type: String,
+          required: true,
+        },
+        destinationAddress: {
+          type: String,
+          required: true,
+        },
+        driverSource: {
+          type: String,
+          required: true,
+        },
+        driverDestination: {
+          type: String,
+          required: true,
+        },
+        overview_polyline: {
+          type: String,
+          required: true,
+        },
+        seats: Number,
+        distance: Number,
+        unitCost: Number,
+        pickUpDate: Date,
+        pickUpTime: String,
       },
-      requesterImageUrl: String,
-      requesterName: String,
-      rideId: {
-        type: Schema.Types.ObjectId,
-        ref: "AvailableRide",
+    },
+    pendingPayments: {
+      type: Map,
+      of: {
+        rideId: {
+          type: Schema.Types.ObjectId,
+          ref: "AvailableRide",
+        },
+        pickUp: {
+          lat: Number,
+          lng: Number,
+        },
+        destination: {
+          lat: Number,
+          lng: Number,
+        },
+        pickUpAddress: {
+          type: String,
+          required: true,
+        },
+        destinationAddress: {
+          type: String,
+          required: true,
+        },
+        seats: Number,
+        distance: Number,
+        unitCost: Number,
+        pickUpDate: Date,
+        pickUpTime: String,
       },
-      pickUp: {
-        lat: Number,
-        lng: Number,
-      },
-      destination: {
-        lat: Number,
-        lng: Number,
-      },
-      pickUpAddress: {
-        type: String,
-        required: true,
-      },
-      destinationAddress: {
-        type: String,
-        required: true,
-      },
-      driverSource: {
-        type: String,
-        required: true,
-      },
-      driverDestination: {
-        type: String,
-        required: true,
-      },
-      seats: Number,
-      distance: Number,
-      unitCost: Number,
-      pickUpDate: Date,
-      pickUpTime: String,
-     
+    },
+
+    dlNumber: String,
+    dob: String,
+    wallet: {
+      type: Number,
+      default: 0,
     },
   },
-  pendingPayments: {
-    type: Map,
-    of: {
-      rideId: {
-        type: Schema.Types.ObjectId,
-        ref: "AvailableRide",
-      },
-      pickUp: {
-        lat: Number,
-        lng: Number,
-      },
-      destination: {
-        lat: Number,
-        lng: Number,
-      },
-      pickUpAddress: {
-        type: String,
-        required: true,
-      },
-      destinationAddress: {
-        type: String,
-        required: true,
-      },
-      seats: Number,
-      distance: Number,
-      unitCost: Number,
-      pickUpDate: Date,
-      pickUpTime: String,
-    },
-  },
-  
-  dlNumber:String,
-  dob:String,
-  wallet:{
-    type:Number,
-    default:0
+  {
+    timestamps: true,
   }
-},
-{
-  timestamps: true,
-});
+);
 
 const User = mongoose.model("User", userSchema);
 

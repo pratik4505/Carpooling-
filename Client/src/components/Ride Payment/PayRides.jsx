@@ -20,7 +20,6 @@ export default function PayRides() {
         const res = await getAcceptedRides();
         if (!res.error) {
           setRides(res.data);
-          
         }
       } catch (error) {
         console.error("Error fetching rides:", error);
@@ -48,14 +47,16 @@ export default function PayRides() {
     try {
       const formData = await payHandler(key); // Get data from payHandler
       // Create a new form
-      const form = document.createElement('form');
-      form.action = `${import.meta.env.VITE_SERVER_BASE_URL}/payment/create-checkout-session`;
-      form.method = 'POST';
+      const form = document.createElement("form");
+      form.action = `${
+        import.meta.env.VITE_SERVER_BASE_URL
+      }/payment/create-checkout-session`;
+      form.method = "POST";
 
       // Append hidden input fields for each key-value pair in formData
       for (const [name, value] of Object.entries(formData)) {
-        const input = document.createElement('input');
-        input.type = 'hidden';
+        const input = document.createElement("input");
+        input.type = "hidden";
         input.name = name;
         input.value = value;
         form.appendChild(input);
@@ -65,7 +66,7 @@ export default function PayRides() {
       document.body.appendChild(form);
       form.submit();
     } catch (error) {
-      console.error('Error handling form submit:', error);
+      console.error("Error handling form submit:", error);
     }
   };
 
@@ -76,17 +77,13 @@ export default function PayRides() {
       const res = await postDeclinePayment(key);
       if (!res.error) {
         const updatedRides = { ...rides };
-        toast( <div>
-          Payment Request Declined
-        </div>,
-        {
+        toast(<div>Payment Request Declined</div>, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          
         });
         delete updatedRides[key];
         setRides(updatedRides);
@@ -98,11 +95,11 @@ export default function PayRides() {
   };
 
   return (
-    <div className="border border-gray-400 h-full p-4 overflow-y-auto">
+    <div className="pt-[70px] border bg-white border-gray-400 h-full overflow-y-auto">
       <h1 className="text-3xl font-bold text-center text-gray-800 my-2">
-        Book your rides
+        Pending Payments
       </h1>
-      {loading&&<FallbackLoading/>}
+      {loading && <FallbackLoading />}
       {rides &&
         Object.entries(rides).map(([key, value]) => (
           <div key={key} className="border-b border-gray-300 py-4">
@@ -127,15 +124,22 @@ export default function PayRides() {
               <span className="font-semibold">Total Cost: </span>
               {1.2 * value.seats * value.distance * value.unitCost}
             </p>
-            <form onSubmit={(e) => handleFormSubmit(e, key)}>
-              <button  className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400" type="submit">Checkout</button>
-            </form>
-            <button
-              className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
-              onClick={() => declinePayment(key)}
-            >
-              Decline
-            </button>
+            <div className="flex gap-3">
+              <form onSubmit={(e) => handleFormSubmit(e, key)}>
+                <button
+                  className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
+                  type="submit"
+                >
+                  Checkout
+                </button>
+              </form>
+              <button
+                className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
+                onClick={() => declinePayment(key)}
+              >
+                Decline
+              </button>
+            </div>
           </div>
         ))}
     </div>

@@ -329,6 +329,7 @@ const FindRide = () => {
 
   const makeRideRequest = async (ride, index) => {
     try {
+      console.log("The overview polyline is ", ride.overview_polyline);
       const rideData = {
         driverId: ride.driverId,
         rideId: ride._id,
@@ -339,10 +340,11 @@ const FindRide = () => {
         driverSource: ride.source,
         driverDestination: ride.destination,
         seats: seatsRef.current.value,
-        distance: ride.rideDistance,
+        distance: ride.rideDistance / 1000,
         unitCost: ride.unitCost,
         pickUpDate: dateRef.current.value,
         pickUpTime: ride.pickUpTime,
+        overview_polyline: ride.overview_polyline,
       };
       // console.log(rideData)
       const res = await rideRequest({ userData, rideData });
@@ -503,7 +505,7 @@ const FindRide = () => {
 
           <div className="flex gap-10 justify-center">
             <button
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
+              className="flex gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 transition duration-300 ease-in-out"
               onClick={searchRide}
               disabled={isSearching}
             >
@@ -515,7 +517,6 @@ const FindRide = () => {
               onClick={clearRoute}
             >
               Clear Route
-              {isSearching && <ButtonLoadingSpinner />}
             </button>
           </div>
         </div>

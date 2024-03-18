@@ -85,6 +85,22 @@ const postRide = async (req, res) => {
   }
 };
 
+const findRides = async (req, res) => {
+  try {
+    const { seats, date } = req.body;
+    const rides = await AvailableRide.find({
+      date: date,
+      availableSeats: { $gte: seats },
+    });
+    res.status(200).json(rides);
+  } catch (err) {
+    console.error("Error fetching rides:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+module.exports = { findRides };
+
 const getRequests = async (req, res) => {
   const userId = req.userId;
   if (!userId) {
@@ -363,7 +379,6 @@ const rideRequest = async (req, res) => {
   try {
     const userId = req.userId;
     const { userData, rideData } = req.body;
-    console.log(rideData);
     const driver = await User.findById(rideData.driverId);
 
     if (!driver) {
@@ -431,8 +446,8 @@ const verifyCode = async (req, res) => {
     //   currency: "usd",
     // });
 
-    const driver= await User.findById(req.userId);
-    driver.wallet+=transaction.amountPaid;
+    const driver = await User.findById(req.userId);
+    driver.wallet += transaction.amountPaid;
     await driver.save();
 
     return res.json({ rideCancelled: false, codeVerified: true });
@@ -444,31 +459,38 @@ const verifyCode = async (req, res) => {
 const getPastRides = async (req, res) => {
   try {
     const userId = req.userId; // Assuming userId is available in req.userId
-    
+
     // Find all documents from PastRide schema where userId matches
     const pastRides = await PastRide.find({ userId });
-    
-    // Calculate average rating for each past ride
-    const pastRidesWithAverageRating = await Promise.all(pastRides.map(async (ride) => {
-      let totalRating = 0;
-      let numberOfRatings = 0;
-      
-      if (ride.ratings && ride.ratings instanceof Map) {
-        ride.ratings.forEach((value) => {
-          if (value && typeof value === 'object' && value.rating !== undefined) {
-            totalRating += value.rating;
-            numberOfRatings++;
-          }
-        });
-      }
-      
-      const averageRating = numberOfRatings > 0 ? totalRating / numberOfRatings : 0;
-     
-      return { ...ride.toObject(), averageRating };
-    }));
 
-   // console.log("The past rides are:", pastRidesWithAverageRating);
-    
+    // Calculate average rating for each past ride
+    const pastRidesWithAverageRating = await Promise.all(
+      pastRides.map(async (ride) => {
+        let totalRating = 0;
+        let numberOfRatings = 0;
+
+        if (ride.ratings && ride.ratings instanceof Map) {
+          ride.ratings.forEach((value) => {
+            if (
+              value &&
+              typeof value === "object" &&
+              value.rating !== undefined
+            ) {
+              totalRating += value.rating;
+              numberOfRatings++;
+            }
+          });
+        }
+
+        const averageRating =
+          numberOfRatings > 0 ? totalRating / numberOfRatings : 0;
+
+        return { ...ride.toObject(), averageRating };
+      })
+    );
+
+    // console.log("The past rides are:", pastRidesWithAverageRating);
+
     // Send the past rides data with average rating as response
     res.status(200).json(pastRidesWithAverageRating);
   } catch (error) {
@@ -476,8 +498,6 @@ const getPastRides = async (req, res) => {
     res.status(500).json({ error: "Unable to fetch past rides" });
   }
 };
-
-
 
 const cancelRide = async (req, res) => {
   const { bookedId } = req.body;
@@ -630,4 +650,5 @@ module.exports = {
   getPastRides,
   cancelRide,
   cancelPublishedRide,
+  findRides,
 };
