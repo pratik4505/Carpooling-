@@ -215,7 +215,6 @@ const getAcceptedRides = async (req, res) => {
       // If user is not found, send a 404 Not Found response
       return res.status(404).json({ error: "User not found" });
     }
-
     // Extract rideRequests map from the user
     const pendingPayments = user.pendingPayments;
 

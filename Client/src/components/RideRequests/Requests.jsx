@@ -136,7 +136,7 @@ export default function Requests() {
               </p>
               <p>
                 <span className="font-semibold">Total Cost: </span>
-                {Math.ceil(value.seats * value.distance * value.unitCost)}
+                {(value.seats * value.distance * value.unitCost).toFixed(2)}
               </p>
               <div className="flex gap-4">
                 <button

@@ -23,6 +23,7 @@ export const postRequest = async (action, key) => {
 export const getAcceptedRides = async () => {
   try {
     const res = await API.get("/rides/getAccepetedRides");
+    console.log("The res is ", res);
     if (res.status === 200) return { error: null, data: res.data };
     else return { error: res.data.error, data: null };
   } catch (error) {

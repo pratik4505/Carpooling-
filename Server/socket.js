@@ -1,5 +1,5 @@
 const Notification = require("./models/Notification");
-const Chat=require('./models/Chat');
+const Chat = require("./models/Chat");
 let io;
 exports.init = (httpServer) => {
   io = require("socket.io")(httpServer);
@@ -20,10 +20,11 @@ exports.runIO = (io) => {
     socket.on("setup", async (room) => {
       // console.log("setup");
       socket.join(room.toString());
-      
-      
+
       try {
-        const chats = await Chat.find({ [`members.${room}`]: { $exists: true } });
+        const chats = await Chat.find({
+          [`members.${room}`]: { $exists: true },
+        });
         // console.log(chats);
         chats.forEach((chat) => {
           // Add the socket to the room based on the _id of each matching chat
@@ -38,7 +39,6 @@ exports.runIO = (io) => {
     socket.on("handleRequest", async (data) => {
       try {
         const temp = {}; // Declare temp variable within the scope
-
         if (data.action === "accept") {
           temp.title = "Ride Request Accepted";
           temp.description = `${data.senderName} accepted your ride request`;

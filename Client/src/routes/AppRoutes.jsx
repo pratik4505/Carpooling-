@@ -32,7 +32,7 @@ const AppRoutes = () => {
     <Suspense fallback={<FallbackLoading />}>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/forgotPassword" element={<ForgotPassword/>} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="*" element={<Error />} />
 
         <Route path="/register" element={<SignUp />} />

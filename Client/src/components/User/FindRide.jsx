@@ -550,7 +550,7 @@ const FindRide = () => {
                       </div>
                       <div>
                         <span className="font-bold">Amount: </span>
-                        {Math.ceil(ride.amount)}
+                        {ride.amount.toFixed(2)}
                       </div>
 
                       <div>

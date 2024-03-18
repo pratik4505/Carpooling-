@@ -28,12 +28,28 @@ export default function PayRides() {
     };
     fetchRides();
   }, []);
+  function convertToAMPM(time) {
+    // Split the time string into hours and minutes
+    const [hours, minutes] = time.split(":").map(Number);
+
+    // Determine whether it's AM or PM
+    const meridiem = hours >= 12 ? "PM" : "AM";
+
+    // Convert hours to 12-hour format
+    const hours12 = hours % 12 || 12;
+
+    // Format minutes with leading zero if necessary
+    const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    // Construct the formatted time string
+    return `${hours12}:${paddedMinutes} ${meridiem}`;
+  }
 
   const payHandler = async (key) => {
     const value = rides[key];
     const data = {
       key: key,
-      amount: 1.2 * value.seats * value.distance * value.unitCost,
+      amount: value.seats * value.distance * value.unitCost,
       description: `Pay for your ride from ${value.pickUpAddress} to ${value.destinationAddress}`,
       email: userData.emailId,
       userId: userData.userId,
@@ -118,11 +134,11 @@ export default function PayRides() {
             </p>
             <p className="text-gray-600">
               <span className="font-semibold">PickUp Time:</span>{" "}
-              {value.pickUpTime}
+              {convertToAMPM(value.pickUpTime)}
             </p>
             <p>
               <span className="font-semibold">Total Cost: </span>
-              {1.2 * value.seats * value.distance * value.unitCost}
+              {(value.seats * value.distance * value.unitCost).toFixed(2)}
             </p>
             <div className="flex gap-3">
               <form onSubmit={(e) => handleFormSubmit(e, key)}>

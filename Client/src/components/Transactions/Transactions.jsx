@@ -5,6 +5,7 @@ import FallbackLoading from "../loader/FallbackLoading";
 import { AuthContext } from "../../context/ContextProvider";
 
 const Transactions = () => {
+  const { wallet } = useContext(AuthContext);
   const [transactions, setTransactions] = useState(null);
   const { userData } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
@@ -38,10 +39,10 @@ const Transactions = () => {
             <div className="flex-grow  dark:bg-gray-900 overflow-y-auto">
               <div className="sm:px-7 sm:pt-7 px-4 p-2 flex flex-col w-full border-b border-gray-200  dark:bg-gray-900 dark:text-black dark:border-gray-800 sticky top-0">
                 <div className="flex w-full items-center">
-                  <div className="flex items-center text-3xl text-gray-900 dark:text-black">
+                  <div className="flex items-center text-3xl  text-white">
                     <img
                       src="https://assets.codepen.io/344846/internal/avatars/users/default.png?fit=crop&format=auto&height=512&version=1582611188&width=512"
-                      className="w-12 mr-4 rounded-full"
+                      className="w-12 text-white mr-4 rounded-full"
                       alt="profile"
                     />
                     {userData && userData.name}
@@ -51,8 +52,8 @@ const Transactions = () => {
                       <div className="text-xs text-gray-400 dark:text-gray-400">
                         Account balance:
                       </div>
-                      <div className="text-gray-900 text-lg dark:text-black">
-                        $2,794.00
+                      <div className="text-white text-lg dark:text-black">
+                        {wallet}
                       </div>
                     </div>
                     <button className="w-8 h-8 ml-4 text-gray-400 shadow dark:text-gray-400 rounded-full flex items-center justify-center border border-gray-200 dark:border-gray-700">

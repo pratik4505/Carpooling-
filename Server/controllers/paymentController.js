@@ -133,7 +133,7 @@ const paymentWebhook = async (request, response) => {
           intentId: session.id,
           paidBy: customData.paidBy,
           paidTo: paidTo,
-          amountPaid: session.amount,
+          amountPaid: session.amount / 100,
           unitCost: value.unitCost,
           distance: value.distance,
           seats: value.seats,
@@ -141,7 +141,7 @@ const paymentWebhook = async (request, response) => {
           driverName: driver.name,
           source: value.pickUpAddress,
           destination: value.destinationAddress,
-          latest_charge:session.latest_charge
+          latest_charge: session.latest_charge,
         });
         await transaction.save();
 
@@ -154,8 +154,8 @@ const paymentWebhook = async (request, response) => {
           user: "passenger",
           rating: {},
           overview_polyline: availableRide.overview_polyline, // Ensure overview_polyline exists
-          sourceCo:value.pickUp,
-          destinationCo:value.destination
+          sourceCo: value.pickUp,
+          destinationCo: value.destination,
         });
         await pastRide.save();
 
