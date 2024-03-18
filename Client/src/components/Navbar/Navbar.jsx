@@ -3,6 +3,7 @@ import "./Navbar.scss";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/ContextProvider";
 import NotificationDialog from "../Notifications/NotificationDialog";
+const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 const Navbar = () => {
   const [showNotification, setShowNotification] = useState(false);
@@ -122,6 +123,34 @@ const Navbar = () => {
             </li>
             <li>
               <Link className="desktop-item" to={`/profile/${userData.userId}`}>
+                {/* {userData && (
+                  <img
+                    src={`${BASE_URL}/${userData.imageUrl}`}
+                    className="w-12 h-12 mr-4 rounded-full"
+                    alt="profile"
+                    style={{ borderRadius: "50%" }}
+                  />
+                )} */}
+                Profile
+              </Link>
+              <input type="checkbox" id="showProfile" />
+              <label htmlFor="showProfile" className="mobile-item">
+                Profile
+              </label>
+              <ul className="drop-menu">
+                <li>
+                  <Link to={`/profile/${userData.userId}`}>My Profile</Link>
+                </li>
+                <li onClick={signOut}>
+                  <Link className="desktop-item" to={`/login`}>
+                    {" "}
+                    Sign Out
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            {/* <li>
+              <Link className="desktop-item" to={`/profile/${userData.userId}`}>
                 Profile
               </Link>
             </li>
@@ -130,7 +159,7 @@ const Navbar = () => {
                 {" "}
                 Sign Out
               </Link>
-            </li>
+            </li> */}
           </ul>
           <label htmlFor="menu-btn" className="btn menu-btn">
             <i className="fas fa-bars"></i>
