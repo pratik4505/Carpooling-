@@ -200,7 +200,7 @@ export default function MessageContainer(props) {
             color="#ffff"
             onClick={() => props.closeContainer()}
           />
-           {props.data.members[props.data.driverId].imageUrl && (
+           {props.data.members[props.data.driverId]?.imageUrl && (
           <img
             src={`${BASE_URL}/${
               props.data.members[props.data.driverId].imageUrl
@@ -210,7 +210,7 @@ export default function MessageContainer(props) {
            
           />
         )}
-        {!props.data.members[props.data.driverId].imageUrl && (
+        {!props.data.members[props.data.driverId]?.imageUrl && (
           <FaRegUser className="w-10 h-10 bg-red-500 rounded-full flex-shrink-0 mr-3" />
         )}
 

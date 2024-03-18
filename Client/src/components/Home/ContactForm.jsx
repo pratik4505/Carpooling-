@@ -59,11 +59,11 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="background-container md:w-[90vw] lg:w-[80vw] mx-auto">
+    <div className="background-container md:w-[90vw] lg:w-[80vw] mx-auto ">
       <div className="container-contact">
         <div className="screen-contact">
           {/* Form */}
-          <form>
+          <form className="">
             <div className="screen-contact-body">
               <div className="screen-contact-body-item left">
                 <div className="app-title">
@@ -76,7 +76,7 @@ const ContactForm = () => {
                 <div className="app-form">
                   <div className="app-form-group">
                     <input
-                      className="app-form-control"
+                      className="app-form-control text-blue-500"
                       placeholder="NAME"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -84,7 +84,7 @@ const ContactForm = () => {
                   </div>
                   <div className="app-form-group">
                     <input
-                      className="app-form-control"
+                      className="app-form-control text-blue-500"
                       placeholder="EMAIL"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -92,7 +92,7 @@ const ContactForm = () => {
                   </div>
                   <div className="app-form-group">
                     <input
-                      className="app-form-control"
+                      className="app-form-control text-blue-500"
                       placeholder="CONTACT NO"
                       value={contactNo}
                       onChange={(e) => setContactNo(e.target.value)}
@@ -100,7 +100,7 @@ const ContactForm = () => {
                   </div>
                   <div className="app-form-group message">
                     <input
-                      className="app-form-control"
+                      className="app-form-control text-blue-500"
                       placeholder="MESSAGE"
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}

@@ -28,7 +28,7 @@ export default function ChatList(props) {
         }`}
         
       >
-        {props.chat.members[props.chat.driverId].imageUrl && (
+        {props.chat.members[props.chat.driverId]?.imageUrl && (
           <img
             src={`${BASE_URL}/${
               props.chat.members[props.chat.driverId].imageUrl
@@ -38,7 +38,7 @@ export default function ChatList(props) {
            
           />
         )}
-        {!props.chat.members[props.chat.driverId].imageUrl && (
+        {!props.chat.members[props.chat.driverId]?.imageUrl && (
           <FaRegUser className="w-10 h-10 bg-red-500 rounded-full flex-shrink-0 mr-3" />
         )}
         

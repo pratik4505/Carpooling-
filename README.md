@@ -41,6 +41,7 @@
 - **Ride history** -user and driver can see the detailed history of their previous rides.
 - **Transaction history** -user and driver can see all their transactions in detail.
 - **Profiles** -anyone can open anyones profile to see the ratings of  their past rides.
+- **ContactUs** -user can address any issue to admin by maining through contactUs form.
 
 
 ## Tech Stack
