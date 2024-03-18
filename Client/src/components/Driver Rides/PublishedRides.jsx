@@ -166,7 +166,7 @@ export default function PublishedRides() {
       )}
       {passengers && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-lg z-50">
-          <div className="bg-white rounded-lg shadow-lg p-8 z-50">
+          <div className="bg-white rounded-lg shadow-lg w-[80vw] p-8 z-50">
             <div className="flex container mt-8">
               <PassengersList
                 rides={rides}
