@@ -221,8 +221,8 @@ export default function PublishRide() {
   }
 
   return (
-    <div className="grid grid-cols-2 pt-[70px]">
-      <div className="h-full pt-[70px]">
+    <div className="bg-white grid grid-cols-2 pt-[70px] h-[100vh]">
+      <div className="h-full">
         <h1 className="text-3xl font-bold text-center text-gray-800 ">
           Publish Ride
         </h1>
@@ -298,8 +298,8 @@ export default function PublishRide() {
             </div>
           </div>
         </div>
-        <div className=" mt-4 p-4 border w-[80%] m-auto flex flex-col gap-4">
-          <div className="flex space-x-4 m-auto mt-3">
+        <div className=" border w-[80%] m-auto flex flex-col gap-2">
+          <div className="flex space-x-4 m-auto ">
             <button
               type="submit"
               className="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring focus:ring-pink-400"
@@ -327,7 +327,7 @@ export default function PublishRide() {
           </button>
         </div>
         {directionsResponses && (
-          <div className=" mt-4 p-4 border w-[80%] m-auto flex flex-col gap-4 overflow-y-auto h-64">
+          <div className=" mt-4 p-4 border w-[80%] m-auto flex flex-col gap-4 overflow-y-auto h-[200px]">
             {directionsResponses.routes.map((route, index) => (
               <div key={index} className="flex items-center mb-2">
                 <input
@@ -354,7 +354,7 @@ export default function PublishRide() {
           </div>
         )}
       </div>
-      <div className="border border-gray-400 h-[100vh]">
+      <div className="border border-gray-400">
         <GoogleMap
           center={currentLocation}
           zoom={15}
