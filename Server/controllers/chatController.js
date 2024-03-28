@@ -1,7 +1,6 @@
-
-
 const Chat=require('../models/Chat');
-const Message=require('../models/Message');
+
+const Text=require('../models/Text')
 
 const getChats=async(req,res)=>{
   const userId = req.userId;
@@ -25,7 +24,7 @@ const getMessages=async(req,res)=>{
     const rideId = req.query.rideId;
     //console.log(rideId,req.query.createdAt);
     // Find messages based on chatId and createdAt
-    const messages = await Message.find({
+    const messages = await Text.find({
        rideId: rideId,
       //  createdAt: { $lt: createdAt },
     })
@@ -46,7 +45,7 @@ const postMessage=async(req,res)=>{
     const { senderId, rideId, message } = req.body;
     
     // Create a new message document
-    const newMessage = new Message({
+    const newMessage = new Text({
       senderId,
       rideId,
       message,

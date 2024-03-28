@@ -1,7 +1,8 @@
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const messageSchema = new Schema(
+const textSchema = new Schema(
   {
     rideId: {
       //rideId
@@ -22,8 +23,8 @@ const messageSchema = new Schema(
   }
 );
 
-messageSchema.index({ rideId: 1 });
+textSchema.index({ rideId: 1 });
 
-const Message = mongoose.model("Message", messageSchema);
+const Text = mongoose.model("Text", textSchema);
 
-module.exports = Message;
+module.exports = Text;
