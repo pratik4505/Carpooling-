@@ -60,9 +60,6 @@
 - **Styling:** Bootstrap, Tailwind CSS
 
 
-## Images
-
-
 ## Installation
 
 1. Clone the repository:
@@ -100,4 +97,4 @@ npm start
 
 
 ## Deployed Link
-Access the deployed site here: 
+Access the deployed site here: `https://carpooling-ebon.vercel.app/`

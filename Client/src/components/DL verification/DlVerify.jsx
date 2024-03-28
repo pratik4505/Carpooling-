@@ -19,7 +19,7 @@ function requestOptions(dlNumber, dob) {
     url: "https://driving-license-verification1.p.rapidapi.com/DL/DLDetails",
     headers: {
       "content-type": "application/json",
-      "X-RapidAPI-Key": "caee9e01f2mshaaac7fa31e8959fp14c242jsnd96c0d0b7166",
+      "X-RapidAPI-Key": import.meta.env.VITE_RAPID_API_KEY,
       "X-RapidAPI-Host": "driving-license-verification1.p.rapidapi.com",
     },
     data: {
