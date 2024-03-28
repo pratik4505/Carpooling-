@@ -18,11 +18,13 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const { paymentWebhook } = require("./controllers/paymentController");
 const bodyParser = require("body-parser");
 const upload = require("./middleware/fileUpload");
+const helmet = require('helmet');
 const cron = require("node-cron");
 const { getTransactions } = require("./controllers/transactions");
 db.connect().catch((err) =>
   console.error("Error connecting to database:", err)
 );
+app.use(helmet());
 app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(
   bodyParser.json({
@@ -41,13 +43,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(upload);
-app.use("/chat", chatRoutes);
+
 app.use("/auth", authRoutes);
 app.use("/rides", rideRoutes);
 app.use("/transactions", transactionRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/user", userRoutes);
 app.use("/notification", notificationRoutes);
+app.use("/chat", chatRoutes);
 app.get("/server-status", (req, res) => {
   res.status(200).json({ message: "Server is up and running!" });
 });
