@@ -26,13 +26,13 @@ db.connect().catch((err) =>
 );
 app.use(helmet());
 app.use("/public", express.static(path.join(__dirname, "public")));
-app.use(
-  bodyParser.json({
-    verify: function (req, res, buf) {
-      req.rawBody = buf;
-    },
-  })
-);
+// app.use(
+//   bodyParser.json({
+//     verify: function (req, res, buf) {
+//       req.rawBody = buf;
+//     },
+//   })
+// );
 app.post(
   "/payment/confirmPaymentWebhook",
   express.raw({ type: "application/json" }),
