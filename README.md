@@ -41,7 +41,7 @@
 - **Ride history** -user and driver can see the detailed history of their previous rides.
 - **Transaction history** -user and driver can see all their transactions in detail.
 - **Profiles** -anyone can open anyones profile to see the ratings of  their past rides.
-- **ContactUs** -user can address any issue to admin by maining through contactUs form.
+- **ContactUs** -user can address any issue to admin by mailing through contactUs form.
 
 
 ## Tech Stack
@@ -87,6 +87,12 @@ npm run dev
 
 //Run backend (in the backend directory)
 npm start
+```
+5. Listen for payment confirmation(if required) using stripe CLI:
+
+```
+   stripe login
+   stripe listen --forward-to localhost:4000/payment/confirmPaymentWebhook
 ```
 
 6. Access the application at `http://localhost:5173/`

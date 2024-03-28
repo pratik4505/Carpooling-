@@ -1,7 +1,7 @@
 
-const Message=require('../models/Message');
-const Chat=require('../models/Chat');
 
+const Chat=require('../models/Chat');
+const Message=require('../models/Message');
 
 const getChats=async(req,res)=>{
   const userId = req.userId;
