@@ -17,7 +17,6 @@ const bookedRideSchema = new Schema({
     ref: "PastRide",
     required: true,
   },
-  
   passengerId: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -49,12 +48,30 @@ const bookedRideSchema = new Schema({
     required: true,
   },
   pickUp: {
-    lat: Number,
-    lng: Number,
+    type: {
+      lat: {
+        type: Number,
+        required: true
+      },
+      lng: {
+        type: Number,
+        required: true
+      }
+    },
+    required: true
   },
   destination: {
-    lat: Number,
-    lng: Number,
+    type: {
+      lat: {
+        type: Number,
+        required: true
+      },
+      lng: {
+        type: Number,
+        required: true
+      }
+    },
+    required: true
   },
   pickUpAddress: {
     type: String,
@@ -64,8 +81,14 @@ const bookedRideSchema = new Schema({
     type: String,
     required: true,
   },
-  pickUpDate: Date,
-  pickUpTime: String,
+  pickUpDate:{
+    type: Date,
+    required: true,
+  } ,
+  pickUpTime:  {
+    type: String,
+    required: true,
+  },
   unitCost: {
     type: Number,
     required: true,
@@ -77,6 +100,7 @@ const bookedRideSchema = new Schema({
   transactionId: {
     type: Schema.Types.ObjectId,
     ref: "Transaction",
+    required: true,
   },
   verificationCode: {
     type: Number,

@@ -48,6 +48,7 @@ const transactionSchema = new Schema(
     rideId: {
       type: Schema.Types.ObjectId,
       ref: "AvailableRide",
+      required: true,
     },
     paidBack: {
       payoutId: String,

@@ -2,11 +2,10 @@
 
 **Team Name:** Code Slayers                                                       
 **Team Members name:**
+ - [Pratik Nandan](https://github.com/pratik4505)
  - [Vaibhav Kumar Maurya](https://github.com/Vaibhavdev309)  
  - [Kushagra Verma](https://github.com/kushagra572)  
- - [Uttam Raj Singh](https://github.com/Uttam426)
- - [Pratik Nandan](https://github.com/pratik4505)
-
+ 
 
 ## Features
 

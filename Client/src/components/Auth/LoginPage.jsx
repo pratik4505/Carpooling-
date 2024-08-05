@@ -15,7 +15,7 @@ export default function LoginPage() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [responseMessage, setResponseMessage] = useState("");
+  
   const { initialLoad, setIsDlVerified } = useContext(AuthContext);
   const navigate = useNavigate();
   const change = (e) => {
@@ -108,51 +108,5 @@ export default function LoginPage() {
       </div>
     </div>
   );
-  {
-    /* <div className="container-login">
-      <div className="form-box-login">
-        <h1>Log in</h1>
-        <div className="input-group">
-          <div className="input-field">
-            <AiOutlineUser className="react-icons" />
-            <input
-              type="text"
-              name="email"
-              value={formData.email}
-              placeholder="Email"
-              onChange={change}
-            />
-          </div>
-          <div className="input-field">
-            <BsKey className="react-icons" />
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              placeholder="Password"
-              onChange={change}
-            />
-          </div>
-          <p>
-            Lost password <a href="#">Click Here!</a>
-          </p>
-          <div className="submit-container">
-            {loading ? (
-              <div className="loading-spinner">Loading...</div>
-            ) : (
-              <div className="submit" onClick={handleLogin}>
-                Log in
-              </div>
-            )}
-          </div>
-          <div className="register">
-            Don't have an account? <Link to="/register">Register</Link>
-          </div>
-        </div>
-      </div>
-      {responseMessage && (
-        <div className="error-message">{responseMessage}</div>
-      )}
-    </div> */
-  }
+  
 }
